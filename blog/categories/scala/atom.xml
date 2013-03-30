@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Scala | Ouertani Blog]]></title>
   <link href="http://ouertani.github.com/blog/categories/scala/atom.xml" rel="self"/>
   <link href="http://ouertani.github.com/"/>
-  <updated>2013-03-31T00:50:06+01:00</updated>
+  <updated>2013-03-31T00:54:49+01:00</updated>
   <id>http://ouertani.github.com/</id>
   <author>
     <name><![CDATA[Ouertani]]></name>
@@ -27,19 +27,25 @@
 
 <p>Resticle is a unit of deployment dedicated to Rest. It provides a new method (“handles”) which can be used by Vert.x to start Rest services. “handles” returns a sequence of rest handlers :</p>
 
-<p>RestHandler : Action => Response
-Action :
-GET(pattern : String)
-POST (pattern : String)
-PUT (pattern : String)
-DELETE(pattern : String)
-HEAD (pattern : String)
-ALL(pattern : String)
-Response : HttpServerRequest => Any
-OK, Unauthorized,....
-In this tutorial we will be working with the SampleResticle class, for both scala and java.</p>
+<ul>
+    <li>RestHandler : Action => Response</li>
+<ul>Action :
+<li>GET(pattern : String)</li>
+<li>POST (pattern : String)</li>
+<li>PUT (pattern : String)</li>
+<li>DELETE(pattern : String)</li>
+<li>HEAD (pattern : String)</li>
+<li>ALL(pattern : String)</li>
+</ul>
+<li>Response : HttpServerRequest => Any</li>
+<li>OK, Unauthorized,....</li>
+</ul>
 
-<p>II - Hello World</p>
+
+<p>In this tutorial we will be working with the SampleResticle class, for both scala and java.</p>
+
+<h1>II - Hello World</h1>
+
 
 <p>Vert.x provides a powerful routing and route matching mechanism, which simplifies the routing of HTTP requests to different handlers based on pattern matching on the request path.</p>
 
@@ -76,8 +82,10 @@ public class SampleResticle extends Verticle {</p>
 </code></pre>
 
 <p>}
-```
-III- Chaining Handlers</p>
+```</p>
+
+<h1>III- Chaining Handlers</h1>
+
 
 <p>Using Resticle we can chain handlers quit easily. The following snippets create static GET and DELETE services :</p>
 
@@ -121,8 +129,10 @@ public class SampleResticle extends Verticle {</p>
 </code></pre>
 
 <p>}
-```
-IV - Value path</p>
+```</p>
+
+<h1>IV - Value path</h1>
+
 
 <p>Vert.x pattern matching lets you extract values from the path and use them as parameters in the request.</p>
 
@@ -178,8 +188,10 @@ public class SampleResticle extends Verticle {</p>
 </code></pre>
 
 <p>}
-```
-V- Json</p>
+```</p>
+
+<h1>V- Json</h1>
+
 
 <p>Let’s assume we have a Blog class with two String fields title and content :</p>
 
@@ -290,8 +302,10 @@ public String getContent() {
 </code></pre>
 
 <p>  }
-  ```
-Conclusion</p>
+  ```</p>
+
+<h1>Conclusion</h1>
+
 
 <p>Despite the fact that Resticle is in first development step, Rest support is by far simpler and elegant in scala than in java. As described in first tutorial Vert.x java version is burdened with a frightening number of handlers. Will Vert.x 2.0 address this point using Promises/Deferred APIs ?</p>
 ]]></content>

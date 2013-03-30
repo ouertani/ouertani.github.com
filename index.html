@@ -103,19 +103,25 @@
 
 <p>Resticle is a unit of deployment dedicated to Rest. It provides a new method (“handles”) which can be used by Vert.x to start Rest services. “handles” returns a sequence of rest handlers :</p>
 
-<p>RestHandler : Action => Response
-Action :
-GET(pattern : String)
-POST (pattern : String)
-PUT (pattern : String)
-DELETE(pattern : String)
-HEAD (pattern : String)
-ALL(pattern : String)
-Response : HttpServerRequest => Any
-OK, Unauthorized,&#8230;.
-In this tutorial we will be working with the SampleResticle class, for both scala and java.</p>
+<ul>
+    <li>RestHandler : Action => Response</li>
+<ul>Action :
+<li>GET(pattern : String)</li>
+<li>POST (pattern : String)</li>
+<li>PUT (pattern : String)</li>
+<li>DELETE(pattern : String)</li>
+<li>HEAD (pattern : String)</li>
+<li>ALL(pattern : String)</li>
+</ul>
+<li>Response : HttpServerRequest => Any</li>
+<li>OK, Unauthorized,&#8230;.</li>
+</ul>
 
-<p>II - Hello World</p>
+
+<p>In this tutorial we will be working with the SampleResticle class, for both scala and java.</p>
+
+<h1>II - Hello World</h1>
+
 
 <p>Vert.x provides a powerful routing and route matching mechanism, which simplifies the routing of HTTP requests to different handlers based on pattern matching on the request path.</p>
 
@@ -170,7 +176,8 @@ Scala</p>
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>III- Chaining Handlers</p>
+<h1>III- Chaining Handlers</h1>
+
 
 <p>Using Resticle we can chain handlers quit easily. The following snippets create static GET and DELETE services :</p>
 
@@ -238,7 +245,8 @@ Scala</p>
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>IV - Value path</p>
+<h1>IV - Value path</h1>
+
 
 <p>Vert.x pattern matching lets you extract values from the path and use them as parameters in the request.</p>
 
@@ -328,7 +336,8 @@ POST : /:blogname → code : 200 , body : post {blogname} received !</p>
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>V- Json</p>
+<h1>V- Json</h1>
+
 
 <p>Let’s assume we have a Blog class with two String fields title and content :</p>
 
@@ -488,8 +497,10 @@ public String getContent() {
 </code></pre>
 
 <p>  }
-  &#8220;`
-Conclusion</p>
+  &#8220;`</p>
+
+<h1>Conclusion</h1>
+
 
 <p>Despite the fact that Resticle is in first development step, Rest support is by far simpler and elegant in scala than in java. As described in first tutorial Vert.x java version is burdened with a frightening number of handlers. Will Vert.x 2.0 address this point using Promises/Deferred APIs ?</p>
 </div>
