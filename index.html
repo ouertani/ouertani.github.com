@@ -9,8 +9,7 @@
   <meta name="author" content="Ouertani">
 
   
-  <meta name="description" content="test
-">
+  <meta name="description" content="A previous post introduced some features of using Scala with Vert.x. This post covers how to publish Rest web services in an elegant and simple &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -95,7 +94,263 @@
   </header>
 
 
-  <div class="entry-content"><p>test</p>
+  <div class="entry-content"><p>A previous post introduced some features of using Scala with Vert.x. This post covers how to publish Rest web services in an elegant and simple fashion.</p>
+
+<p>As in the previous post, Examples in Java and Scala are presented, source code been hosted on GitHub as part of lang-scala https://github.com/ouertani/vert.x/tree/master/vertx-lang/vertx-lang-scala</p>
+
+<p>I- Resticle</p>
+
+<p>Resticle is a unit of deployment dedicated to Rest. It provides a new method (“handles”) which can be used by Vert.x to start Rest services. “handles” returns a sequence of rest handlers :</p>
+
+<p>RestHandler : Action => Response
+Action :
+GET(pattern : String)
+POST (pattern : String)
+PUT (pattern : String)
+DELETE(pattern : String)
+HEAD (pattern : String)
+ALL(pattern : String)
+Response : HttpServerRequest => Any
+OK, Unauthorized,&#8230;.
+In this tutorial we will be working with the SampleResticle class, for both scala and java.</p>
+
+<p>II - Hello World</p>
+
+<p>Vert.x provides a powerful routing and route matching mechanism, which simplifies the routing of HTTP requests to different handlers based on pattern matching on the request path.</p>
+
+<p>In Hello World snippet, let us publish a static GET service :</p>
+
+<p>GET : /hello → code : 200 , body : world
+Scala</p>
+
+<p>class SampleResticle extends Resticle
+{
+  override def handles =</p>
+
+<pre><code>     { GET("/hello")      :&gt;  OK( _ =&gt; "world ") }
+</code></pre>
+
+<p>}
+Java</p>
+
+<p>public class SampleResticle extends Verticle {</p>
+
+<pre><code>public void start() {
+    HttpServer server = vertx.createHttpServer();
+    RouteMatcher routeMatcher = new RouteMatcher();
+    routeMatcher.get("/hello", new Handler&lt;HttpServerRequest&gt;() {
+        public void handle(HttpServerRequest req) {
+            req.response.statusCode =200;
+            req.response.end("world");
+        }
+    });
+    server.requestHandler(routeMatcher).listen(8080, "localhost");
+}
+</code></pre>
+
+<p>}
+III- Chaining Handlers</p>
+
+<p>Using Resticle we can chain handlers quit easily. The following snippets create static GET and DELETE services :</p>
+
+<p>GET : /hello → code : 200 , body : world
+DELETE : /posts → code : 401 , body : Not allowed user
+Scala</p>
+
+<p>class SampleResticle extends Resticle
+{
+  override def handles =</p>
+
+<pre><code>     { GET("/hello")      :&gt;  OK( _ =&gt; "world ") } ++
+     { DELETE("/posts")   :&gt;  Unauthorized {_ =&gt; "Not allowed user" }} 
+</code></pre>
+
+<p>}
+java</p>
+
+<p>public class SampleResticle extends Verticle {</p>
+
+<pre><code>public void start() {
+    HttpServer server = vertx.createHttpServer();
+    RouteMatcher routeMatcher = new RouteMatcher();
+    routeMatcher.get("/hello", new Handler&lt;HttpServerRequest&gt;() {
+        public void handle(HttpServerRequest req) {
+            req.response.statusCode =200;
+            req.response.end("world");
+        }
+    });
+     routeMatcher.delete("/posts", new Handler&lt;HttpServerRequest&gt;() {
+        public void handle(HttpServerRequest req) {
+            req.response.statusCode =401;
+            req.response.end("Not allowed user");
+        }
+    });
+    server.requestHandler(routeMatcher).listen(8080, "localhost");
+}
+</code></pre>
+
+<p>}
+IV - Value path</p>
+
+<p>Vert.x pattern matching lets you extract values from the path and use them as parameters in the request.</p>
+
+<p>GET : /hello → code : 200 , body : world
+DELETE : /posts → code : 401 , body : Not allowed user
+POST : /:blogname → code : 200 , body : post {blogname} received !</p>
+
+<p>Scala : ( Using String interpolation)</p>
+
+<p>class SampleResticle extends Resticle
+{
+  override def handles =</p>
+
+<pre><code>     { GET("/hello")      :&gt;  OK( _ =&gt; "world ") } ++
+     { DELETE("/posts")   :&gt;  Unauthorized {_ =&gt; "Not allowed user" }} ++
+     { POST("/:blogname") :&gt;  OK {req  =&gt; val param = req.params().get("blogname") ; s"post $param received !" } }
+</code></pre>
+
+<p>}
+Java</p>
+
+<p>public class SampleResticle extends Verticle {</p>
+
+<pre><code>public void start() {
+    HttpServer server = vertx.createHttpServer();
+    RouteMatcher routeMatcher = new RouteMatcher();
+    routeMatcher.get("/hello", new Handler&lt;HttpServerRequest&gt;() {
+        public void handle(HttpServerRequest req) {
+            req.response.statusCode =200;
+            req.response.end("world");
+        }
+    });
+     routeMatcher.delete("/posts", new Handler&lt;HttpServerRequest&gt;() {
+        public void handle(HttpServerRequest req) {
+            req.response.statusCode =401;
+            req.response.end("Not allowed user");
+        }
+    });
+
+     routeMatcher.post("/:blogname", new Handler&lt;HttpServerRequest&gt;() {
+        public void handle(HttpServerRequest req) {
+            req.response.statusCode =200;
+            String blogName = req.params().get("blogname");
+            req.response.end("post "+blogName+ " received !");
+        }
+    });
+
+    server.requestHandler(routeMatcher).listen(8080, "localhost");
+}
+</code></pre>
+
+<p>}
+V- Json</p>
+
+<p>Let’s assume we have a Blog class with two String fields title and content :</p>
+
+<p>case class Blog (title :String , content : String)
+The java equivalent has been relocated to the end of the document due to its verbosity ;).</p>
+
+<p>Publishing an object using Resticle is simple and transparent due to implicit convertor : T => Buffer.</p>
+
+<p>Scala ( Type Class)</p>
+
+<p>object Blog {
+  implicit def toBuffer(blog : Blog):Buffer = JsonObject.withString(&#8220;title&#8221; -> blog.title).withString(&#8220;content&#8221; -> blog.content)
+}
+Java ( with explicit convertor )</p>
+
+<p>public class Convertor {</p>
+
+<pre><code>public static  JsonObject toJson(Blog blog) {
+   return new JsonObject().putString("title", blog.getTitle()).putString("content", blog.getContent());
+} 
+</code></pre>
+
+<p>}
+GET : /hello → code : 200 , body : world
+DELETE : /posts → code : 401 , body : Not allowed user
+POST : /:blogname → code : 200 , body : post {blogname} received !
+GET : /:id → code : 200 , body : {&#8220;title&#8221;:&#8221;rest&#8221;,&#8221;content&#8221;:&#8221;scala &amp; vertx&#8221;}
+Scala</p>
+
+<p>class SampleResticle extends Resticle
+{
+  override def handles =</p>
+
+<pre><code>     { GET("/hello")      :&gt;  OK( _ =&gt; "world ") } ++
+     { DELETE("/posts")   :&gt;  Unauthorized {_ =&gt; "Not allowed user" }} ++
+     { POST("/:blogname") :&gt;  OK {req  =&gt; val param = req.params().get("blogname") ; s"post $param received !" } } ++
+     { GET("/:id")        :&gt;  OK ( _ =&gt; Blog("rest","scala &amp; vertx"))}
+</code></pre>
+
+<p>}
+Java</p>
+
+<p>public class SampleResticle extends Verticle {</p>
+
+<pre><code>public void start() {
+    HttpServer server = vertx.createHttpServer();
+    RouteMatcher routeMatcher = new RouteMatcher();
+    routeMatcher.get("/hello", new Handler&lt;HttpServerRequest&gt;() {
+        public void handle(HttpServerRequest req) {
+            req.response.statusCode =200;
+            req.response.end("world");
+        }
+    });
+     routeMatcher.delete("/posts", new Handler&lt;HttpServerRequest&gt;() {
+        public void handle(HttpServerRequest req) {
+            req.response.statusCode =401;
+            req.response.end("Not allowed user");
+        }
+    });
+
+     routeMatcher.post("/:blogname", new Handler&lt;HttpServerRequest&gt;() {
+        public void handle(HttpServerRequest req) {
+            req.response.statusCode =200;
+            String blogName = req.params().get("blogname");
+            req.response.end("post "+blogName+ " received !");
+        }
+    });
+
+    routeMatcher.get("/:id", new Handler&lt;HttpServerRequest&gt;() {
+        public void handle(HttpServerRequest req) {
+            req.response.statusCode =200;
+            Blog blog =  new Blog("rest","scala &amp; vertx");
+            JsonObject obj = Convertor.toJson(blog);
+            req.response.end(obj.encode());
+        }
+    });
+
+    server.requestHandler(routeMatcher).listen(8080, "localhost");
+}
+</code></pre>
+
+<p>}
+Java Blog</p>
+
+<p>public class Blog {</p>
+
+<pre><code>private final  String title;
+private final String content;
+
+public Blog(String title, String content) {
+    this.title = title;
+    this.content = content;
+}
+
+public String getTitle() {
+    return title;
+}
+
+public String getContent() {
+    return content;
+}
+</code></pre>
+
+<p>  }
+Conclusion</p>
+
+<p>Despite the fact that Resticle is in first development step, Rest support is by far simpler and elegant in scala than in java. As described in first tutorial Vert.x java version is burdened with a frightening number of handlers. Will Vert.x 2.0 address this point using Promises/Deferred APIs ?</p>
 </div>
   
   
