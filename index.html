@@ -152,13 +152,6 @@ Scala</p>
 <span class='line-number'>12</span>
 <span class='line-number'>13</span>
 <span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
 </pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">SampleResticle</span> <span class="kd">extends</span> <span class="n">Verticle</span> <span class="o">{</span>
 </span><span class='line'>
 </span><span class='line'>    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">start</span><span class="o">()</span> <span class="o">{</span>
@@ -173,56 +166,78 @@ Scala</p>
 </span><span class='line'>        <span class="n">server</span><span class="o">.</span><span class="na">requestHandler</span><span class="o">(</span><span class="n">routeMatcher</span><span class="o">).</span><span class="na">listen</span><span class="o">(</span><span class="mi">8080</span><span class="o">,</span> <span class="s">&quot;localhost&quot;</span><span class="o">);</span>
 </span><span class='line'>    <span class="o">}</span>
 </span><span class='line'><span class="o">}</span>
-</span><span class='line'><span class="n">III</span><span class="o">-</span> <span class="n">Chaining</span> <span class="n">Handlers</span>
-</span><span class='line'>
-</span><span class='line'><span class="n">Using</span> <span class="n">Resticle</span> <span class="n">we</span> <span class="n">can</span> <span class="n">chain</span> <span class="n">handlers</span> <span class="n">quit</span> <span class="n">easily</span><span class="o">.</span> <span class="n">The</span> <span class="n">following</span> <span class="n">snippets</span> <span class="n">create</span> <span class="kd">static</span> <span class="n">GET</span> <span class="n">and</span> <span class="n">DELETE</span> <span class="n">services</span> <span class="o">:</span>
-</span><span class='line'>
-</span><span class='line'><span class="n">GET</span> <span class="o">:</span> <span class="o">/</span><span class="n">hello</span> <span class="err">→</span> <span class="n">code</span> <span class="o">:</span> <span class="mi">200</span> <span class="o">,</span> <span class="n">body</span> <span class="o">:</span> <span class="n">world</span>
-</span><span class='line'><span class="n">DELETE</span> <span class="o">:</span> <span class="o">/</span><span class="n">posts</span> <span class="err">→</span> <span class="n">code</span> <span class="o">:</span> <span class="mi">401</span> <span class="o">,</span> <span class="n">body</span> <span class="o">:</span> <span class="n">Not</span> <span class="n">allowed</span> <span class="n">user</span>
-</span><span class='line'><span class="n">Scala</span>
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p> scala   SampleResticle.scala              <br/>
-class SampleResticle extends Resticle
-{
-  override def handles =</p>
+<p>III- Chaining Handlers</p>
 
-<pre><code>     { GET("/hello")      :&gt;  OK( _ =&gt; "world ") } ++
-     { DELETE("/posts")   :&gt;  Unauthorized {_ =&gt; "Not allowed user" }} 
-</code></pre>
+<p>Using Resticle we can chain handlers quit easily. The following snippets create static GET and DELETE services :</p>
 
-<p>}</p>
+<p>GET : /hello → code : 200 , body : world
+DELETE : /posts → code : 401 , body : Not allowed user
+Scala</p>
 
-<figure class='code'><figcaption><span>SampleResticle.java            </span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="n">java</span>
+<figure class='code'><figcaption><span>SampleResticle.scala               </span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='scala'><span class='line'><span class="k">class</span> <span class="nc">SampleResticle</span> <span class="k">extends</span> <span class="nc">Resticle</span>
+</span><span class='line'><span class="o">{</span>
+</span><span class='line'>  <span class="k">override</span> <span class="k">def</span> <span class="n">handles</span> <span class="k">=</span>
+</span><span class='line'>         <span class="o">{</span> <span class="nc">GET</span><span class="o">(</span><span class="s">&quot;/hello&quot;</span><span class="o">)</span>      <span class="o">:&gt;</span>  <span class="nc">OK</span><span class="o">(</span> <span class="k">_</span> <span class="k">=&gt;</span> <span class="s">&quot;world &quot;</span><span class="o">)</span> <span class="o">}</span> <span class="o">++</span>
+</span><span class='line'>         <span class="o">{</span> <span class="nc">DELETE</span><span class="o">(</span><span class="s">&quot;/posts&quot;</span><span class="o">)</span>   <span class="o">:&gt;</span>  <span class="nc">Unauthorized</span> <span class="o">{</span><span class="k">_</span> <span class="k">=&gt;</span> <span class="s">&quot;Not allowed user&quot;</span> <span class="o">}}</span>
+</span><span class='line'><span class="o">}</span>
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p> java    SampleResticle.java           <br/>
-public class SampleResticle extends Verticle {</p>
+<p>java</p>
 
-<pre><code>public void start() {
-    HttpServer server = vertx.createHttpServer();
-    RouteMatcher routeMatcher = new RouteMatcher();
-    routeMatcher.get("/hello", new Handler&lt;HttpServerRequest&gt;() {
-        public void handle(HttpServerRequest req) {
-            req.response.statusCode =200;
-            req.response.end("world");
-        }
-    });
-     routeMatcher.delete("/posts", new Handler&lt;HttpServerRequest&gt;() {
-        public void handle(HttpServerRequest req) {
-            req.response.statusCode =401;
-            req.response.end("Not allowed user");
-        }
-    });
-    server.requestHandler(routeMatcher).listen(8080, "localhost");
-}
-</code></pre>
+<figure class='code'><figcaption><span>SampleResticle.java                </span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">SampleResticle</span> <span class="kd">extends</span> <span class="n">Verticle</span> <span class="o">{</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">start</span><span class="o">()</span> <span class="o">{</span>
+</span><span class='line'>        <span class="n">HttpServer</span> <span class="n">server</span> <span class="o">=</span> <span class="n">vertx</span><span class="o">.</span><span class="na">createHttpServer</span><span class="o">();</span>
+</span><span class='line'>        <span class="n">RouteMatcher</span> <span class="n">routeMatcher</span> <span class="o">=</span> <span class="k">new</span> <span class="n">RouteMatcher</span><span class="o">();</span>
+</span><span class='line'>        <span class="n">routeMatcher</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="s">&quot;/hello&quot;</span><span class="o">,</span> <span class="k">new</span> <span class="n">Handler</span><span class="o">&lt;</span><span class="n">HttpServerRequest</span><span class="o">&gt;()</span> <span class="o">{</span>
+</span><span class='line'>            <span class="kd">public</span> <span class="kt">void</span> <span class="nf">handle</span><span class="o">(</span><span class="n">HttpServerRequest</span> <span class="n">req</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>                <span class="n">req</span><span class="o">.</span><span class="na">response</span><span class="o">.</span><span class="na">statusCode</span> <span class="o">=</span><span class="mi">200</span><span class="o">;</span>
+</span><span class='line'>                <span class="n">req</span><span class="o">.</span><span class="na">response</span><span class="o">.</span><span class="na">end</span><span class="o">(</span><span class="s">&quot;world&quot;</span><span class="o">);</span>
+</span><span class='line'>            <span class="o">}</span>
+</span><span class='line'>        <span class="o">});</span>
+</span><span class='line'>         <span class="n">routeMatcher</span><span class="o">.</span><span class="na">delete</span><span class="o">(</span><span class="s">&quot;/posts&quot;</span><span class="o">,</span> <span class="k">new</span> <span class="n">Handler</span><span class="o">&lt;</span><span class="n">HttpServerRequest</span><span class="o">&gt;()</span> <span class="o">{</span>
+</span><span class='line'>            <span class="kd">public</span> <span class="kt">void</span> <span class="nf">handle</span><span class="o">(</span><span class="n">HttpServerRequest</span> <span class="n">req</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>                <span class="n">req</span><span class="o">.</span><span class="na">response</span><span class="o">.</span><span class="na">statusCode</span> <span class="o">=</span><span class="mi">401</span><span class="o">;</span>
+</span><span class='line'>                <span class="n">req</span><span class="o">.</span><span class="na">response</span><span class="o">.</span><span class="na">end</span><span class="o">(</span><span class="s">&quot;Not allowed user&quot;</span><span class="o">);</span>
+</span><span class='line'>            <span class="o">}</span>
+</span><span class='line'>        <span class="o">});</span>
+</span><span class='line'>        <span class="n">server</span><span class="o">.</span><span class="na">requestHandler</span><span class="o">(</span><span class="n">routeMatcher</span><span class="o">).</span><span class="na">listen</span><span class="o">(</span><span class="mi">8080</span><span class="o">,</span> <span class="s">&quot;localhost&quot;</span><span class="o">);</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
 
-<p>}
-IV - Value path</p>
+
+<p>IV - Value path</p>
 
 <p>Vert.x pattern matching lets you extract values from the path and use them as parameters in the request.</p>
 

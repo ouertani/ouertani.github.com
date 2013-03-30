@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Vert.x | Ouertani Blog]]></title>
   <link href="http://ouertani.github.com/blog/categories/vert-dot-x/atom.xml" rel="self"/>
   <link href="http://ouertani.github.com/"/>
-  <updated>2013-03-31T00:36:54+01:00</updated>
+  <updated>2013-03-31T00:39:08+01:00</updated>
   <id>http://ouertani.github.com/</id>
   <author>
     <name><![CDATA[Ouertani]]></name>
@@ -75,6 +75,7 @@ public class SampleResticle extends Verticle {</p>
 </code></pre>
 
 <p>}
+```
 III- Chaining Handlers</p>
 
 <p>Using Resticle we can chain handlers quit easily. The following snippets create static GET and DELETE services :</p>
@@ -119,6 +120,7 @@ public class SampleResticle extends Verticle {</p>
 </code></pre>
 
 <p>}
+```
 IV - Value path</p>
 
 <p>Vert.x pattern matching lets you extract values from the path and use them as parameters in the request.</p>
