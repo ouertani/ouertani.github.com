@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Rest | Ouertani Blog]]></title>
   <link href="http://ouertani.github.com/blog/categories/rest/atom.xml" rel="self"/>
   <link href="http://ouertani.github.com/"/>
-  <updated>2013-03-31T00:33:09+01:00</updated>
+  <updated>2013-03-31T00:36:54+01:00</updated>
   <id>http://ouertani.github.com/</id>
   <author>
     <name><![CDATA[Ouertani]]></name>
@@ -56,10 +56,10 @@ class SampleResticle extends Resticle
 </code></pre>
 
 <p>}
-Java
-```</p>
-
-<p>public class SampleResticle extends Verticle {</p>
+<code>
+Java    
+</code> java    SampleResticle.java       <br/>
+public class SampleResticle extends Verticle {</p>
 
 <pre><code>public void start() {
     HttpServer server = vertx.createHttpServer();
@@ -83,7 +83,8 @@ III- Chaining Handlers</p>
 DELETE : /posts → code : 401 , body : Not allowed user
 Scala</p>
 
-<p>class SampleResticle extends Resticle
+<p>``` scala   SampleResticle.scala              <br/>
+class SampleResticle extends Resticle
 {
   override def handles =</p>
 
@@ -92,9 +93,11 @@ Scala</p>
 </code></pre>
 
 <p>}
+```
 java</p>
 
-<p>public class SampleResticle extends Verticle {</p>
+<p>``` java    SampleResticle.java           <br/>
+public class SampleResticle extends Verticle {</p>
 
 <pre><code>public void start() {
     HttpServer server = vertx.createHttpServer();
@@ -126,7 +129,8 @@ POST : /:blogname → code : 200 , body : post {blogname} received !</p>
 
 <p>Scala : ( Using String interpolation)</p>
 
-<p>class SampleResticle extends Resticle
+<p>``` scala   SampleResticle.scala              <br/>
+class SampleResticle extends Resticle
 {
   override def handles =</p>
 
@@ -136,9 +140,11 @@ POST : /:blogname → code : 200 , body : post {blogname} received !</p>
 </code></pre>
 
 <p>}
+```
 Java</p>
 
-<p>public class SampleResticle extends Verticle {</p>
+<p>``` java    SampleResticle.java           <br/>
+public class SampleResticle extends Verticle {</p>
 
 <pre><code>public void start() {
     HttpServer server = vertx.createHttpServer();
@@ -169,6 +175,7 @@ Java</p>
 </code></pre>
 
 <p>}
+```
 V- Json</p>
 
 <p>Let’s assume we have a Blog class with two String fields title and content :</p>
@@ -178,14 +185,15 @@ The java equivalent has been relocated to the end of the document due to its ver
 
 <p>Publishing an object using Resticle is simple and transparent due to implicit convertor : T => Buffer.</p>
 
-<p>Scala ( Type Class)</p>
-
-<p>object Blog {
+<p>Scala ( Type Class)
+``` scala   Blog.scala<br/>
+object Blog {
   implicit def toBuffer(blog : Blog):Buffer = JsonObject.withString("title" -> blog.title).withString("content" -> blog.content)
 }
 Java ( with explicit convertor )</p>
 
-<p>public class Convertor {</p>
+<p>``` java    Convertor.java            <br/>
+public class Convertor {</p>
 
 <pre><code>public static  JsonObject toJson(Blog blog) {
    return new JsonObject().putString("title", blog.getTitle()).putString("content", blog.getContent());
@@ -199,7 +207,8 @@ POST : /:blogname → code : 200 , body : post {blogname} received !
 GET : /:id → code : 200 , body : {"title":"rest","content":"scala &amp; vertx"}
 Scala</p>
 
-<p>class SampleResticle extends Resticle
+<p>``` scala   SampleResticle.scala              <br/>
+class SampleResticle extends Resticle
 {
   override def handles =</p>
 
@@ -210,9 +219,11 @@ Scala</p>
 </code></pre>
 
 <p>}
+```
 Java</p>
 
-<p>public class SampleResticle extends Verticle {</p>
+<p>``` java    SampleResticle.java           <br/>
+public class SampleResticle extends Verticle {</p>
 
 <pre><code>public void start() {
     HttpServer server = vertx.createHttpServer();
@@ -252,9 +263,11 @@ Java</p>
 </code></pre>
 
 <p>}
+```
 Java Blog</p>
 
-<p>public class Blog {</p>
+<p>``` java    Blog.java             <br/>
+public class Blog {</p>
 
 <pre><code>private final  String title;
 private final String content;
@@ -274,6 +287,7 @@ public String getContent() {
 </code></pre>
 
 <p>  }
+  ```
 Conclusion</p>
 
 <p>Despite the fact that Resticle is in first development step, Rest support is by far simpler and elegant in scala than in java. As described in first tutorial Vert.x java version is burdened with a frightening number of handlers. Will Vert.x 2.0 address this point using Promises/Deferred APIs ?</p>
