@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Vert.x | Ouertani Blog]]></title>
   <link href="http://ouertani.github.com/blog/categories/vert-dot-x/atom.xml" rel="self"/>
   <link href="http://ouertani.github.com/"/>
-  <updated>2013-03-31T00:32:33+01:00</updated>
+  <updated>2013-03-31T00:33:09+01:00</updated>
   <id>http://ouertani.github.com/</id>
   <author>
     <name><![CDATA[Ouertani]]></name>
@@ -47,7 +47,7 @@ In this tutorial we will be working with the SampleResticle class, for both scal
 <p>GET : /hello → code : 200 , body : world
 Scala</p>
 
-<p>``` scala     <br/>
+<p>``` scala   SampleResticle.scala  <br/>
 class SampleResticle extends Resticle
 {
   override def handles =</p>
