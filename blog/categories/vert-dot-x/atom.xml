@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
 
-  <title><![CDATA[Ouertani Blog]]></title>
-  <link href="http://ouertani.github.com/atom.xml" rel="self"/>
+  <title><![CDATA[Category: Vert.x | Ouertani Blog]]></title>
+  <link href="http://ouertani.github.com/blog/categories/vert-dot-x/atom.xml" rel="self"/>
   <link href="http://ouertani.github.com/"/>
   <updated>2013-03-31T00:28:22+01:00</updated>
   <id>http://ouertani.github.com/</id>
