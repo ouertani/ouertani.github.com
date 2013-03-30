@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Scala | Ouertani Blog]]></title>
   <link href="http://ouertani.github.com/blog/categories/scala/atom.xml" rel="self"/>
   <link href="http://ouertani.github.com/"/>
-  <updated>2013-03-31T00:39:08+01:00</updated>
+  <updated>2013-03-31T00:50:06+01:00</updated>
   <id>http://ouertani.github.com/</id>
   <author>
     <name><![CDATA[Ouertani]]></name>
@@ -22,7 +22,8 @@
 
 <p>As in the previous post, Examples in Java and Scala are presented, source code been hosted on GitHub as part of lang-scala https://github.com/ouertani/vert.x/tree/master/vertx-lang/vertx-lang-scala</p>
 
-<p>I- Resticle</p>
+<h1>I- Resticle</h1>
+
 
 <p>Resticle is a unit of deployment dedicated to Rest. It provides a new method (“handles”) which can be used by Vert.x to start Rest services. “handles” returns a sequence of rest handlers :</p>
 
