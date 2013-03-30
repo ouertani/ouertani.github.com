@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Vert.x | Ouertani Blog]]></title>
   <link href="http://ouertani.github.com/blog/categories/vert-dot-x/atom.xml" rel="self"/>
   <link href="http://ouertani.github.com/"/>
-  <updated>2013-03-31T00:54:49+01:00</updated>
+  <updated>2013-03-31T00:57:30+01:00</updated>
   <id>http://ouertani.github.com/</id>
   <author>
     <name><![CDATA[Ouertani]]></name>
@@ -29,14 +29,14 @@
 
 <ul>
     <li>RestHandler : Action => Response</li>
-<ul>Action :
+<li><ul>Action :
 <li>GET(pattern : String)</li>
 <li>POST (pattern : String)</li>
 <li>PUT (pattern : String)</li>
 <li>DELETE(pattern : String)</li>
 <li>HEAD (pattern : String)</li>
 <li>ALL(pattern : String)</li>
-</ul>
+</ul></li>
 <li>Response : HttpServerRequest => Any</li>
 <li>OK, Unauthorized,....</li>
 </ul>
@@ -201,10 +201,11 @@ The java equivalent has been relocated to the end of the document due to its ver
 <p>Publishing an object using Resticle is simple and transparent due to implicit convertor : T => Buffer.</p>
 
 <p>Scala ( Type Class)
-``` scala   Blog.scala<br/>
+<code>scala   Blog.scala  
 object Blog {
-  implicit def toBuffer(blog : Blog):Buffer = JsonObject.withString("title" -> blog.title).withString("content" -> blog.content)
+  implicit def toBuffer(blog : Blog):Buffer = JsonObject.withString("title" -&gt; blog.title).withString("content" -&gt; blog.content)
 }
+</code>
 Java ( with explicit convertor )</p>
 
 <p>``` java    Convertor.java            <br/>
@@ -216,10 +217,11 @@ public class Convertor {</p>
 </code></pre>
 
 <p>}
-GET : /hello → code : 200 , body : world
-DELETE : /posts → code : 401 , body : Not allowed user
-POST : /:blogname → code : 200 , body : post {blogname} received !
-GET : /:id → code : 200 , body : {"title":"rest","content":"scala &amp; vertx"}
+```
+<li>GET : /hello → code : 200 , body : world</li>
+<li>DELETE : /posts → code : 401 , body : Not allowed user</li>
+<li>POST : /:blogname → code : 200 , body : post {blogname} received !</li>
+<li>GET : /:id → code : 200 , body : {"title":"rest","content":"scala &amp; vertx"}</li>
 Scala</p>
 
 <p>``` scala   SampleResticle.scala              <br/>
