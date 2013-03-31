@@ -4,7 +4,7 @@
   <title><![CDATA[Ouertani Blog]]></title>
   <link href="http://ouertani.github.com/atom.xml" rel="self"/>
   <link href="http://ouertani.github.com/"/>
-  <updated>2013-03-31T19:27:29+02:00</updated>
+  <updated>2013-03-31T19:28:41+02:00</updated>
   <id>http://ouertani.github.com/</id>
   <author>
     <name><![CDATA[Ouertani]]></name>
@@ -961,7 +961,9 @@ The java equivalent has been relocated to the end of the document due to its ver
 
 <p>If you don&#8217;t already have a Play 2 project, then create a new one after installing Play 2:</p>
 
-<p>play new mySlickApp</p>
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>play new mySlickApp</span></code></pre></td></tr></table></div></figure>
+
 
 <p>Choose Scala as the language for the project.</p>
 
