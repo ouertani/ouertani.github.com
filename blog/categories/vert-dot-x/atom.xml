@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Vert.x | Ouertani Blog]]></title>
   <link href="http://ouertani.github.com/blog/categories/vert-dot-x/atom.xml" rel="self"/>
   <link href="http://ouertani.github.com/"/>
-  <updated>2013-03-31T18:29:58+02:00</updated>
+  <updated>2013-03-31T18:54:14+02:00</updated>
   <id>http://ouertani.github.com/</id>
   <author>
     <name><![CDATA[Ouertani]]></name>
@@ -336,6 +336,244 @@ public String getContent() {
 
 
 <p>Despite the fact that Resticle is in first development step, Rest support is by far simpler and elegant in scala than in java. As described in first tutorial Vert.x java version is burdened with a frightening number of handlers. Will Vert.x 2.0 address this point using <a href="https://github.com/vert-x/vert.x/wiki/Vert.x-2.0-plan">Promises/Deferred APIs </a>?</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Fun with Scala and Vert.x]]></title>
+    <link href="http://ouertani.github.com/blog/2013/02/12/fun-with-scala-and-vert-dot-x/"/>
+    <updated>2013-02-12T18:43:00+01:00</updated>
+    <id>http://ouertani.github.com/blog/2013/02/12/fun-with-scala-and-vert-dot-x</id>
+    <content type="html"><![CDATA[<p><a href="http://vertx.io/">Vert.x</a> is a polyglot event-driven application framework that runs on the Java Virtual Machine (JAVA 7 is the minimum supported version). Like Node.js, Vert.x is asynchronous and scalable, and lets developers build modern and effective web applications.</p>
+
+<p>Being polyglot, Vert.x can be used in many flavors, among which : JavaScript,CoffeeScript, Ruby, Python,Groovy and Java. In order to enforce asynchronism and scalabity, Vert.x is built upon <a href="https://netty.io/">Netty</a>, leverage the <a href="http://en.wikipedia.org/wiki/Reactor_pattern">reactor pattern</a>, using a frightening number of handlers.</p>
+
+<p>This article aims at showing the powerful combination of Scala and Vert.x - the Java counterpart being provided as comparison.</p>
+
+<p>Note : the source code are hosted on GitHub as part of lang-scala <a href="https://github.com/ouertani/vert.x/tree/master/vertx-lang/vertx-lang-scala">https://github.com/ouertani/vert.x/tree/master/vertx-lang/vertx-lang-scala</a></p>
+
+<p>Vert.x supports many components :</p>
+
+<p><li><a href="http://en.wikipedia.org/wiki/WebSocket">WebSocket</a></li>
+<li>HttpServer</li>
+<li>Distributed Event Bus</li>
+<li>TCP Server, SockJS ,... not presented here</li></p>
+
+<h2>I - WebSocket</h2>
+
+
+<p>Web Socket are HTML 5 feature providing full-duplex communications. For old browsers that do not support WebSocket, Vert.x provides <a href="https://github.com/sockjs/sockjs-client">SockJS</a> as out-of-the-box component.</p>
+
+<p>In order to run the following example check out : <a href="https://github.com/ouertani/vert.x/blob/master/vertx-examples/src/main/javascript/websockets/ws.html">https://github.com/ouertani/vert.x/blob/master/vertx-examples/src/main/javascript/websockets/ws.html</a> and save it into the compiled lib directory</p>
+
+<h4>Java</h4>
+
+
+<p>``` java
+import org.vertx.java.core.Handler;
+import org.vertx.java.core.buffer.Buffer;
+import org.vertx.java.core.http.HttpServerRequest;
+import org.vertx.java.core.http.ServerWebSocket;
+import org.vertx.java.deploy.Verticle;</p>
+
+<p>public class SampleWebSocket extends Verticle {</p>
+
+<p>  public void start() {</p>
+
+<pre><code>vertx.createHttpServer().websocketHandler(new Handler&lt;ServerWebSocket&gt;() {
+  public void handle(final ServerWebSocket ws) {
+    if (ws.path.equals("/myapp")) {
+      ws.dataHandler(new Handler&lt;Buffer&gt;() {
+        public void handle(Buffer data) {
+          ws.writeTextFrame(data.toString()); // Echo it back
+        }
+      });
+    } else {
+      ws.reject();
+    }
+  }
+}).requestHandler(new Handler&lt;HttpServerRequest&gt;() {
+  public void handle(HttpServerRequest req) {
+    if (req.path.equals("/")) req.response.sendFile("ws.html"); // Serve the html
+  }
+}).listen(8080);
+</code></pre>
+
+<p>  }
+}
+```</p>
+
+<h4>Scala</h4>
+
+
+<p>``` scala
+import org.vertx.java.core.buffer.Buffer;
+import org.vertx.java.core.http.HttpServerRequest;
+import org.vertx.java.core.http.ServerWebSocket;
+import org.vertx.scala.deploy.Verticle
+import org.vertx.scala.core._</p>
+
+<p>class SampleWebSocket extends Verticle (
+  _.getVertx().createHttpServer().websocketHandler{</p>
+
+<pre><code> ws:ServerWebSocket =&gt; ws.path match {
+    case "/myapp" =&gt; ws.dataHandler{data : Buffer =&gt;   ws.writeTextFrame(data.toString())}
+    case _ =&gt; ws.reject();
+  }}
+  .requestHandler{req : HttpServerRequest =&gt; req.path match {case ("/") =&gt; req.response.sendFile("ws.html")}}
+  .listen(8080)
+</code></pre>
+
+<p>)()
+```</p>
+
+<h2>II-HttpWebServer</h2>
+
+
+<p>Vert.x allows you to easily write full featured, highly performant and scalable HTTP and HTTPS servers.</p>
+
+<p>The following example starts up an Http server, listening on port 8080, and logging all received requests.</p>
+
+<h4>Java</h4>
+
+
+<p>``` java
+import org.vertx.java.core.Handler;
+import org.vertx.java.core.http.HttpServer;
+import org.vertx.java.core.http.HttpServerRequest;
+import org.vertx.java.core.logging.Logger;
+import org.vertx.java.deploy.Verticle;</p>
+
+<p>public class SampleHttpWebServer extends Verticle {</p>
+
+<pre><code>public void start() {
+    HttpServer server = vertx.createHttpServer();
+    final Logger log = getContainer().getLogger();
+    server.requestHandler(new Handler&lt;HttpServerRequest&gt;() {
+        public void handle(HttpServerRequest request) {
+            log.info("A request has arrived on the server!");
+        }
+    }).listen(8080, "localhost");
+}
+</code></pre>
+
+<p>}
+```</p>
+
+<h4>Scala</h4>
+
+
+<p>``` scala
+import org.vertx.java.core.http. { HttpServerRequest => JHttpServerRequest}
+import org.vertx.scala.deploy.Verticle
+import org.vertx.scala.core._</p>
+
+<p>class SampleWebServer extends Verticle ( x =>
+  x.getVertx().createHttpServer().withRequestHandler{_ : JHttpServerRequest =></p>
+
+<pre><code> x.info("A request has arrived on the server!")}
+</code></pre>
+
+<p>.listen(8080, "localhost")
+)()
+```</p>
+
+<h2>III-HttpClient</h2>
+
+
+<p>Vert.x also provides an HttpClient API, so as to interact with the server part. The following samples create and send a GET request, then log the server's response.</p>
+
+<h4>Java</h4>
+
+
+<p>``` java
+import org.vertx.java.core.Handler;
+import org.vertx.java.core.http.HttpClient;
+import org.vertx.java.core.http.HttpClientRequest;
+import org.vertx.java.core.http.HttpClientResponse;
+import org.vertx.java.core.logging.Logger;
+import org.vertx.java.deploy.Verticle;</p>
+
+<p>public class SampleHttpClient extends Verticle {</p>
+
+<pre><code>@Override
+public void start() throws Exception {
+    HttpClient client = vertx.createHttpClient().setHost("127.0.0.1");
+    final Logger log = getContainer().getLogger();
+
+    HttpClientRequest request = client.post("/some-path/", new Handler&lt;HttpClientResponse&gt;() {
+        public void handle(HttpClientResponse resp) {
+            log.info("Got a response: ");
+        }
+    });
+
+    request.end();
+}
+</code></pre>
+
+<p>}
+```</p>
+
+<h4>Scala</h4>
+
+
+<p>``` scala
+import org.vertx.scala.deploy.Verticle
+import org.vertx.scala.core._</p>
+
+<p>class SampleWebClient extends Verticle (v =>
+   v.getVertx.createHttpClient().setHost("127.0.0.1").setPort(8080)
+   .andGetNow("/") {_ => v.info("Got a response: " )}
+  )()
+```</p>
+
+<h2>IV-EventBus</h2>
+
+
+<p>The event bus is like a vertebral spine, it can be used to connect distributed nodes, and to support interaction between different Verticles, even written in different languages.</p>
+
+<h4>Java</h4>
+
+
+<p>``` java
+import org.vertx.java.deploy.Verticle;
+import org.vertx.java.core.eventbus.EventBus;</p>
+
+<p>public class SampleEventBus extends Verticle {
+   @Override</p>
+
+<pre><code>public void start() throws Exception {
+   EventBus eb = vertx.eventBus();
+   eb.send("path", "ping1");
+   eb.send("path", "ping2");
+</code></pre>
+
+<p>   }<br/>
+}
+```</p>
+
+<h4>Scala</h4>
+
+
+<p><code>scala
+import org.vertx.scala.deploy.Verticle
+import org.vertx.scala.core._
+class SampleEventBus extends Verticle ( x =&gt; {
+ val  point = x ! ("path")
+ point &gt;&gt; ("ping 1")
+ point &gt;&gt; ("ping 2")
+}
+)()
+</code></p>
+
+<h2>Conclusion</h2>
+
+
+<p>This article introduced the basic of Vert.x using scala language and short examples. Full Scala language support will soon, hopefully, become available.</p>
+
+<p>Stay tuned, a subsequent post will show you more about Vert.x with Scala.</p>
+
+<p>source : http://blog.zenika.com/index.php?post/2013/02/11/fun-with-scala-and-vert-x</p>
 ]]></content>
   </entry>
   

@@ -1,6 +1,10 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <urlset xmlns='http://www.sitemaps.org/schemas/sitemap/0.9'>
     <url>
+        <loc>http://ouertani.github.com/blog/2013/02/12/fun-with-scala-and-vert-dot-x/</loc>
+        <lastmod>2013-03-31T18:54:09+02:00</lastmod>
+    </url>
+    <url>
         <loc>http://ouertani.github.com/blog/2013/03/09/rest-with-scala-and-vert-dot-x/</loc>
         <lastmod>2013-03-31T18:23:20+02:00</lastmod>
     </url>
@@ -10,11 +14,11 @@
     </url>
     <url>
         <loc>http://ouertani.github.com/blog/archives/</loc>
-        <lastmod>2013-03-31T18:23:20+02:00</lastmod>
+        <lastmod>2013-03-31T18:54:09+02:00</lastmod>
     </url>
     <url>
         <loc>http://ouertani.github.com/</loc>
-        <lastmod>2013-03-31T18:23:20+02:00</lastmod>
+        <lastmod>2013-03-31T18:54:09+02:00</lastmod>
     </url>
     <url>
         <loc>http://ouertani.github.com/robots.txt</loc>
