@@ -32,7 +32,7 @@ In this tutorial we will be working with the SampleResticle class, for both scal
 
 <h2>II - Hello World</h2>
 
-Vert.x provides a powerful routing and route matching mechanism, which simplifies the routing of HTTP requests to different handlers based on pattern matching on the request path.
+Vert.x provides a powerful routing and <a href="http://vertx.io/core_manual_java.html#routing-http-requests-with-pattern-matching">route matching</a> mechanism, which simplifies the routing of HTTP requests to different handlers based on pattern matching on the request path.
 
 In Hello World snippet, let us publish a static GET service :
 
@@ -105,14 +105,14 @@ public class SampleResticle extends Verticle {
 ```
 <h2>IV - Value path</h2>
 
-Vert.x pattern matching lets you extract values from the path and use them as parameters in the request.
+Vert.x <a href="http://vertx.io/core_manual_java.html#routing-http-requests-with-pattern-matching">pattern matching</a> lets you extract values from the path and use them as parameters in the request.
 
 <li>GET : /hello → code : 200 , body : world</li>
 <li>DELETE : /posts → code : 401 , body : Not allowed user</li>
 <li>POST : /:blogname → code : 200 , body : post {blogname} received !</li>
  
 
-<h4>Scala : ( Using String interpolation)</h4>
+<h4>Scala : ( Using <a href="http://docs.scala-lang.org/overviews/core/string-interpolation.html">String interpolation</a>)</h4>
 
 ```	scala	SampleResticle.scala				
 class SampleResticle extends Resticle 
@@ -263,4 +263,4 @@ public class Blog {
 ```
 <h2>Conclusion</h2>
 
-Despite the fact that Resticle is in first development step, Rest support is by far simpler and elegant in scala than in java. As described in first tutorial Vert.x java version is burdened with a frightening number of handlers. Will Vert.x 2.0 address this point using Promises/Deferred APIs ?
+Despite the fact that Resticle is in first development step, Rest support is by far simpler and elegant in scala than in java. As described in first tutorial Vert.x java version is burdened with a frightening number of handlers. Will Vert.x 2.0 address this point using <a href="https://github.com/vert-x/vert.x/wiki/Vert.x-2.0-plan">Promises/Deferred APIs </a>?
