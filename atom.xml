@@ -4,7 +4,7 @@
   <title><![CDATA[Ouertani Blog]]></title>
   <link href="http://ouertani.github.com/atom.xml" rel="self"/>
   <link href="http://ouertani.github.com/"/>
-  <updated>2013-03-31T19:15:08+02:00</updated>
+  <updated>2013-03-31T19:27:29+02:00</updated>
   <id>http://ouertani.github.com/</id>
   <author>
     <name><![CDATA[Ouertani]]></name>
@@ -943,6 +943,523 @@ The java equivalent has been relocated to the end of the document due to its ver
 <li>Implicit Class : <a href="http://docs.scala-lang.org/sips/pending/implicit-classes.html">http://docs.scala-lang.org/sips/pending/implicit-classes.html</a>
 <li>Macro : <a href="http://scalamacros.org/">http://scalamacros.org/</a></li>
 <li>String interpolation with concise samples : <a href="http://www.blog.project13.pl/index.php/coding/1540/scala-2-10-0-hello-string-interpolation/">http://www.blog.project13.pl/index.php/coding/1540/scala-2-10-0-hello-string-interpolation/</a></li></p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Play 2.1 , Scala 2.10 and Slick 0.11.1]]></title>
+    <link href="http://ouertani.github.com/blog/2012/10/09/play-2-dot-1/"/>
+    <updated>2012-10-09T15:17:00+02:00</updated>
+    <id>http://ouertani.github.com/blog/2012/10/09/play-2-dot-1</id>
+    <content type="html"><![CDATA[<p>Starting from scala <a href="http://www.scala-lang.org/downloads">2.10</a> version , <a href="http://slick.typesafe.com/">Slick</a> will be by defaut the database manager. In addition, <a href="http://www.playframework.org/">Playframework</a>  also will be based on scala 2.10  since version 2.1.</p>
+
+<p>In this tutorial, I will try to present an example using the last version of slick and scalatest based on <a href="http://www.scala-lang.org/downloads">scala 2.10.0-M7</a> and a developpment version of <a href="https://github.com/playframework/Play20">playframework</a></p>
+
+<p>This post follow this <a href="http://www.artima.com/articles/play2_scala_squeryl.html">famous tutorial</a> !</p>
+
+<p>Setup <a href="http://slick.typesafe.com/">Slick</a> in Play 2</p>
+
+<p>If you don&#8217;t already have a Play 2 project, then create a new one after installing Play 2:</p>
+
+<p>play new mySlickApp</p>
+
+<p>Choose Scala as the language for the project.</p>
+
+<p>The Slick library needs to be added to the Play project.</p>
+
+<p>Edit the project/Build.scala file and update the dependencies:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='scala'><span class='line'><span class="k">val</span> <span class="n">appDependencies</span> <span class="k">=</span> <span class="nc">Seq</span><span class="o">(</span>
+</span><span class='line'>   <span class="s">&quot;com.typesafe&quot;</span> <span class="o">%</span> <span class="s">&quot;slick_2.10.0-M7&quot;</span> <span class="o">%</span> <span class="s">&quot;0.11.1&quot;</span>
+</span><span class='line'><span class="o">)</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Then if you are using an Eclipse or IntelliJ Play can automatically create the project for you using either:</p>
+
+<p>play idea</p>
+
+<p>or</p>
+
+<p>play eclipse</p>
+
+<p>Note that we created the project files after updating the dependencies, so the projects would be configured with the required libraries. If the dependencies change in the future, just re-run the commands to create the projects.</p>
+
+<p>You can now start the application from within your project&#8217;s root directory:</p>
+
+<p>play ~run</p>
+
+<p>Verify that the server is running by opening the following URL in your browser: http://localhost:9000</p>
+
+<p>For local testing we will use an in-memory &#8220;h2&#8221; database. To setup Play to use that database, edit the conf/application.conf file and uncomment or add the following lines:</p>
+
+<p>db.default.driver=org.h2.Driver
+db.default.url=&#8221;jdbc:h2:mem:play&#8221;</p>
+
+<p>The final setup step is to provide Squeryl a database connection, but we still want to use the standard Play configuration system to get the database connection information. This is easily done by adding a Global class that can hook into the startup phase of the Play application lifecycle. Create a new file named app/Global.scala containing:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+</pre></td><td class='code'><pre><code class='scala'><span class='line'><span class="k">import</span> <span class="nn">play.api.db.DB</span>
+</span><span class='line'><span class="k">import</span> <span class="nn">play.api.GlobalSettings</span>
+</span><span class='line'><span class="c1">// Use H2Driver to connect to an H2 database</span>
+</span><span class='line'><span class="k">import</span> <span class="nn">scala.slick.driver.H2Driver.simple._</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1">// Use the implicit threadLocalSession</span>
+</span><span class='line'><span class="k">import</span> <span class="nn">Database.threadLocalSession</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">import</span> <span class="nn">play.api.Application</span>
+</span><span class='line'><span class="k">import</span> <span class="nn">play.api.Play.current</span>
+</span><span class='line'>
+</span><span class='line'>
+</span><span class='line'><span class="k">object</span> <span class="nc">Global</span> <span class="k">extends</span> <span class="nc">GlobalSettings</span> <span class="o">{</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="k">override</span> <span class="k">def</span> <span class="n">onStart</span><span class="o">(</span><span class="n">app</span><span class="k">:</span> <span class="kt">Application</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="k">lazy</span> <span class="k">val</span> <span class="n">database</span> <span class="k">=</span> <span class="nc">Database</span><span class="o">.</span><span class="n">forDataSource</span><span class="o">(</span><span class="nc">DB</span><span class="o">.</span><span class="n">getDataSource</span><span class="o">())</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="o">}</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>On application startup the  configuration parameter will be used to determine which driver to use to setup the database connection.</p>
+
+<p>If you reload the http://localhost:9000 webpage in your browser, everything should still be working and you should see the following message in the Play STDOUT log:</p>
+
+<p>[info] play - database [default] connected at jdbc:h2:mem:play</p>
+
+<p>Create an Entity</p>
+
+<p>Now lets create a simple entity object that will be used to persist data into the database. Create a new file named app/models/Bar.scala containing:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+</pre></td><td class='code'><pre><code class='scala'><span class='line'><span class="k">package</span> <span class="nn">models</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">import</span> <span class="nn">scala.slick.driver.H2Driver.simple._</span>
+</span><span class='line'>
+</span><span class='line'>
+</span><span class='line'><span class="k">case</span> <span class="k">class</span> <span class="nc">Bar</span><span class="o">(</span><span class="n">id</span><span class="k">:</span> <span class="kt">Option</span><span class="o">[</span><span class="kt">Int</span><span class="o">]</span> <span class="k">=</span> <span class="nc">None</span><span class="o">,</span> <span class="n">name</span><span class="k">:</span> <span class="kt">String</span><span class="o">)</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">object</span> <span class="nc">Bars</span> <span class="k">extends</span> <span class="nc">Table</span><span class="o">[</span><span class="kt">Bar</span><span class="o">](</span><span class="s">&quot;bar&quot;</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>  <span class="k">def</span> <span class="n">id</span> <span class="k">=</span> <span class="n">column</span><span class="o">[</span><span class="kt">Int</span><span class="o">](</span><span class="s">&quot;id&quot;</span><span class="o">,</span> <span class="n">O</span><span class="o">.</span><span class="nc">PrimaryKey</span><span class="o">,</span> <span class="n">O</span><span class="o">.</span><span class="nc">AutoInc</span><span class="o">)</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="c1">// This is the primary key column</span>
+</span><span class='line'>  <span class="k">def</span> <span class="n">name</span> <span class="k">=</span> <span class="n">column</span><span class="o">[</span><span class="kt">String</span><span class="o">](</span><span class="s">&quot;name&quot;</span><span class="o">)</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="c1">// Every table needs a * projection with the same type as the table&#39;s type parameter</span>
+</span><span class='line'>  <span class="k">def</span> <span class="o">*</span> <span class="k">=</span> <span class="n">id</span><span class="o">.?</span> <span class="o">~</span> <span class="n">name</span> <span class="o">&lt;&gt;(</span><span class="nc">Bar</span><span class="o">,</span> <span class="nc">Bar</span><span class="o">.</span><span class="n">unapply</span> <span class="k">_</span><span class="o">)</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>This is a very simple entity that will store a list of Bar objects. Each Bar has a name and an id property for the primary key. The case class in Scala is immutable and basically supercharges a class, adding a number of syntactic conveniences. It also allows it to be used for pattern matching, which can be quite handy when matching form values returned from the client. The Bars object is an instance of Table  Bar that Slick will map into the database.</p>
+
+<p>Begineer about slick, I will not use evolution to create database but let slick create it for me, let&#8217;s modify Global.scala as bellow :</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+</pre></td><td class='code'><pre><code class='scala'><span class='line'><span class="k">import</span> <span class="nn">play.api.db.DB</span>
+</span><span class='line'><span class="k">import</span> <span class="nn">play.api.GlobalSettings</span>
+</span><span class='line'><span class="c1">// Use H2Driver to connect to an H2 database</span>
+</span><span class='line'><span class="k">import</span> <span class="nn">scala.slick.driver.H2Driver.simple._</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1">// Use the implicit threadLocalSession</span>
+</span><span class='line'><span class="k">import</span> <span class="nn">Database.threadLocalSession</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">import</span> <span class="nn">play.api.Application</span>
+</span><span class='line'><span class="k">import</span> <span class="nn">play.api.Play.current</span>
+</span><span class='line'><span class="k">import</span> <span class="nn">models.Bars</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">object</span> <span class="nc">Global</span> <span class="k">extends</span> <span class="nc">GlobalSettings</span> <span class="o">{</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="k">override</span> <span class="k">def</span> <span class="n">onStart</span><span class="o">(</span><span class="n">app</span><span class="k">:</span> <span class="kt">Application</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="k">lazy</span> <span class="k">val</span> <span class="n">database</span> <span class="k">=</span> <span class="nc">Database</span><span class="o">.</span><span class="n">forDataSource</span><span class="o">(</span><span class="nc">DB</span><span class="o">.</span><span class="n">getDataSource</span><span class="o">())</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="n">database</span> <span class="o">.</span><span class="n">withSession</span> <span class="o">{</span>
+</span><span class='line'>     <span class="nc">Bars</span><span class="o">.</span><span class="n">ddl</span><span class="o">.</span><span class="n">create</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>  <span class="o">}</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>reload the http://localhost:9000 webpage to create bar table on your local in-memory database.
+Test the Model</p>
+
+<p>The testing support in Play 2 is very powerful and fits well with the Test Driven Development style. Play 2 with Scala uses specs2 as the default for testing but we prefer ScalaTest. Lets create a simple test for the Bar model object. Start by adding the ScalaTest dependency to the project and modifying the testOptions setting.  Since scala 2.10.0-M6 scala-actor is an independent jar and must be add as dependencies.
+Update the project/Build.scala file to contain:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+</pre></td><td class='code'><pre><code class='scala'><span class='line'><span class="k">val</span> <span class="n">appDependencies</span> <span class="k">=</span> <span class="nc">Seq</span><span class="o">(</span>
+</span><span class='line'>      <span class="s">&quot;org.scalatest&quot;</span> <span class="o">%</span> <span class="s">&quot;scalatest_2.10.0-M7&quot;</span> <span class="o">%</span> <span class="s">&quot;2.0.M4-2.10.0-M7-B1&quot;</span> <span class="o">%</span> <span class="s">&quot;test&quot;</span><span class="o">,</span>
+</span><span class='line'>      <span class="s">&quot;org.scala-lang&quot;</span> <span class="o">%</span> <span class="s">&quot;scala-actors&quot;</span> <span class="o">%</span> <span class="s">&quot;2.10.0-M7&quot;</span>    <span class="o">%</span> <span class="s">&quot;test&quot;</span><span class="o">,</span>
+</span><span class='line'>      <span class="s">&quot;com.typesafe&quot;</span> <span class="o">%</span> <span class="s">&quot;slick_2.10.0-M7&quot;</span> <span class="o">%</span> <span class="s">&quot;0.11.1&quot;</span>
+</span><span class='line'><span class="o">)</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">val</span> <span class="n">main</span> <span class="k">=</span> <span class="nc">PlayProject</span><span class="o">(</span><span class="n">appName</span><span class="o">,</span> <span class="n">appVersion</span><span class="o">,</span> <span class="n">appDependencies</span><span class="o">,</span> <span class="n">mainLang</span> <span class="k">=</span> <span class="nc">SCALA</span><span class="o">).</span><span class="n">settings</span><span class="o">(</span>
+</span><span class='line'>  <span class="n">testOptions</span> <span class="n">in</span> <span class="nc">Test</span> <span class="o">:=</span> <span class="nc">Nil</span>
+</span><span class='line'>  <span class="c1">// Add your own project settings here</span>
+</span><span class='line'><span class="o">)</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Now create a new file named test/BarSpec.scala containing.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+</pre></td><td class='code'><pre><code class='scala'><span class='line'><span class="k">import</span> <span class="nn">models.</span><span class="o">{</span><span class="nc">Bars</span><span class="o">,</span> <span class="nc">Bar</span><span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">import</span> <span class="nn">org.scalatest.FlatSpec</span>
+</span><span class='line'><span class="k">import</span> <span class="nn">org.scalatest.matchers.ShouldMatchers</span>
+</span><span class='line'><span class="c1">// Use H2Driver to connect to an H2 database</span>
+</span><span class='line'><span class="k">import</span> <span class="nn">scala.slick.driver.H2Driver.simple._</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1">// Use the implicit threadLocalSession</span>
+</span><span class='line'><span class="k">import</span> <span class="nn">Database.threadLocalSession</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">import</span> <span class="nn">play.api.test._</span>
+</span><span class='line'><span class="k">import</span> <span class="nn">play.api.test.Helpers._</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">class</span> <span class="nc">BarSpec</span> <span class="k">extends</span> <span class="nc">FlatSpec</span> <span class="k">with</span> <span class="nc">ShouldMatchers</span> <span class="o">{</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="s">&quot;A Bar&quot;</span> <span class="n">should</span> <span class="s">&quot;be creatable&quot;</span> <span class="n">in</span> <span class="o">{</span>
+</span><span class='line'>    <span class="nc">Database</span><span class="o">.</span><span class="n">forURL</span><span class="o">(</span><span class="s">&quot;jdbc:h2:mem:test1&quot;</span><span class="o">,</span> <span class="n">driver</span> <span class="k">=</span> <span class="s">&quot;org.h2.Driver&quot;</span><span class="o">)</span> <span class="n">withSession</span> <span class="o">{</span>
+</span><span class='line'>
+</span><span class='line'>      <span class="nc">Bars</span><span class="o">.</span><span class="n">ddl</span><span class="o">.</span><span class="n">create</span>
+</span><span class='line'>      <span class="nc">Bars</span><span class="o">.</span><span class="n">insert</span><span class="o">(</span><span class="nc">Bar</span><span class="o">(</span><span class="nc">None</span><span class="o">,</span> <span class="s">&quot;foo&quot;</span><span class="o">))</span>
+</span><span class='line'>      <span class="k">val</span> <span class="n">b</span> <span class="k">=</span> <span class="k">for</span><span class="o">(</span><span class="n">b</span> <span class="k">&lt;-</span> <span class="nc">Bars</span><span class="o">)</span> <span class="k">yield</span> <span class="n">b</span>
+</span><span class='line'>      <span class="n">b</span><span class="o">.</span><span class="n">first</span><span class="o">.</span><span class="n">id</span><span class="o">.</span><span class="n">get</span>     <span class="n">should</span>  <span class="n">equal</span><span class="o">(</span><span class="mi">1</span><span class="o">)</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>  <span class="o">}</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>This test uses a  an in-memory database to run the test.  The body of the test simply creates a new instance of Bar and tests that the id is equal to one.  Different from Play 1, test are run from the command line using:</p>
+
+<p>play test</p>
+
+<p>If the tests worked, then you should see the following message in the Play STDOUT log:</p>
+
+<p>[mySlickApp] $ test
+[info] BarSpec:
+[info] A Bar
+[info] - should be creatable
+[info] Passed: : Total 1, Failed 0, Errors 0, Passed 1, Skipped 0
+[success] Total time: 2 s, completed Oct 9, 2012 12:28:28 PM</p>
+
+<p>If you&#8217;d like to have the tests run whenever the source changes then run:</p>
+
+<p>play ~test</p>
+
+<p>You can keep both the ~run and ~test commands running in the background. This allows you to quickly test the application from both programmatic unit / functional tests and from manual browser tests.
+Creating Bars From a Web Form</p>
+
+<p>Now lets add a basic web UI for creating new Bar objects. Note that this code will not compile until this entire section is completed.</p>
+
+<p>First update the app/controllers/Application.scala file to contain:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+<span class='line-number'>38</span>
+<span class='line-number'>39</span>
+<span class='line-number'>40</span>
+<span class='line-number'>41</span>
+<span class='line-number'>42</span>
+<span class='line-number'>43</span>
+<span class='line-number'>44</span>
+<span class='line-number'>45</span>
+<span class='line-number'>46</span>
+<span class='line-number'>47</span>
+<span class='line-number'>48</span>
+<span class='line-number'>49</span>
+<span class='line-number'>50</span>
+<span class='line-number'>51</span>
+<span class='line-number'>52</span>
+<span class='line-number'>53</span>
+<span class='line-number'>54</span>
+<span class='line-number'>55</span>
+<span class='line-number'>56</span>
+<span class='line-number'>57</span>
+<span class='line-number'>58</span>
+<span class='line-number'>59</span>
+<span class='line-number'>60</span>
+<span class='line-number'>61</span>
+<span class='line-number'>62</span>
+<span class='line-number'>63</span>
+<span class='line-number'>64</span>
+<span class='line-number'>65</span>
+</pre></td><td class='code'><pre><code class='scala'><span class='line'><span class="k">package</span> <span class="nn">controllers</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">import</span> <span class="nn">play.api._</span>
+</span><span class='line'><span class="k">import</span> <span class="nn">play.api.mvc._</span>
+</span><span class='line'>
+</span><span class='line'>
+</span><span class='line'><span class="k">import</span> <span class="nn">play.api.data.Form</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">import</span> <span class="nn">play.api.data._</span>
+</span><span class='line'><span class="k">import</span> <span class="nn">play.api.data.Forms._</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1">// Use H2Driver to connect to an H2 database</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">import</span> <span class="nn">scala.slick.driver.H2Driver.simple._</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1">// Use the implicit threadLocalSession</span>
+</span><span class='line'><span class="c1">//import Database.threadLocalSession</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">import</span> <span class="nn">scala.slick.session.Session</span>
+</span><span class='line'><span class="k">import</span> <span class="nn">play.api.libs.json._</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">import</span> <span class="nn">models.</span><span class="o">{</span><span class="nc">Bar</span><span class="o">,</span> <span class="nc">Bars</span><span class="o">}</span>
+</span><span class='line'><span class="k">import</span> <span class="nn">play.api.db._</span>
+</span><span class='line'><span class="k">import</span> <span class="nn">play.api.Play.current</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1">// Use H2Driver to connect to an H2 database</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">import</span> <span class="nn">scala.slick.driver.H2Driver.simple._</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1">// Use the implicit threadLocalSession</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">import</span> <span class="nn">Database.threadLocalSession</span>
+</span><span class='line'>
+</span><span class='line'>
+</span><span class='line'><span class="k">object</span> <span class="nc">Application</span> <span class="k">extends</span> <span class="nc">Controller</span> <span class="o">{</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="k">lazy</span> <span class="k">val</span> <span class="n">database</span> <span class="k">=</span> <span class="nc">Database</span><span class="o">.</span><span class="n">forDataSource</span><span class="o">(</span><span class="nc">DB</span><span class="o">.</span><span class="n">getDataSource</span><span class="o">())</span>
+</span><span class='line'>
+</span><span class='line'>
+</span><span class='line'>  <span class="k">val</span> <span class="n">barForm</span> <span class="k">=</span> <span class="nc">Form</span><span class="o">(</span>
+</span><span class='line'>    <span class="n">mapping</span><span class="o">(</span>
+</span><span class='line'>      <span class="s">&quot;name&quot;</span> <span class="o">-&gt;</span> <span class="n">text</span>
+</span><span class='line'>    <span class="o">)</span>
+</span><span class='line'>      <span class="o">((</span><span class="n">name</span><span class="o">)</span> <span class="k">=&gt;</span> <span class="nc">Bar</span><span class="o">(</span><span class="nc">None</span><span class="o">,</span> <span class="n">name</span><span class="o">))</span>
+</span><span class='line'>
+</span><span class='line'>      <span class="o">((</span><span class="n">bar</span><span class="k">:</span> <span class="kt">Bar</span><span class="o">)</span> <span class="k">=&gt;</span> <span class="nc">Some</span><span class="o">(</span><span class="n">bar</span><span class="o">.</span><span class="n">name</span><span class="o">))</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="o">)</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="k">def</span> <span class="n">index</span> <span class="k">=</span> <span class="nc">Action</span> <span class="o">{</span>
+</span><span class='line'>    <span class="nc">Ok</span><span class="o">(</span><span class="n">views</span><span class="o">.</span><span class="n">html</span><span class="o">.</span><span class="n">index</span><span class="o">(</span><span class="n">barForm</span><span class="o">))</span>
+</span><span class='line'>  <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="k">def</span> <span class="n">addBar</span> <span class="k">=</span> <span class="nc">Action</span> <span class="o">{</span>
+</span><span class='line'>    <span class="k">implicit</span> <span class="n">request</span> <span class="k">=&gt;</span>
+</span><span class='line'>      <span class="n">barForm</span><span class="o">.</span><span class="n">bindFromRequest</span><span class="o">.</span><span class="n">value</span> <span class="n">map</span> <span class="o">{</span>
+</span><span class='line'>        <span class="n">bar</span> <span class="k">=&gt;</span>
+</span><span class='line'>          <span class="n">database</span> <span class="n">withSession</span> <span class="o">{</span>
+</span><span class='line'>            <span class="o">(</span><span class="nc">Bars</span> <span class="n">insert</span> <span class="n">bar</span><span class="o">)</span>
+</span><span class='line'>          <span class="o">}</span>
+</span><span class='line'>          <span class="nc">Redirect</span><span class="o">(</span><span class="n">routes</span><span class="o">.</span><span class="nc">Application</span><span class="o">.</span><span class="n">index</span><span class="o">())</span>
+</span><span class='line'>      <span class="o">}</span> <span class="n">getOrElse</span> <span class="nc">BadRequest</span>
+</span><span class='line'>  <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>The barForm provides a mapping from a request parameter named name to the name property on the Bar case class (via it&#8217;s constructor). The index method has been updated to pass an instance of the barForm into the index template. We will update that template next. The addBar method binds the request parameters into an object named bar then in a session the bar is inserted into the database.  Then the user is redirected back to the index page. If the request parameters could not be mapped to a Bar using the barForm then a BadRequest error is returned.</p>
+
+<p>Now we need to update the app/views/index.scala.html template to contain:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+</pre></td><td class='code'><pre><code class='scala'><span class='line'><span class="o">@(</span><span class="n">form</span><span class="k">:</span> <span class="kt">play.api.data.Form</span><span class="o">[</span><span class="kt">Bar</span><span class="o">])</span>
+</span><span class='line'>
+</span><span class='line'><span class="nd">@main</span><span class="o">(</span><span class="s">&quot;Welcome to Play 2.0&quot;</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="nd">@helper</span><span class="o">.</span><span class="n">form</span><span class="o">(</span><span class="n">action</span> <span class="k">=</span> <span class="n">routes</span><span class="o">.</span><span class="nc">Application</span><span class="o">.</span><span class="n">addBar</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>        <span class="nd">@helper</span><span class="o">.</span><span class="n">inputText</span><span class="o">(</span><span class="n">form</span><span class="o">(</span><span class="s">&quot;name&quot;</span><span class="o">))</span>
+</span><span class='line'>        <span class="o">&lt;</span><span class="n">input</span> <span class="n">type</span><span class="o">=</span><span class="s">&quot;submit&quot;</span><span class="o">/&gt;</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>The template now takes a Form[Bar] parameter which is passed from the index method on the Application controller. Then in the body of the template a new HTML form is rendered using Play 2&#8217;s form helper. The form contains an HTML field for the name and a submit button. Notice that the action of the form points from the route to the Application controller&#8217;s addBar method.</p>
+
+<p>If you look in the console window at this point you will see the error &#8220;value addBar is not a member of controllers.ReverseApplication&#8221;. This is because the route file is compiled and the view is checked for a valid route. But we haven&#8217;t created a route yet, so edit the conf/routes file and add a new line with the following:</p>
+
+<p>POST    /bars                       controllers.Application.addBar</p>
+
+<p>This creates a HTTP route that maps POST requests for the /bars URL to the addBar method.</p>
+
+<p>Now refresh http://localhost:9000 in your browser and you should see the very basic form for adding new Bar objects. If successful, after adding a new Bar the browser should just redirect back to the index page.</p>
+
+<p>Now lets add a RESTful service to the application that will return all of the Bar objects as JSON-serialized data. Start by adding a new method to the app/controllers/Application.scala file:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class='scala'><span class='line'><span class="k">def</span> <span class="n">getBars</span> <span class="k">=</span> <span class="nc">Action</span> <span class="o">{</span>
+</span><span class='line'>    <span class="k">val</span> <span class="n">json</span> <span class="k">=</span> <span class="n">database</span> <span class="n">withSession</span> <span class="o">{</span>
+</span><span class='line'>      <span class="k">val</span> <span class="n">bars</span> <span class="k">=</span> <span class="k">for</span> <span class="o">(</span><span class="n">b</span> <span class="k">&lt;-</span> <span class="nc">Bars</span><span class="o">)</span> <span class="k">yield</span> <span class="n">b</span><span class="o">.</span><span class="n">name</span><span class="o">.</span><span class="n">toString</span>
+</span><span class='line'>      <span class="nc">Json</span><span class="o">.</span><span class="n">toJson</span><span class="o">(</span><span class="n">bars</span><span class="o">.</span><span class="n">list</span><span class="o">)</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>    <span class="nc">Ok</span><span class="o">(</span><span class="n">json</span><span class="o">).</span><span class="n">as</span><span class="o">(</span><span class="nc">JSON</span><span class="o">)</span>
+</span><span class='line'>  <span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>The getBars method fetches the Bar objects from the database using Slick dsl and then creates a JSON representation of the list of Bar objects and returns the JSON data.</p>
+
+<p>Now add a new route to the conf/routes file:</p>
+
+<p>GET     /bars                       controllers.Application.getBars</p>
+
+<p>This maps GET requests for /bars to the getBars method.</p>
+
+<p>Try this out in your browser by loading: http://localhost:9000/bars</p>
+
+<p>You should see a list of the Bar objects you&#8217;ve created serialized as JSON.</p>
+
+<p>The syntax of the query demonstrates the power of Slick type-safe query language and the power of Scala to create DSLs.  The json val is then returned in an Ok (HTTP 200 status code response) with the content type set to application/json (the value of JSON).</p>
+
+<p>References :
+Slick : http://slick.typesafe.com
+Playframework :  http://www.playframework.org</p>
+
+<pre><code>                        https://github.com/playframework/Play20
+</code></pre>
+
+<p>Scala : http://www.scala-lang.org/downloads
+Squeryl + Playframework + Scala  : http://www.artima.com/articles/play2_scala_squeryl.html</p>
 ]]></content>
   </entry>
   

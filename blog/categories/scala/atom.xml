@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Scala | Ouertani Blog]]></title>
   <link href="http://ouertani.github.com/blog/categories/scala/atom.xml" rel="self"/>
   <link href="http://ouertani.github.com/"/>
-  <updated>2013-03-31T19:15:08+02:00</updated>
+  <updated>2013-03-31T19:27:29+02:00</updated>
   <id>http://ouertani.github.com/</id>
   <author>
     <name><![CDATA[Ouertani]]></name>
@@ -660,6 +660,344 @@ Short and concise !</p>
 <li>Implicit Class : <a href="http://docs.scala-lang.org/sips/pending/implicit-classes.html">http://docs.scala-lang.org/sips/pending/implicit-classes.html</a>
 <li>Macro : <a href="http://scalamacros.org/">http://scalamacros.org/</a></li>
 <li>String interpolation with concise samples : <a href="http://www.blog.project13.pl/index.php/coding/1540/scala-2-10-0-hello-string-interpolation/">http://www.blog.project13.pl/index.php/coding/1540/scala-2-10-0-hello-string-interpolation/</a></li></p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Play 2.1 , Scala 2.10 and Slick 0.11.1]]></title>
+    <link href="http://ouertani.github.com/blog/2012/10/09/play-2-dot-1/"/>
+    <updated>2012-10-09T15:17:00+02:00</updated>
+    <id>http://ouertani.github.com/blog/2012/10/09/play-2-dot-1</id>
+    <content type="html"><![CDATA[<p>Starting from scala <a href="http://www.scala-lang.org/downloads">2.10</a> version , <a href="http://slick.typesafe.com/">Slick</a> will be by defaut the database manager. In addition, <a href="http://www.playframework.org/">Playframework</a>  also will be based on scala 2.10  since version 2.1.</p>
+
+<p>In this tutorial, I will try to present an example using the last version of slick and scalatest based on <a href="http://www.scala-lang.org/downloads">scala 2.10.0-M7</a> and a developpment version of <a href="https://github.com/playframework/Play20">playframework</a></p>
+
+<p>This post follow this <a href="http://www.artima.com/articles/play2_scala_squeryl.html">famous tutorial</a> !</p>
+
+<p>Setup <a href="http://slick.typesafe.com/">Slick</a> in Play 2</p>
+
+<p>If you don't already have a Play 2 project, then create a new one after installing Play 2:</p>
+
+<p>play new mySlickApp</p>
+
+<p>Choose Scala as the language for the project.</p>
+
+<p>The Slick library needs to be added to the Play project.</p>
+
+<p>Edit the project/Build.scala file and update the dependencies:
+<code>scala
+val appDependencies = Seq(
+   "com.typesafe" % "slick_2.10.0-M7" % "0.11.1"
+)
+</code>
+Then if you are using an Eclipse or IntelliJ Play can automatically create the project for you using either:</p>
+
+<p>play idea</p>
+
+<p>or</p>
+
+<p>play eclipse</p>
+
+<p>Note that we created the project files after updating the dependencies, so the projects would be configured with the required libraries. If the dependencies change in the future, just re-run the commands to create the projects.</p>
+
+<p>You can now start the application from within your project's root directory:</p>
+
+<p>play ~run</p>
+
+<p>Verify that the server is running by opening the following URL in your browser: http://localhost:9000</p>
+
+<p>For local testing we will use an in-memory "h2" database. To setup Play to use that database, edit the conf/application.conf file and uncomment or add the following lines:</p>
+
+<p>db.default.driver=org.h2.Driver
+db.default.url="jdbc:h2:mem:play"</p>
+
+<p>The final setup step is to provide Squeryl a database connection, but we still want to use the standard Play configuration system to get the database connection information. This is easily done by adding a Global class that can hook into the startup phase of the Play application lifecycle. Create a new file named app/Global.scala containing:
+``` scala
+import play.api.db.DB
+import play.api.GlobalSettings
+// Use H2Driver to connect to an H2 database
+import scala.slick.driver.H2Driver.simple._</p>
+
+<p>// Use the implicit threadLocalSession
+import Database.threadLocalSession</p>
+
+<p>import play.api.Application
+import play.api.Play.current</p>
+
+<p>object Global extends GlobalSettings {</p>
+
+<p>  override def onStart(app: Application) {</p>
+
+<pre><code>lazy val database = Database.forDataSource(DB.getDataSource())
+</code></pre>
+
+<p>  }
+}
+```
+On application startup the  configuration parameter will be used to determine which driver to use to setup the database connection.</p>
+
+<p>If you reload the http://localhost:9000 webpage in your browser, everything should still be working and you should see the following message in the Play STDOUT log:</p>
+
+<p>[info] play - database [default] connected at jdbc:h2:mem:play</p>
+
+<p>Create an Entity</p>
+
+<p>Now lets create a simple entity object that will be used to persist data into the database. Create a new file named app/models/Bar.scala containing:
+``` scala
+package models</p>
+
+<p>import scala.slick.driver.H2Driver.simple._</p>
+
+<p>case class Bar(id: Option[Int] = None, name: String)</p>
+
+<p>object Bars extends Table<a href="" title="bar">Bar</a> {
+  def id = column<a href="%22id%22,%20O.PrimaryKey,%20O.AutoInc">Int</a></p>
+
+<p>  // This is the primary key column
+  def name = column<a href="" title="name">String</a></p>
+
+<p>  // Every table needs a * projection with the same type as the table's type parameter
+  def * = id.? ~ name &lt;>(Bar, Bar.unapply _)
+}
+```
+This is a very simple entity that will store a list of Bar objects. Each Bar has a name and an id property for the primary key. The case class in Scala is immutable and basically supercharges a class, adding a number of syntactic conveniences. It also allows it to be used for pattern matching, which can be quite handy when matching form values returned from the client. The Bars object is an instance of Table  Bar that Slick will map into the database.</p>
+
+<p>Begineer about slick, I will not use evolution to create database but let slick create it for me, let's modify Global.scala as bellow :
+``` scala
+import play.api.db.DB
+import play.api.GlobalSettings
+// Use H2Driver to connect to an H2 database
+import scala.slick.driver.H2Driver.simple._</p>
+
+<p>// Use the implicit threadLocalSession
+import Database.threadLocalSession</p>
+
+<p>import play.api.Application
+import play.api.Play.current
+import models.Bars</p>
+
+<p>object Global extends GlobalSettings {</p>
+
+<p>  override def onStart(app: Application) {</p>
+
+<pre><code>lazy val database = Database.forDataSource(DB.getDataSource())
+
+database .withSession {
+ Bars.ddl.create
+}
+</code></pre>
+
+<p>  }
+}
+```
+reload the http://localhost:9000 webpage to create bar table on your local in-memory database.
+Test the Model</p>
+
+<p>The testing support in Play 2 is very powerful and fits well with the Test Driven Development style. Play 2 with Scala uses specs2 as the default for testing but we prefer ScalaTest. Lets create a simple test for the Bar model object. Start by adding the ScalaTest dependency to the project and modifying the testOptions setting.  Since scala 2.10.0-M6 scala-actor is an independent jar and must be add as dependencies.
+Update the project/Build.scala file to contain:
+``` scala
+val appDependencies = Seq(</p>
+
+<pre><code>  "org.scalatest" % "scalatest_2.10.0-M7" % "2.0.M4-2.10.0-M7-B1" % "test",
+  "org.scala-lang" % "scala-actors" % "2.10.0-M7"    % "test",
+  "com.typesafe" % "slick_2.10.0-M7" % "0.11.1"
+</code></pre>
+
+<p>)</p>
+
+<p>val main = PlayProject(appName, appVersion, appDependencies, mainLang = SCALA).settings(
+  testOptions in Test := Nil
+  // Add your own project settings here
+)
+<code>
+Now create a new file named test/BarSpec.scala containing.
+</code> scala
+import models.{Bars, Bar}</p>
+
+<p>import org.scalatest.FlatSpec
+import org.scalatest.matchers.ShouldMatchers
+// Use H2Driver to connect to an H2 database
+import scala.slick.driver.H2Driver.simple._</p>
+
+<p>// Use the implicit threadLocalSession
+import Database.threadLocalSession</p>
+
+<p>import play.api.test.<em>
+import play.api.test.Helpers.</em></p>
+
+<p>class BarSpec extends FlatSpec with ShouldMatchers {</p>
+
+<p>  "A Bar" should "be creatable" in {</p>
+
+<pre><code>Database.forURL("jdbc:h2:mem:test1", driver = "org.h2.Driver") withSession {
+
+  Bars.ddl.create
+  Bars.insert(Bar(None, "foo"))
+  val b = for(b &lt;- Bars) yield b
+  b.first.id.get     should  equal(1)
+}
+</code></pre>
+
+<p>  }
+}
+```
+This test uses a  an in-memory database to run the test.  The body of the test simply creates a new instance of Bar and tests that the id is equal to one.  Different from Play 1, test are run from the command line using:</p>
+
+<p>play test</p>
+
+<p>If the tests worked, then you should see the following message in the Play STDOUT log:</p>
+
+<p>[mySlickApp] $ test
+[info] BarSpec:
+[info] A Bar
+[info] - should be creatable
+[info] Passed: : Total 1, Failed 0, Errors 0, Passed 1, Skipped 0
+[success] Total time: 2 s, completed Oct 9, 2012 12:28:28 PM</p>
+
+<p>If you'd like to have the tests run whenever the source changes then run:</p>
+
+<p>play ~test</p>
+
+<p>You can keep both the ~run and ~test commands running in the background. This allows you to quickly test the application from both programmatic unit / functional tests and from manual browser tests.
+Creating Bars From a Web Form</p>
+
+<p>Now lets add a basic web UI for creating new Bar objects. Note that this code will not compile until this entire section is completed.</p>
+
+<p>First update the app/controllers/Application.scala file to contain:
+``` scala
+package controllers</p>
+
+<p>import play.api.<em>
+import play.api.mvc.</em></p>
+
+<p>import play.api.data.Form</p>
+
+<p>import play.api.data.<em>
+import play.api.data.Forms.</em></p>
+
+<p>// Use H2Driver to connect to an H2 database</p>
+
+<p>import scala.slick.driver.H2Driver.simple._</p>
+
+<p>// Use the implicit threadLocalSession
+//import Database.threadLocalSession</p>
+
+<p>import scala.slick.session.Session
+import play.api.libs.json._</p>
+
+<p>import models.{Bar, Bars}
+import play.api.db._
+import play.api.Play.current</p>
+
+<p>// Use H2Driver to connect to an H2 database</p>
+
+<p>import scala.slick.driver.H2Driver.simple._</p>
+
+<p>// Use the implicit threadLocalSession</p>
+
+<p>import Database.threadLocalSession</p>
+
+<p>object Application extends Controller {</p>
+
+<p>  lazy val database = Database.forDataSource(DB.getDataSource())</p>
+
+<p>  val barForm = Form(</p>
+
+<pre><code>mapping(
+  "name" -&gt; text
+)
+  ((name) =&gt; Bar(None, name))
+
+  ((bar: Bar) =&gt; Some(bar.name))
+</code></pre>
+
+<p>  )</p>
+
+<p>  def index = Action {</p>
+
+<pre><code>Ok(views.html.index(barForm))
+</code></pre>
+
+<p>  }</p>
+
+<p>  def addBar = Action {</p>
+
+<pre><code>implicit request =&gt;
+  barForm.bindFromRequest.value map {
+    bar =&gt;
+      database withSession {
+        (Bars insert bar)
+      }
+      Redirect(routes.Application.index())
+  } getOrElse BadRequest
+</code></pre>
+
+<p>  }</p>
+
+<p>}
+```
+The barForm provides a mapping from a request parameter named name to the name property on the Bar case class (via it's constructor). The index method has been updated to pass an instance of the barForm into the index template. We will update that template next. The addBar method binds the request parameters into an object named bar then in a session the bar is inserted into the database.  Then the user is redirected back to the index page. If the request parameters could not be mapped to a Bar using the barForm then a BadRequest error is returned.</p>
+
+<p>Now we need to update the app/views/index.scala.html template to contain:
+``` scala
+@(form: play.api.data.Form[Bar])</p>
+
+<p>@main("Welcome to Play 2.0") {</p>
+
+<pre><code>@helper.form(action = routes.Application.addBar) {
+    @helper.inputText(form("name"))
+    &lt;input type="submit"/&gt;
+}
+</code></pre>
+
+<p>}
+```
+The template now takes a Form[Bar] parameter which is passed from the index method on the Application controller. Then in the body of the template a new HTML form is rendered using Play 2's form helper. The form contains an HTML field for the name and a submit button. Notice that the action of the form points from the route to the Application controller's addBar method.</p>
+
+<p>If you look in the console window at this point you will see the error "value addBar is not a member of controllers.ReverseApplication". This is because the route file is compiled and the view is checked for a valid route. But we haven't created a route yet, so edit the conf/routes file and add a new line with the following:</p>
+
+<p>POST    /bars                       controllers.Application.addBar</p>
+
+<p>This creates a HTTP route that maps POST requests for the /bars URL to the addBar method.</p>
+
+<p>Now refresh http://localhost:9000 in your browser and you should see the very basic form for adding new Bar objects. If successful, after adding a new Bar the browser should just redirect back to the index page.</p>
+
+<p>Now lets add a RESTful service to the application that will return all of the Bar objects as JSON-serialized data. Start by adding a new method to the app/controllers/Application.scala file:
+``` scala
+def getBars = Action {</p>
+
+<pre><code>val json = database withSession {
+  val bars = for (b &lt;- Bars) yield b.name.toString
+  Json.toJson(bars.list)
+}
+Ok(json).as(JSON)
+</code></pre>
+
+<p>  }
+```
+The getBars method fetches the Bar objects from the database using Slick dsl and then creates a JSON representation of the list of Bar objects and returns the JSON data.</p>
+
+<p>Now add a new route to the conf/routes file:</p>
+
+<p>GET     /bars                       controllers.Application.getBars</p>
+
+<p>This maps GET requests for /bars to the getBars method.</p>
+
+<p>Try this out in your browser by loading: http://localhost:9000/bars</p>
+
+<p>You should see a list of the Bar objects you've created serialized as JSON.</p>
+
+<p>The syntax of the query demonstrates the power of Slick type-safe query language and the power of Scala to create DSLs.  The json val is then returned in an Ok (HTTP 200 status code response) with the content type set to application/json (the value of JSON).</p>
+
+<p>References :
+Slick : http://slick.typesafe.com
+Playframework :  http://www.playframework.org</p>
+
+<pre><code>                        https://github.com/playframework/Play20
+</code></pre>
+
+<p>Scala : http://www.scala-lang.org/downloads
+Squeryl + Playframework + Scala  : http://www.artima.com/articles/play2_scala_squeryl.html</p>
 ]]></content>
   </entry>
   

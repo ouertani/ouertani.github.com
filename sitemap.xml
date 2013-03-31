@@ -1,6 +1,10 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <urlset xmlns='http://www.sitemaps.org/schemas/sitemap/0.9'>
     <url>
+        <loc>http://ouertani.github.com/blog/2012/10/09/play-2-dot-1/</loc>
+        <lastmod>2013-03-31T19:27:11+02:00</lastmod>
+    </url>
+    <url>
         <loc>http://ouertani.github.com/blog/2012/10/18/getting-started-with-play-2-dot-1/</loc>
         <lastmod>2013-03-31T19:14:49+02:00</lastmod>
     </url>
@@ -18,11 +22,11 @@
     </url>
     <url>
         <loc>http://ouertani.github.com/blog/archives/</loc>
-        <lastmod>2013-03-31T19:14:49+02:00</lastmod>
+        <lastmod>2013-03-31T19:27:11+02:00</lastmod>
     </url>
     <url>
         <loc>http://ouertani.github.com/</loc>
-        <lastmod>2013-03-31T19:14:49+02:00</lastmod>
+        <lastmod>2013-03-31T19:27:11+02:00</lastmod>
     </url>
     <url>
         <loc>http://ouertani.github.com/robots.txt</loc>
