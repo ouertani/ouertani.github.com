@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Scala | Ouertani Blog]]></title>
   <link href="http://ouertani.github.com/blog/categories/scala/atom.xml" rel="self"/>
   <link href="http://ouertani.github.com/"/>
-  <updated>2013-03-31T00:57:30+01:00</updated>
+  <updated>2013-03-31T01:01:52+01:00</updated>
   <id>http://ouertani.github.com/</id>
   <author>
     <name><![CDATA[Ouertani]]></name>
@@ -28,7 +28,7 @@
 <p>Resticle is a unit of deployment dedicated to Rest. It provides a new method (“handles”) which can be used by Vert.x to start Rest services. “handles” returns a sequence of rest handlers :</p>
 
 <ul>
-    <li>RestHandler : Action => Response</li>
+<li>RestHandler : Action => Response</li>
 <li><ul>Action :
 <li>GET(pattern : String)</li>
 <li>POST (pattern : String)</li>
@@ -51,7 +51,7 @@
 
 <p>In Hello World snippet, let us publish a static GET service :</p>
 
-<p>GET : /hello → code : 200 , body : world
+<p><li>GET : /hello → code : 200 , body : world</li>
 Scala</p>
 
 <p>``` scala   SampleResticle.scala  <br/>
@@ -89,8 +89,8 @@ public class SampleResticle extends Verticle {</p>
 
 <p>Using Resticle we can chain handlers quit easily. The following snippets create static GET and DELETE services :</p>
 
-<p>GET : /hello → code : 200 , body : world
-DELETE : /posts → code : 401 , body : Not allowed user
+<p><li>GET : /hello → code : 200 , body : world</li>
+<li>DELETE : /posts → code : 401 , body : Not allowed user</li>
 Scala</p>
 
 <p>``` scala   SampleResticle.scala              <br/>
@@ -136,9 +136,9 @@ public class SampleResticle extends Verticle {</p>
 
 <p>Vert.x pattern matching lets you extract values from the path and use them as parameters in the request.</p>
 
-<p>GET : /hello → code : 200 , body : world
-DELETE : /posts → code : 401 , body : Not allowed user
-POST : /:blogname → code : 200 , body : post {blogname} received !</p>
+<p><li>GET : /hello → code : 200 , body : world</li>
+<li>DELETE : /posts → code : 401 , body : Not allowed user</li>
+<li>POST : /:blogname → code : 200 , body : post {blogname} received !</li></p>
 
 <p>Scala : ( Using String interpolation)</p>
 
@@ -304,7 +304,7 @@ public String getContent() {
 </code></pre>
 
 <p>  }
-  ```</p>
+```</p>
 
 <h1>Conclusion</h1>
 

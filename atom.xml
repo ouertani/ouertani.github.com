@@ -4,7 +4,7 @@
   <title><![CDATA[Ouertani Blog]]></title>
   <link href="http://ouertani.github.com/atom.xml" rel="self"/>
   <link href="http://ouertani.github.com/"/>
-  <updated>2013-03-31T00:57:30+01:00</updated>
+  <updated>2013-03-31T01:01:52+01:00</updated>
   <id>http://ouertani.github.com/</id>
   <author>
     <name><![CDATA[Ouertani]]></name>
@@ -28,7 +28,7 @@
 <p>Resticle is a unit of deployment dedicated to Rest. It provides a new method (“handles”) which can be used by Vert.x to start Rest services. “handles” returns a sequence of rest handlers :</p>
 
 <ul>
-    <li>RestHandler : Action => Response</li>
+<li>RestHandler : Action => Response</li>
 <li><ul>Action :
 <li>GET(pattern : String)</li>
 <li>POST (pattern : String)</li>
@@ -51,7 +51,7 @@
 
 <p>In Hello World snippet, let us publish a static GET service :</p>
 
-<p>GET : /hello → code : 200 , body : world
+<p><li>GET : /hello → code : 200 , body : world</li>
 Scala</p>
 
 <figure class='code'><figcaption><span>SampleResticle.scala   </span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
@@ -105,8 +105,8 @@ Scala</p>
 
 <p>Using Resticle we can chain handlers quit easily. The following snippets create static GET and DELETE services :</p>
 
-<p>GET : /hello → code : 200 , body : world
-DELETE : /posts → code : 401 , body : Not allowed user
+<p><li>GET : /hello → code : 200 , body : world</li>
+<li>DELETE : /posts → code : 401 , body : Not allowed user</li>
 Scala</p>
 
 <figure class='code'><figcaption><span>SampleResticle.scala               </span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
@@ -174,9 +174,9 @@ Scala</p>
 
 <p>Vert.x pattern matching lets you extract values from the path and use them as parameters in the request.</p>
 
-<p>GET : /hello → code : 200 , body : world
-DELETE : /posts → code : 401 , body : Not allowed user
-POST : /:blogname → code : 200 , body : post {blogname} received !</p>
+<p><li>GET : /hello → code : 200 , body : world</li>
+<li>DELETE : /posts → code : 401 , body : Not allowed user</li>
+<li>POST : /:blogname → code : 200 , body : post {blogname} received !</li></p>
 
 <p>Scala : ( Using String interpolation)</p>
 
@@ -404,28 +404,44 @@ Scala</p>
 
 <p>Java Blog</p>
 
-<p>&#8220;` java    Blog.java             <br/>
-public class Blog {</p>
+<figure class='code'><figcaption><span>Blog.java              </span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Blog</span> <span class="o">{</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">private</span> <span class="kd">final</span>  <span class="n">String</span> <span class="n">title</span><span class="o">;</span>
+</span><span class='line'>    <span class="kd">private</span> <span class="kd">final</span> <span class="n">String</span> <span class="n">content</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">public</span> <span class="nf">Blog</span><span class="o">(</span><span class="n">String</span> <span class="n">title</span><span class="o">,</span> <span class="n">String</span> <span class="n">content</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>        <span class="k">this</span><span class="o">.</span><span class="na">title</span> <span class="o">=</span> <span class="n">title</span><span class="o">;</span>
+</span><span class='line'>        <span class="k">this</span><span class="o">.</span><span class="na">content</span> <span class="o">=</span> <span class="n">content</span><span class="o">;</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">public</span> <span class="n">String</span> <span class="nf">getTitle</span><span class="o">()</span> <span class="o">{</span>
+</span><span class='line'>        <span class="k">return</span> <span class="n">title</span><span class="o">;</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">public</span> <span class="n">String</span> <span class="nf">getContent</span><span class="o">()</span> <span class="o">{</span>
+</span><span class='line'>        <span class="k">return</span> <span class="n">content</span><span class="o">;</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>  <span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
 
-<pre><code>private final  String title;
-private final String content;
-
-public Blog(String title, String content) {
-    this.title = title;
-    this.content = content;
-}
-
-public String getTitle() {
-    return title;
-}
-
-public String getContent() {
-    return content;
-}
-</code></pre>
-
-<p>  }
-  &#8220;`</p>
 
 <h1>Conclusion</h1>
 
