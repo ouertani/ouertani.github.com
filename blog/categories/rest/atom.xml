@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Rest | Ouertani Blog]]></title>
   <link href="http://ouertani.github.com/blog/categories/rest/atom.xml" rel="self"/>
   <link href="http://ouertani.github.com/"/>
-  <updated>2013-03-31T01:23:06+01:00</updated>
+  <updated>2013-03-31T01:24:41+01:00</updated>
   <id>http://ouertani.github.com/</id>
   <author>
     <name><![CDATA[Ouertani]]></name>
@@ -15,9 +15,9 @@
   
   <entry>
     <title type="html"><![CDATA[Rest with Scala and Vert.x]]></title>
-    <link href="http://ouertani.github.com/blog/2013/03/31/rest-with-scala-and-vert-dot-x/"/>
-    <updated>2013-03-31T00:24:00+01:00</updated>
-    <id>http://ouertani.github.com/blog/2013/03/31/rest-with-scala-and-vert-dot-x</id>
+    <link href="http://ouertani.github.com/blog/2013/03/09/rest-with-scala-and-vert-dot-x/"/>
+    <updated>2013-03-09T00:24:00+01:00</updated>
+    <id>http://ouertani.github.com/blog/2013/03/09/rest-with-scala-and-vert-dot-x</id>
     <content type="html"><![CDATA[<p>A previous post introduced some features of using Scala with Vert.x. This post covers how to publish Rest web services in an elegant and simple fashion.</p>
 
 <p>As in the previous post, Examples in Java and Scala are presented, source code been hosted on GitHub as part of lang-scala https://github.com/ouertani/vert.x/tree/master/vertx-lang/vertx-lang-scala</p>
