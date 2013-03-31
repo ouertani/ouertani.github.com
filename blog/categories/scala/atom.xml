@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Scala | Ouertani Blog]]></title>
   <link href="http://ouertani.github.com/blog/categories/scala/atom.xml" rel="self"/>
   <link href="http://ouertani.github.com/"/>
-  <updated>2013-03-31T19:28:41+02:00</updated>
+  <updated>2013-03-31T19:31:02+02:00</updated>
   <id>http://ouertani.github.com/</id>
   <author>
     <name><![CDATA[Ouertani]]></name>
@@ -677,9 +677,7 @@ Short and concise !</p>
 <p>Setup <a href="http://slick.typesafe.com/">Slick</a> in Play 2</p>
 
 <p>If you don't already have a Play 2 project, then create a new one after installing Play 2:
-<code>
-play new mySlickApp
-</code>
+<blockquote><p>play new mySlickApp</p></blockquote>
 Choose Scala as the language for the project.</p>
 
 <p>The Slick library needs to be added to the Play project.</p>
