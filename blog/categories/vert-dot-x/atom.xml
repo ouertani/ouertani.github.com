@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Vert.x | Ouertani Blog]]></title>
   <link href="http://ouertani.github.com/blog/categories/vert-dot-x/atom.xml" rel="self"/>
   <link href="http://ouertani.github.com/"/>
-  <updated>2013-03-31T18:54:14+02:00</updated>
+  <updated>2013-03-31T18:57:16+02:00</updated>
   <id>http://ouertani.github.com/</id>
   <author>
     <name><![CDATA[Ouertani]]></name>
@@ -369,7 +369,7 @@ public String getContent() {
 <h4>Java</h4>
 
 
-<p>``` java
+<p>``` java SampleWebSocket.java
 import org.vertx.java.core.Handler;
 import org.vertx.java.core.buffer.Buffer;
 import org.vertx.java.core.http.HttpServerRequest;
@@ -406,7 +406,7 @@ import org.vertx.java.deploy.Verticle;</p>
 <h4>Scala</h4>
 
 
-<p>``` scala
+<p>``` scala SampleWebSocket.scala
 import org.vertx.java.core.buffer.Buffer;
 import org.vertx.java.core.http.HttpServerRequest;
 import org.vertx.java.core.http.ServerWebSocket;
@@ -437,7 +437,7 @@ import org.vertx.scala.core._</p>
 <h4>Java</h4>
 
 
-<p>``` java
+<p>``` java SampleHttpWebServer.java
 import org.vertx.java.core.Handler;
 import org.vertx.java.core.http.HttpServer;
 import org.vertx.java.core.http.HttpServerRequest;
@@ -463,7 +463,7 @@ import org.vertx.java.deploy.Verticle;</p>
 <h4>Scala</h4>
 
 
-<p>``` scala
+<p>``` scala SampleWebServer.scala
 import org.vertx.java.core.http. { HttpServerRequest => JHttpServerRequest}
 import org.vertx.scala.deploy.Verticle
 import org.vertx.scala.core._</p>
@@ -486,7 +486,7 @@ import org.vertx.scala.core._</p>
 <h4>Java</h4>
 
 
-<p>``` java
+<p>``` java SampleHttpClient.java
 import org.vertx.java.core.Handler;
 import org.vertx.java.core.http.HttpClient;
 import org.vertx.java.core.http.HttpClientRequest;
@@ -517,7 +517,7 @@ public void start() throws Exception {
 <h4>Scala</h4>
 
 
-<p>``` scala
+<p>``` scala SampleWebClient.scala
 import org.vertx.scala.deploy.Verticle
 import org.vertx.scala.core._</p>
 
@@ -535,7 +535,7 @@ import org.vertx.scala.core._</p>
 <h4>Java</h4>
 
 
-<p>``` java
+<p>``` java SampleEventBus.java
 import org.vertx.java.deploy.Verticle;
 import org.vertx.java.core.eventbus.EventBus;</p>
 
@@ -555,7 +555,7 @@ import org.vertx.java.core.eventbus.EventBus;</p>
 <h4>Scala</h4>
 
 
-<p><code>scala
+<p><code>scala SampleEventBus.scala
 import org.vertx.scala.deploy.Verticle
 import org.vertx.scala.core._
 class SampleEventBus extends Verticle ( x =&gt; {
