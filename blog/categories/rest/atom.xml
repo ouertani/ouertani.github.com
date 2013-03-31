@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Rest | Ouertani Blog]]></title>
   <link href="http://ouertani.github.com/blog/categories/rest/atom.xml" rel="self"/>
   <link href="http://ouertani.github.com/"/>
-  <updated>2013-03-31T01:20:56+01:00</updated>
+  <updated>2013-03-31T01:23:06+01:00</updated>
   <id>http://ouertani.github.com/</id>
   <author>
     <name><![CDATA[Ouertani]]></name>
@@ -70,9 +70,13 @@ class SampleResticle extends Resticle
 </code></pre>
 
 <p>}
-<code>
-Java    
-</code> java    SampleResticle.java       <br/>
+```</p>
+
+<h4>Java</h4>
+
+
+<p> <br/>
+``` java    SampleResticle.java       <br/>
 public class SampleResticle extends Verticle {</p>
 
 <pre><code>public void start() {

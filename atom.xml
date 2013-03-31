@@ -4,7 +4,7 @@
   <title><![CDATA[Ouertani Blog]]></title>
   <link href="http://ouertani.github.com/atom.xml" rel="self"/>
   <link href="http://ouertani.github.com/"/>
-  <updated>2013-03-31T01:20:56+01:00</updated>
+  <updated>2013-03-31T01:23:06+01:00</updated>
   <id>http://ouertani.github.com/</id>
   <author>
     <name><![CDATA[Ouertani]]></name>
@@ -76,7 +76,10 @@
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>Java</p>
+<h4>Java</h4>
+
+
+<p></p>
 
 <figure class='code'><figcaption><span>SampleResticle.java            </span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
