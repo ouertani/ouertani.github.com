@@ -141,43 +141,6 @@
 <a href="https://docs.google.com/open?id=0B3c0mmqYdPkobDdhV3ZWbnl2ek0"><img class="center" src="/images/oracle_certprof_clr_rgb.jpg" width="350" height="350" title="score 100%" alt="images"></a>
 <a href="https://docs.google.com/file/d/0B3c0mmqYdPkoR1NLMnJwWFB4dmc/preview"><img class="center" src="/images/spring-certification.gif" width="350" height="350" title="score 94%" alt="images"></a>
 
-
-<section>
-  <h1>About Me</h1>
-  <div id="twitter-profile" style="margin-top:0.5em;">
-    <p>
-      <strong>Ouertani</strong> 
-      (<a href="http://twitter.com/ouertani">@ouertani</a>)
-    </p>
-    <p></p>
-  </div>
-  <script type="text/javascript">
-    $.domReady(function(){
-        var container = $('#twitter-profile'),
-            user = "ouertani";
-        
-        function parseTwLinks(s) {
-          var twUrl = "http://www.twitter.com/"
-          s = s.replace(/ (@([\w]+))/g, function(match, p1, p2) {
-              return " <a href='"+twUrl+p2+"'>"+p1+"</a>"
-          }).replace(/ (#([\w]+))/g, function(match, p1, p2) {
-              return " <a href='"+twUrl+"#!/search?q=%23"+p2+"'>"+p1+"</a>"
-          })
-          return s
-        }
-
-        $.ajax({
-            url: "http://api.twitter.com/1/users/show.json?include_entities=false&screen_name="+user+"&callback=?"
-          , type: 'jsonp'
-          , error: function (err) { $('#twitter-profile').addClass('error');  }
-          , success: function(data) {
-              container.html('<img class="left" src="http://api.twitter.com/1/users/profile_image/'+user+'.json?size=bigger" alt="@'+user+'"><p><strong>'+data.name+'</strong> (<a href="http://twitter.com/'+user+'">@'+user+'</a>)<br/>'+data.location+'</p><p>'+parseTwLinks(data.description)+'</p>');
-            }
-        })
-      });
-  </script>
-</section>
-
 <section>
   <h1>Tag Cloud</h1>
     <span id="tag-cloud"><a href='/blog/categories/jca' style='font-size: 115.0%'>JCA(1)</a> <a href='/blog/categories/jee' style='font-size: 115.0%'>JEE(1)</a> <a href='/blog/categories/play' style='font-size: 130.0%'>Play(2)</a> <a href='/blog/categories/rest' style='font-size: 115.0%'>Rest(1)</a> <a href='/blog/categories/rpc' style='font-size: 115.0%'>RPC(1)</a> <a href='/blog/categories/scala' style='font-size: 160.0%'>Scala(4)</a> <a href='/blog/categories/scala' style='font-size: 115.0%'>SCALA(1)</a> <a href='/blog/categories/ucip' style='font-size: 115.0%'>UCIP(1)</a> <a href='/blog/categories/vert-x' style='font-size: 130.0%'>Vert.x(2)</a> <a href='/blog/categories/xml' style='font-size: 115.0%'>XML(1)</a> </span>
