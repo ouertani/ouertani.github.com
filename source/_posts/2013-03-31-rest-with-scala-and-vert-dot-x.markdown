@@ -4,6 +4,9 @@ title: "Rest with Scala and Vert.x"
 date: 2013-03-09 00:24
 comments: true
 categories: [Scala, Vert.x, Rest]
+
+keywords: Rest, Scala, Vert.x, String interpolation, Resticle, Web Service
+description: Rest Web Service with Vert.x using Scala
 ---
 
 A previous post introduced some features of using Scala with <a href="http://vertx.io/">Vert.x</a>. This post covers how to publish Rest web services in an elegant and simple fashion.
