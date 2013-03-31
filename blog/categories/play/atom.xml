@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: Play | Ouertani Blog]]></title>
+  <link href="http://ouertani.github.com/blog/categories/play/atom.xml" rel="self"/>
+  <link href="http://ouertani.github.com/"/>
+  <updated>2013-03-31T19:11:52+02:00</updated>
+  <id>http://ouertani.github.com/</id>
+  <author>
+    <name><![CDATA[Ouertani]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Getting Started with Play 2.1]]></title>
+    <link href="http://ouertani.github.com/blog/2012/10/18/getting-started-with-play-2-dot-1/"/>
+    <updated>2012-10-18T19:00:00+02:00</updated>
+    <id>http://ouertani.github.com/blog/2012/10/18/getting-started-with-play-2-dot-1</id>
+    <content type="html"><![CDATA[<p>Play Roadmap has been <a href="https://docs.google.com/document/d/1OEt6gZ3a-daSkNXqXGAM4jBs5LtuDkLZIzsWN9aeM1g/preview?sle=true">published</a>. The major feature will be the support of <a href="http://www.scala-lang.org/">scala 2.10</a> version.</p>
+
+<p>By using <a href="http://www.playframework.org/">Play 2.1</a> we can start profiting with <a href="https://docs.google.com/document/d/1NdxNxZYodPA-c4MLr33KzwzKFkzm9iW9POexT9PkJsU/edit">String interpolation</a></p>
+
+<h2>STRING INTERPOLATION: QUICK EXAMPLE ? </h2>
+
+
+<p>``` scala
+val n = 20</p>
+
+<p>"Bob is "+n+" years old"
+<code>
+can be replaced by :
+</code> scala
+s"Bob is $n years old"
+```
+The benefit of using String interpolation are :</p>
+
+<p><li>one or two characters in less</li>
+<li>compile time check</li>
+<li>compile time transformation ( thanks to <a href="http://scalamacros.org/">macros</a>)</li></p>
+
+<h2>PLAY 2.1</h2>
+
+
+<p>On Play framework an sample action can be :
+<code>scala
+def index = Action {
+  val version = 2.10
+  Ok("hello scala "+ version)
+}
+</code>
+And by String interpolation we can rewrite it as :
+<code>scala
+def index = Action {
+  val version = 2.10
+  Ok(s"hello scala $version")
+}
+</code></p>
+
+<h2>BETTER ! </h2>
+
+
+<p>Let's do better and remove parenthesizes and 's' characters</p>
+
+<p>First create an <a href="http://docs.scala-lang.org/sips/pending/implicit-classes.html">implicit class</a> (scala 2.10 features) to wrap a call to Ok object and define an ok object :
+``` scala
+implicit class HTTPInterpolation(s: StringContext) {
+   object ok {</p>
+
+<pre><code> def apply(exprs: Any*) = {
+   Ok(s.s(exprs: _*))
+ }
+</code></pre>
+
+<p>   }
+ }
+ <code>
+Now we can use it as
+</code> scala
+def index = Action {</p>
+
+<pre><code>val version = 2.10
+ok"hello scala $version"
+</code></pre>
+
+<p>}
+```
+Short and concise !</p>
+
+<h2>REFERENCES :</h2>
+
+
+<p><li>Play RaodMap: <a href="https://docs.google.com/document/d/1OEt6gZ3a-daSkNXqXGAM4jBs5LtuDkLZIzsWN9aeM1g/preview?sle=true.">https://docs.google.com/document/d/1OEt6gZ3a-daSkNXqXGAM4jBs5LtuDkLZIzsWN9aeM1g/preview?sle=true.</a></li>
+<li>String interpolation : <a href="https://docs.google.com/document/d/1NdxNxZYodPA-c4MLr33KzwzKFkzm9iW9POexT9PkJsU/edit">https://docs.google.com/document/d/1NdxNxZYodPA-c4MLr33KzwzKFkzm9iW9POexT9PkJsU/edit</a></li>
+<li>Implicit Class : <a href="http://docs.scala-lang.org/sips/pending/implicit-classes.html">http://docs.scala-lang.org/sips/pending/implicit-classes.html</a>
+<li>Macro : <a href="http://scalamacros.org/">http://scalamacros.org/</a></li>
+<li>String interpolation with concise samples : <a href="http://www.blog.project13.pl/index.php/coding/1540/scala-2-10-0-hello-string-interpolation/">http://www.blog.project13.pl/index.php/coding/1540/scala-2-10-0-hello-string-interpolation/</a></li></p>
+]]></content>
+  </entry>
+  
+</feed>

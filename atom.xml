@@ -4,7 +4,7 @@
   <title><![CDATA[Ouertani Blog]]></title>
   <link href="http://ouertani.github.com/atom.xml" rel="self"/>
   <link href="http://ouertani.github.com/"/>
-  <updated>2013-03-31T18:57:16+02:00</updated>
+  <updated>2013-03-31T19:11:52+02:00</updated>
   <id>http://ouertani.github.com/</id>
   <author>
     <name><![CDATA[Ouertani]]></name>
@@ -828,6 +828,121 @@ The java equivalent has been relocated to the end of the document due to its ver
 <p>Stay tuned, a subsequent post will show you more about Vert.x with Scala.</p>
 
 <p>source : http://blog.zenika.com/index.php?post/2013/02/11/fun-with-scala-and-vert-x</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Getting Started with Play 2.1]]></title>
+    <link href="http://ouertani.github.com/blog/2012/10/18/getting-started-with-play-2-dot-1/"/>
+    <updated>2012-10-18T19:00:00+02:00</updated>
+    <id>http://ouertani.github.com/blog/2012/10/18/getting-started-with-play-2-dot-1</id>
+    <content type="html"><![CDATA[<p>Play Roadmap has been <a href="https://docs.google.com/document/d/1OEt6gZ3a-daSkNXqXGAM4jBs5LtuDkLZIzsWN9aeM1g/preview?sle=true">published</a>. The major feature will be the support of <a href="http://www.scala-lang.org/">scala 2.10</a> version.</p>
+
+<p>By using <a href="http://www.playframework.org/">Play 2.1</a> we can start profiting with <a href="https://docs.google.com/document/d/1NdxNxZYodPA-c4MLr33KzwzKFkzm9iW9POexT9PkJsU/edit">String interpolation</a></p>
+
+<h2>STRING INTERPOLATION: QUICK EXAMPLE ? </h2>
+
+
+
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='scala'><span class='line'><span class="k">val</span> <span class="n">n</span> <span class="k">=</span> <span class="mi">20</span>
+</span><span class='line'>
+</span><span class='line'><span class="s">&quot;Bob is &quot;</span><span class="o">+</span><span class="n">n</span><span class="o">+</span><span class="s">&quot; years old&quot;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>can be replaced by :</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='scala'><span class='line'><span class="n">s</span><span class="s">&quot;Bob is $n years old&quot;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>The benefit of using String interpolation are :</p>
+
+<p><li>one or two characters in less</li>
+<li>compile time check</li>
+<li>compile time transformation ( thanks to <a href="http://scalamacros.org/">macros</a>)</li></p>
+
+<h2>PLAY 2.1</h2>
+
+
+<p>On Play framework an sample action can be :</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='scala'><span class='line'><span class="k">def</span> <span class="n">index</span> <span class="k">=</span> <span class="nc">Action</span> <span class="o">{</span>
+</span><span class='line'>  <span class="k">val</span> <span class="n">version</span> <span class="k">=</span> <span class="mf">2.10</span>
+</span><span class='line'>  <span class="nc">Ok</span><span class="o">(</span><span class="s">&quot;hello scala &quot;</span><span class="o">+</span> <span class="n">version</span><span class="o">)</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>And by String interpolation we can rewrite it as :</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='scala'><span class='line'><span class="k">def</span> <span class="n">index</span> <span class="k">=</span> <span class="nc">Action</span> <span class="o">{</span>
+</span><span class='line'>  <span class="k">val</span> <span class="n">version</span> <span class="k">=</span> <span class="mf">2.10</span>
+</span><span class='line'>  <span class="nc">Ok</span><span class="o">(</span><span class="n">s</span><span class="s">&quot;hello scala $version&quot;</span><span class="o">)</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>BETTER ! </h2>
+
+
+<p>Let&#8217;s do better and remove parenthesizes and &#8216;s&#8217; characters</p>
+
+<p>First create an <a href="http://docs.scala-lang.org/sips/pending/implicit-classes.html">implicit class</a> (scala 2.10 features) to wrap a call to Ok object and define an ok object :</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+</pre></td><td class='code'><pre><code class='scala'><span class='line'><span class="k">implicit</span> <span class="k">class</span> <span class="nc">HTTPInterpolation</span><span class="o">(</span><span class="n">s</span><span class="k">:</span> <span class="kt">StringContext</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>   <span class="k">object</span> <span class="nc">ok</span> <span class="o">{</span>
+</span><span class='line'>     <span class="k">def</span> <span class="n">apply</span><span class="o">(</span><span class="n">exprs</span><span class="k">:</span> <span class="kt">Any*</span><span class="o">)</span> <span class="k">=</span> <span class="o">{</span>
+</span><span class='line'>       <span class="nc">Ok</span><span class="o">(</span><span class="n">s</span><span class="o">.</span><span class="n">s</span><span class="o">(</span><span class="n">exprs</span><span class="k">:</span> <span class="k">_</span><span class="kt">*</span><span class="o">))</span>
+</span><span class='line'>     <span class="o">}</span>
+</span><span class='line'>   <span class="o">}</span>
+</span><span class='line'> <span class="o">}</span>
+</span><span class='line'> <span class="err">```</span>
+</span><span class='line'><span class="nc">Now</span> <span class="n">we</span> <span class="n">can</span> <span class="n">use</span> <span class="n">it</span> <span class="n">as</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p> scala
+def index = Action {</p>
+
+<pre><code>val version = 2.10
+ok"hello scala $version"
+</code></pre>
+
+<p>}
+&#8220;`
+Short and concise !</p>
+
+<h2>REFERENCES :</h2>
+
+
+<p><li>Play RaodMap: <a href="https://docs.google.com/document/d/1OEt6gZ3a-daSkNXqXGAM4jBs5LtuDkLZIzsWN9aeM1g/preview?sle=true.">https://docs.google.com/document/d/1OEt6gZ3a-daSkNXqXGAM4jBs5LtuDkLZIzsWN9aeM1g/preview?sle=true.</a></li>
+<li>String interpolation : <a href="https://docs.google.com/document/d/1NdxNxZYodPA-c4MLr33KzwzKFkzm9iW9POexT9PkJsU/edit">https://docs.google.com/document/d/1NdxNxZYodPA-c4MLr33KzwzKFkzm9iW9POexT9PkJsU/edit</a></li>
+<li>Implicit Class : <a href="http://docs.scala-lang.org/sips/pending/implicit-classes.html">http://docs.scala-lang.org/sips/pending/implicit-classes.html</a>
+<li>Macro : <a href="http://scalamacros.org/">http://scalamacros.org/</a></li>
+<li>String interpolation with concise samples : <a href="http://www.blog.project13.pl/index.php/coding/1540/scala-2-10-0-hello-string-interpolation/">http://www.blog.project13.pl/index.php/coding/1540/scala-2-10-0-hello-string-interpolation/</a></li></p>
 ]]></content>
   </entry>
   
