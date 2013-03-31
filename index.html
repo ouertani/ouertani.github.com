@@ -139,7 +139,23 @@
     
   </ul>
 </section>
-Included file &#8216;asides/twitter.html&#8217; not found in _includes directory
+
+<section>
+  <h1>Latest Tweets</h1>
+  <ul id="tweets">
+    <li class="loading">Status updating&#8230;</li>
+  </ul>
+  <script type="text/javascript">
+    $.domReady(function(){
+      getTwitterFeed("ouertani", 4, false);
+    });
+  </script>
+  <script src="/javascripts/twitter.js" type="text/javascript"> </script>
+  
+    <a href="http://twitter.com/ouertani" class="twitter-follow-button" data-show-count="true">Follow @ouertani</a>
+  
+</section>
+
 
 
 
