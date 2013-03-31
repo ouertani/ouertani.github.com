@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Scala | Ouertani Blog]]></title>
   <link href="http://ouertani.github.com/blog/categories/scala/atom.xml" rel="self"/>
   <link href="http://ouertani.github.com/"/>
-  <updated>2013-03-31T19:14:23+02:00</updated>
+  <updated>2013-03-31T19:15:08+02:00</updated>
   <id>http://ouertani.github.com/</id>
   <author>
     <name><![CDATA[Ouertani]]></name>
@@ -639,7 +639,7 @@ implicit class HTTPInterpolation(s: StringContext) {
 
 <p>   }
  }
- <code>
+<code>
 Now we can use it as
 </code> scala
 def index = Action {</p>

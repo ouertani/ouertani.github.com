@@ -178,8 +178,6 @@
 <span class='line-number'>5</span>
 <span class='line-number'>6</span>
 <span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
 </pre></td><td class='code'><pre><code class='scala'><span class='line'><span class="k">implicit</span> <span class="k">class</span> <span class="nc">HTTPInterpolation</span><span class="o">(</span><span class="n">s</span><span class="k">:</span> <span class="kt">StringContext</span><span class="o">)</span> <span class="o">{</span>
 </span><span class='line'>   <span class="k">object</span> <span class="nc">ok</span> <span class="o">{</span>
 </span><span class='line'>     <span class="k">def</span> <span class="n">apply</span><span class="o">(</span><span class="n">exprs</span><span class="k">:</span> <span class="kt">Any*</span><span class="o">)</span> <span class="k">=</span> <span class="o">{</span>
@@ -187,21 +185,23 @@
 </span><span class='line'>     <span class="o">}</span>
 </span><span class='line'>   <span class="o">}</span>
 </span><span class='line'> <span class="o">}</span>
-</span><span class='line'> <span class="err">```</span>
-</span><span class='line'><span class="nc">Now</span> <span class="n">we</span> <span class="n">can</span> <span class="n">use</span> <span class="n">it</span> <span class="n">as</span>
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p> scala
-def index = Action {</p>
+<p>Now we can use it as</p>
 
-<pre><code>val version = 2.10
-ok"hello scala $version"
-</code></pre>
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='scala'><span class='line'><span class="k">def</span> <span class="n">index</span> <span class="k">=</span> <span class="nc">Action</span> <span class="o">{</span>
+</span><span class='line'>    <span class="k">val</span> <span class="n">version</span> <span class="k">=</span> <span class="mf">2.10</span>
+</span><span class='line'>    <span class="n">ok</span><span class="s">&quot;hello scala $version&quot;</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
 
-<p>}
-&#8220;`
-Short and concise !</p>
+
+<p>Short and concise !</p>
 
 <h2>REFERENCES :</h2>
 
