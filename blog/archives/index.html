@@ -132,12 +132,25 @@ Mar 09 2013 posted in Rest, Scala, Vert.x Recent Posts Rest with Scala and Vert.
   <ul id="tweets">
     <li class="loading">Status updating...</li>
   </ul>
-  <script type="text/javascript">
-    $.domReady(function(){
-      getTwitterFeed("ouertani", 4, false);
-    });
+  
+  <script>
+    (function(w, d, s) {
+      function go(){
+        var js, fjs = d.getElementsByTagName(s)[0], load = function(url, id) {
+        if (d.getElementById(id)) {return;}
+        js = d.createElement(s); js.src = url; js.id = id; js.async = true;
+        $(js).load(function(){
+            getTwitterFeed("ouertani", 4, false);
+        });
+        fjs.parentNode.insertBefore(js, fjs);
+      };
+        load('/javascripts/twitter.js', 'recentTweets');
+      }
+      if (w.addEventListener) { w.addEventListener("load", go, false); }
+      else if (w.attachEvent) { w.attachEvent("onload",go); }
+    }(window, document, 'script'));
   </script>
-  <script src="/javascripts/twitter.js" type="text/javascript"> </script>
+
   
     <a href="http://twitter.com/ouertani" class="twitter-follow-button" data-show-count="true">Follow @ouertani</a>
   
