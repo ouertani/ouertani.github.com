@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Vert.x | Ouertani Blog]]></title>
   <link href="http://ouertani.github.com/blog/categories/vert-dot-x/atom.xml" rel="self"/>
   <link href="http://ouertani.github.com/"/>
-  <updated>2013-03-31T01:24:41+01:00</updated>
+  <updated>2013-03-31T01:27:55+01:00</updated>
   <id>http://ouertani.github.com/</id>
   <author>
     <name><![CDATA[Ouertani]]></name>
@@ -58,7 +58,7 @@
 
 <p><li>GET : /hello → code : 200 , body : world</li></p>
 
-<h3>Scala</h3>
+<h4>Scala</h4>
 
 
 <p>``` scala   SampleResticle.scala  <br/>
@@ -101,8 +101,10 @@ public class SampleResticle extends Verticle {</p>
 <p>Using Resticle we can chain handlers quit easily. The following snippets create static GET and DELETE services :</p>
 
 <p><li>GET : /hello → code : 200 , body : world</li>
-<li>DELETE : /posts → code : 401 , body : Not allowed user</li>
-Scala</p>
+<li>DELETE : /posts → code : 401 , body : Not allowed user</li></p>
+
+<h4>Scala</h4>
+
 
 <p>``` scala   SampleResticle.scala              <br/>
 class SampleResticle extends Resticle
@@ -114,8 +116,10 @@ class SampleResticle extends Resticle
 </code></pre>
 
 <p>}
-```
-java</p>
+```</p>
+
+<h4>java</h4>
+
 
 <p>``` java    SampleResticle.java           <br/>
 public class SampleResticle extends Verticle {</p>
@@ -151,7 +155,8 @@ public class SampleResticle extends Verticle {</p>
 <li>DELETE : /posts → code : 401 , body : Not allowed user</li>
 <li>POST : /:blogname → code : 200 , body : post {blogname} received !</li></p>
 
-<p>Scala : ( Using String interpolation)</p>
+<h4>Scala : ( Using String interpolation)</h4>
+
 
 <p>``` scala   SampleResticle.scala              <br/>
 class SampleResticle extends Resticle
@@ -164,8 +169,10 @@ class SampleResticle extends Resticle
 </code></pre>
 
 <p>}
-```
-Java</p>
+```</p>
+
+<h4>Java</h4>
+
 
 <p>``` java    SampleResticle.java           <br/>
 public class SampleResticle extends Verticle {</p>
@@ -211,13 +218,17 @@ The java equivalent has been relocated to the end of the document due to its ver
 
 <p>Publishing an object using Resticle is simple and transparent due to implicit convertor : T => Buffer.</p>
 
-<p>Scala ( Type Class)
-<code>scala   Blog.scala  
+<h4>Scala ( Type Class)</h4>
+
+
+<p><code>scala   Blog.scala  
 object Blog {
   implicit def toBuffer(blog : Blog):Buffer = JsonObject.withString("title" -&gt; blog.title).withString("content" -&gt; blog.content)
 }
-</code>
-Java ( with explicit convertor )</p>
+</code></p>
+
+<h4>Java ( with explicit convertor )</h4>
+
 
 <p>``` java    Convertor.java            <br/>
 public class Convertor {</p>
@@ -232,8 +243,10 @@ public class Convertor {</p>
 <li>GET : /hello → code : 200 , body : world</li>
 <li>DELETE : /posts → code : 401 , body : Not allowed user</li>
 <li>POST : /:blogname → code : 200 , body : post {blogname} received !</li>
-<li>GET : /:id → code : 200 , body : {"title":"rest","content":"scala &amp; vertx"}</li>
-Scala</p>
+<li>GET : /:id → code : 200 , body : {"title":"rest","content":"scala &amp; vertx"}</li></p>
+
+<h4>Scala</h4>
+
 
 <p>``` scala   SampleResticle.scala              <br/>
 class SampleResticle extends Resticle
@@ -247,8 +260,10 @@ class SampleResticle extends Resticle
 </code></pre>
 
 <p>}
-```
-Java</p>
+```</p>
+
+<h4>Java</h4>
+
 
 <p>``` java    SampleResticle.java           <br/>
 public class SampleResticle extends Verticle {</p>

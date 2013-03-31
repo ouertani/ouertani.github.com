@@ -143,7 +143,7 @@
 
 <p><li>GET : /hello → code : 200 , body : world</li></p>
 
-<h3>Scala</h3>
+<h4>Scala</h4>
 
 
 
@@ -203,8 +203,12 @@
 <p>Using Resticle we can chain handlers quit easily. The following snippets create static GET and DELETE services :</p>
 
 <p><li>GET : /hello → code : 200 , body : world</li>
-<li>DELETE : /posts → code : 401 , body : Not allowed user</li>
-Scala</p>
+<li>DELETE : /posts → code : 401 , body : Not allowed user</li></p>
+
+<h4>Scala</h4>
+
+
+
 
 <figure class='code'><figcaption><span>SampleResticle.scala               </span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -221,7 +225,10 @@ Scala</p>
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>java</p>
+<h4>java</h4>
+
+
+
 
 <figure class='code'><figcaption><span>SampleResticle.java                </span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -275,7 +282,10 @@ Scala</p>
 <li>DELETE : /posts → code : 401 , body : Not allowed user</li>
 <li>POST : /:blogname → code : 200 , body : post {blogname} received !</li></p>
 
-<p>Scala : ( Using String interpolation)</p>
+<h4>Scala : ( Using String interpolation)</h4>
+
+
+
 
 <figure class='code'><figcaption><span>SampleResticle.scala               </span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -294,7 +304,10 @@ Scala</p>
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>Java</p>
+<h4>Java</h4>
+
+
+
 
 <figure class='code'><figcaption><span>SampleResticle.java                </span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -367,7 +380,8 @@ The java equivalent has been relocated to the end of the document due to its ver
 
 <p>Publishing an object using Resticle is simple and transparent due to implicit convertor : T => Buffer.</p>
 
-<p>Scala ( Type Class)</p>
+<h4>Scala ( Type Class)</h4>
+
 
 <figure class='code'><figcaption><span>Blog.scala </span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -378,7 +392,10 @@ The java equivalent has been relocated to the end of the document due to its ver
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>Java ( with explicit convertor )</p>
+<h4>Java ( with explicit convertor )</h4>
+
+
+
 
 <figure class='code'><figcaption><span>Convertor.java             </span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -396,8 +413,12 @@ The java equivalent has been relocated to the end of the document due to its ver
 <p><li>GET : /hello → code : 200 , body : world</li>
 <li>DELETE : /posts → code : 401 , body : Not allowed user</li>
 <li>POST : /:blogname → code : 200 , body : post {blogname} received !</li>
-<li>GET : /:id → code : 200 , body : {&#8220;title&#8221;:&#8221;rest&#8221;,&#8221;content&#8221;:&#8221;scala &amp; vertx&#8221;}</li>
-Scala</p>
+<li>GET : /:id → code : 200 , body : {&#8220;title&#8221;:&#8221;rest&#8221;,&#8221;content&#8221;:&#8221;scala &amp; vertx&#8221;}</li></p>
+
+<h4>Scala</h4>
+
+
+
 
 <figure class='code'><figcaption><span>SampleResticle.scala               </span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -418,7 +439,10 @@ Scala</p>
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>Java</p>
+<h4>Java</h4>
+
+
+
 
 <figure class='code'><figcaption><span>SampleResticle.java                </span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
