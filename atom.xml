@@ -4,7 +4,7 @@
   <title><![CDATA[Ouertani Blog]]></title>
   <link href="http://ouertani.github.com/atom.xml" rel="self"/>
   <link href="http://ouertani.github.com/"/>
-  <updated>2013-03-31T01:30:41+01:00</updated>
+  <updated>2013-03-31T01:41:50+01:00</updated>
   <id>http://ouertani.github.com/</id>
   <author>
     <name><![CDATA[Ouertani]]></name>
@@ -52,7 +52,7 @@
 <h2>II - Hello World</h2>
 
 
-<p>Vert.x provides a powerful routing and route matching mechanism, which simplifies the routing of HTTP requests to different handlers based on pattern matching on the request path.</p>
+<p>Vert.x provides a powerful routing and <a href="http://vertx.io/core_manual_java.html#routing-http-requests-with-pattern-matching">route matching</a> mechanism, which simplifies the routing of HTTP requests to different handlers based on pattern matching on the request path.</p>
 
 <p>In Hello World snippet, let us publish a static GET service :</p>
 
@@ -191,13 +191,13 @@
 <h2>IV - Value path</h2>
 
 
-<p>Vert.x pattern matching lets you extract values from the path and use them as parameters in the request.</p>
+<p>Vert.x <a href="http://vertx.io/core_manual_java.html#routing-http-requests-with-pattern-matching">pattern matching</a> lets you extract values from the path and use them as parameters in the request.</p>
 
 <p><li>GET : /hello → code : 200 , body : world</li>
 <li>DELETE : /posts → code : 401 , body : Not allowed user</li>
 <li>POST : /:blogname → code : 200 , body : post {blogname} received !</li></p>
 
-<h4>Scala : ( Using String interpolation)</h4>
+<h4>Scala : ( Using <a href="http://docs.scala-lang.org/overviews/core/string-interpolation.html">String interpolation</a>)</h4>
 
 
 
@@ -482,7 +482,7 @@ The java equivalent has been relocated to the end of the document due to its ver
 <h2>Conclusion</h2>
 
 
-<p>Despite the fact that Resticle is in first development step, Rest support is by far simpler and elegant in scala than in java. As described in first tutorial Vert.x java version is burdened with a frightening number of handlers. Will Vert.x 2.0 address this point using Promises/Deferred APIs ?</p>
+<p>Despite the fact that Resticle is in first development step, Rest support is by far simpler and elegant in scala than in java. As described in first tutorial Vert.x java version is burdened with a frightening number of handlers. Will Vert.x 2.0 address this point using <a href="https://github.com/vert-x/vert.x/wiki/Vert.x-2.0-plan">Promises/Deferred APIs </a>?</p>
 ]]></content>
   </entry>
   
