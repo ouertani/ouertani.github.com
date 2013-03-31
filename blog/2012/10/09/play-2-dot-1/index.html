@@ -134,24 +134,22 @@
 
 <p>Then if you are using an Eclipse or IntelliJ Play can automatically create the project for you using either:</p>
 
-<p>play idea</p>
+<blockquote><p>play idea</p><p>or</p><p>play eclipse</p></blockquote>
 
-<p>or</p>
-
-<p>play eclipse</p>
 
 <p>Note that we created the project files after updating the dependencies, so the projects would be configured with the required libraries. If the dependencies change in the future, just re-run the commands to create the projects.</p>
 
 <p>You can now start the application from within your project&#8217;s root directory:</p>
 
-<p>play ~run</p>
+<blockquote><p>play ~run</p></blockquote>
+
 
 <p>Verify that the server is running by opening the following URL in your browser: http://localhost:9000</p>
 
 <p>For local testing we will use an in-memory &#8220;h2&#8221; database. To setup Play to use that database, edit the conf/application.conf file and uncomment or add the following lines:</p>
 
-<p>db.default.driver=org.h2.Driver
-db.default.url=&#8221;jdbc:h2:mem:play&#8221;</p>
+<blockquote><p>db.default.driver=org.h2.Driver<br/>db.default.url=&#8221;jdbc:h2:mem:play&#8221;</p></blockquote>
+
 
 <p>The final setup step is to provide Squeryl a database connection, but we still want to use the standard Play configuration system to get the database connection information. This is easily done by adding a Global class that can hook into the startup phase of the Play application lifecycle. Create a new file named app/Global.scala containing:</p>
 
@@ -202,7 +200,8 @@ db.default.url=&#8221;jdbc:h2:mem:play&#8221;</p>
 
 <p>If you reload the http://localhost:9000 webpage in your browser, everything should still be working and you should see the following message in the Play STDOUT log:</p>
 
-<p>[info] play - database [default] connected at jdbc:h2:mem:play</p>
+<blockquote><p>[info] play - database [default] connected at jdbc:h2:mem:play</p></blockquote>
+
 
 <p>Create an Entity</p>
 
@@ -386,16 +385,13 @@ Update the project/Build.scala file to contain:</p>
 
 <p>If the tests worked, then you should see the following message in the Play STDOUT log:</p>
 
-<p>[mySlickApp] $ test
-[info] BarSpec:
-[info] A Bar
-[info] - should be creatable
-[info] Passed: : Total 1, Failed 0, Errors 0, Passed 1, Skipped 0
-[success] Total time: 2 s, completed Oct 9, 2012 12:28:28 PM</p>
+<blockquote><p>[mySlickApp] $ test<br/>[info] BarSpec:<br/>[info] A Bar<br/>[info] - should be creatable<br/>[info] Passed: : Total 1, Failed 0, Errors 0, Passed 1, Skipped 0<br/>[success] Total time: 2 s, completed Oct 9, 2012 12:28:28 PM</p></blockquote>
+
 
 <p>If you&#8217;d like to have the tests run whenever the source changes then run:</p>
 
-<p>play ~test</p>
+<blockquote><p>play ~test</p></blockquote>
+
 
 <p>You can keep both the ~run and ~test commands running in the background. This allows you to quickly test the application from both programmatic unit / functional tests and from manual browser tests.
 Creating Bars From a Web Form</p>
@@ -566,7 +562,8 @@ Creating Bars From a Web Form</p>
 
 <p>If you look in the console window at this point you will see the error &#8220;value addBar is not a member of controllers.ReverseApplication&#8221;. This is because the route file is compiled and the view is checked for a valid route. But we haven&#8217;t created a route yet, so edit the conf/routes file and add a new line with the following:</p>
 
-<p>POST    /bars                       controllers.Application.addBar</p>
+<blockquote><p>POST    /bars                       controllers.Application.addBar</p></blockquote>
+
 
 <p>This creates a HTTP route that maps POST requests for the /bars URL to the addBar method.</p>
 
@@ -595,7 +592,8 @@ Creating Bars From a Web Form</p>
 
 <p>Now add a new route to the conf/routes file:</p>
 
-<p>GET     /bars                       controllers.Application.getBars</p>
+<blockquote><p>GET     /bars                       controllers.Application.getBars</p></blockquote>
+
 
 <p>This maps GET requests for /bars to the getBars method.</p>
 
@@ -605,15 +603,17 @@ Creating Bars From a Web Form</p>
 
 <p>The syntax of the query demonstrates the power of Slick type-safe query language and the power of Scala to create DSLs.  The json val is then returned in an Ok (HTTP 200 status code response) with the content type set to application/json (the value of JSON).</p>
 
-<p>References :
-Slick : http://slick.typesafe.com
-Playframework :  http://www.playframework.org</p>
+<h2>References :</h2>
 
-<pre><code>                        https://github.com/playframework/Play20
+
+<p><li>Slick : http://slick.typesafe.com </li>
+<li>Playframework :  http://www.playframework.org </li></p>
+
+<pre><code>                        https://github.com/playframework/Play20&lt;/li&gt;
 </code></pre>
 
-<p>Scala : http://www.scala-lang.org/downloads
-Squeryl + Playframework + Scala  : http://www.artima.com/articles/play2_scala_squeryl.html</p>
+<p><li>Scala : http://www.scala-lang.org/downloads</li>
+<li>Squeryl + Playframework + Scala  : http://www.artima.com/articles/play2_scala_squeryl.html</li></p>
 </div>
 
 
