@@ -4,7 +4,7 @@
   <title><![CDATA[Ouertani Blog]]></title>
   <link href="http://ouertani.github.com/atom.xml" rel="self"/>
   <link href="http://ouertani.github.com/"/>
-  <updated>2013-03-31T19:35:51+02:00</updated>
+  <updated>2013-04-01T01:21:43+02:00</updated>
   <id>http://ouertani.github.com/</id>
   <author>
     <name><![CDATA[Ouertani]]></name>
@@ -12,6 +12,79 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[XML/RPC driver as JCA Scala connector]]></title>
+    <link href="http://ouertani.github.com/blog/2013/03/31/xml-slash-rpc-driver-as-jca-scala-connector/"/>
+    <updated>2013-03-31T19:41:00+02:00</updated>
+    <id>http://ouertani.github.com/blog/2013/03/31/xml-slash-rpc-driver-as-jca-scala-connector</id>
+    <content type="html"><![CDATA[<p>Interoperability and reusability are key features of SOA architecture.</p>
+
+<p>The <a href="http://en.wikipedia.org/wiki/Java_EE_Connector_Architecture">Java EE Connector architecture</a> defines a standard architecture for connecting the Java EE platform to heterogeneous EISs. This article presents an XML/RPC  adapter using a Scala JCA outbound connector to an IN/AIR legacy system.</p>
+
+<h2>JCA and integration</h2>
+
+
+
+
+<blockquote><p>&#8220;For enterprise application integration, bi-directional connectivity between enterprise applications and EIS is essential. The Java EE Connector architecture defines standard contracts that allow bi-directional connectivity between enterprise applications and EISs. It also formalizes the relationships, interactions, and the packaging of the integration layer, thus enabling enterprise application integration.&#8221;</p><footer><strong>JCA 1.6 p 35</strong></footer></blockquote>
+
+
+<p>The connector architecture defines a set of scalable, secure, and transactional mechanisms that enable the integration of EISs with application servers and enterprise application.</p>
+
+<p><img class="center" src="http://ouertani.github.com/images/jca.jpg" width="350" height="350" title="JCA" alt="images"></p>
+
+<p>Using a UCIP JCA connector rather than using an <a href="http://java.dzone.com/articles/xml-rpc-using-scala">XML/RPC raw driver</a> lets you:</p>
+
+<ol>
+<li>Hide connection complexity.</li>
+<li>Use connection pooling and scalability.</li>
+<li>Use a standard adapter that can be deployed with any JEE 6 server from an m x n integration problem to an m + n solution</li>
+</ol>
+
+
+<h2>How?</h2>
+
+
+<p>The use of a <a href="http://www.jcp.org/en/jsr/detail?id=322">JCA</a> resource adapter inside a JEE solution is the same as interacting with a database or queue: protocol communication and wire negotiation&#8230; are hidden to the final user.</p>
+
+<p>Two interfaces are presented to a customer:</p>
+
+<p>1) A factory trait:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='scala'><span class='line'><span class="k">trait</span> <span class="nc">AirConnectorFactory</span> <span class="k">extends</span> <span class="nc">Referenceable</span> <span class="k">with</span> <span class="nc">Function0</span><span class="o">[</span><span class="kt">AirConnector</span><span class="o">]</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>2) The connector trait:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='scala'><span class='line'><span class="k">trait</span> <span class="nc">AirConnector</span> <span class="o">{</span>
+</span><span class='line'><span class="k">def</span> <span class="n">fire</span><span class="o">(</span><span class="n">elem</span> <span class="k">:</span> <span class="kt">Elem</span><span class="o">)</span> <span class="k">:</span> <span class="kt">Option</span><span class="o">[</span><span class="kt">Elem</span><span class="o">]</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>As an outbound communication where the resource adapter allows an ESB or EE application server to connect to an IN/AIR node and perform work. All communication is initiated by the application. The Air connector factory should be injected as any resource and used like the following.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='scala'><span class='line'><span class="nd">@Resource</span><span class="o">(</span><span class="n">name</span><span class="o">=</span><span class="s">&quot;AIR&quot;</span><span class="o">)</span>
+</span><span class='line'><span class="k">var</span> <span class="n">airConnectorFactory</span> <span class="k">:</span> <span class="kt">AirConnectorFactory</span> <span class="o">=</span> <span class="k">_</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">val</span> <span class="n">output</span> <span class="k">=</span> <span class="n">airConnectorFactory</span><span class="o">().</span><span class="n">fire</span><span class="o">(</span><span class="n">input</span><span class="o">)</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<blockquote><p>source code is based on JCA 1.6 specification and hosted on <a href="https://github.com/ouertani/TelcoCX">github</a>.</p></blockquote>
+
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Rest with Scala and Vert.x]]></title>
