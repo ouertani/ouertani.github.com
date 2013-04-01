@@ -4,7 +4,7 @@
   <title><![CDATA[Category: XML/RPC | Ouertani Blog]]></title>
   <link href="http://ouertani.github.com/blog/categories/xml-slash-rpc/atom.xml" rel="self"/>
   <link href="http://ouertani.github.com/"/>
-  <updated>2013-04-01T02:38:37+02:00</updated>
+  <updated>2013-04-01T02:40:30+02:00</updated>
   <id>http://ouertani.github.com/</id>
   <author>
     <name><![CDATA[Ouertani]]></name>
@@ -15,9 +15,9 @@
   
   <entry>
     <title type="html"><![CDATA[XML-RPC using scala]]></title>
-    <link href="http://ouertani.github.com/blog/2012/06/28/xml-rpc-using-scala/"/>
-    <updated>2012-06-28T02:03:00+02:00</updated>
-    <id>http://ouertani.github.com/blog/2012/06/28/xml-rpc-using-scala</id>
+    <link href="http://ouertani.github.com/blog/2012/06/29/xml-rpc-using-scala/"/>
+    <updated>2012-06-29T02:03:00+02:00</updated>
+    <id>http://ouertani.github.com/blog/2012/06/29/xml-rpc-using-scala</id>
     <content type="html"><![CDATA[<h2>Purpose</h2>
 
 

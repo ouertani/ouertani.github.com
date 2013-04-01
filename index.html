@@ -1288,7 +1288,7 @@ Creating Bars From a Web Form</p>
       
   <header>
     
-      <h1 class="entry-title"><a href="/blog/2012/06/28/sending-an-email-using-the-javamail-session-and-glassfish/">Sending an Email Using the JavaMail Session and Glassfish</a></h1>
+      <h1 class="entry-title"><a href="/blog/2012/06/29/xml-rpc-using-scala/">XML-RPC Using Scala</a></h1>
     
     
       <p class="meta">
@@ -1304,192 +1304,7 @@ Creating Bars From a Web Form</p>
   
 
 
-<time datetime="2012-06-28T02:18:00+02:00" pubdate data-updated="true">Jun 28<span>th</span>, 2012</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><h2>Purpose</h2>
-
-
-<p>This tutorial is a supplement to the article of oracle published here.
-After reading this later, I decided to share some tips about this EE environment JavaMail api configuration.</p>
-
-<h2>Introduction</h2>
-
-
-<p>Two years ago, we decided to move to JEE 6 for our enterprise solutions and take a lot of fun with new EJB 3.1 features and annotations. Glassfish has made our lives easier, it was very easy to declare variables using it&#8217;s administration console.
-Less complicated than using global resource environment for properties It is also the continuation to this tricks this tutorial delegate to Glassfish EE server managing mail session.</p>
-
-<h2>Prerequisites</h2>
-
-
-<p>Before starting this tutorial, you should:
-Fully understand of http://www.oracle.com/webfolder/technetwork/tutorials/obe/java/javamail/javamail.html</p>
-
-<p>Have access to an SMTP server. You must know the host name, port number, and security settings for your SMTP server. Web mail providers may offer SMTP access, view your email account settings or help to find further information. Be aware that your user name is often your full email address and not just the name that comes before the @ symbol.</p>
-
-<p>Have basic familiarity with Servlets and CDIs (helpful but not required)</p>
-
-<h2>Create a Java mail session resource :</h2>
-
-
-<p>To create and JavaMail Session :</p>
-
-<p>start galssfish server
-open admin console ( default localhost:4848)
-Go to Resources -> JavaMail Sessions -> click new to add new javaMail resource
-make sure the following field are filled in :</p>
-
-<p>Jndi name : EMailME for example, will be used later on lookup resource :</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="nd">@Resource</span><span class="o">(</span><span class="n">lookup</span> <span class="o">=</span> <span class="s">&quot;EMailME&quot;</span><span class="o">)</span>
-</span><span class='line'><span class="n">Mail</span> <span class="n">host</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>3-Default user
-4-Default sender will be used later on mailSession.getProperty(&#8220;mail.from&#8221;)
-5- For secure Mail add this advanced setting :</p>
-
-<ul>
-<li>mail.smtp.password : email password</li>
-<li>mail.smtp.port : email port</li>
-<li>mail.smtp.auth : true </li>
-</ul>
-
-
-<p>This screenshot summarizes all these parameters :</p>
-
-<p><img class="center" src="/images/mailee.jpg" width="350" height="350" title="Mail EE" alt="images"></p>
-
-<h2>II - Using email Service</h2>
-
-
-<p>This tutorial is a supplement to oracle one. We will use CDI with the same example.</p>
-
-<p>1 - MailSessionBean Will be a CDI bean with RequestScope
-2- Inject the full JavaMail Session as resource rather than create it</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-<span class='line-number'>23</span>
-<span class='line-number'>24</span>
-</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="nd">@Named</span>
-</span><span class='line'><span class="nd">@RequestScoped</span>
-</span><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">EmailSessionBean</span> <span class="o">{</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="nd">@Resource</span><span class="o">(</span><span class="n">lookup</span> <span class="o">=</span> <span class="s">&quot;EMailME&quot;</span><span class="o">)</span>
-</span><span class='line'>    <span class="kd">private</span> <span class="n">Session</span> <span class="n">mailSession</span><span class="o">;</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">sendEmail</span><span class="o">(</span><span class="n">String</span> <span class="n">to</span><span class="o">,</span> <span class="n">String</span> <span class="n">subject</span><span class="o">,</span> <span class="n">String</span> <span class="n">body</span><span class="o">)</span> <span class="o">{</span>
-</span><span class='line'>        <span class="n">MimeMessage</span> <span class="n">message</span> <span class="o">=</span> <span class="k">new</span> <span class="n">MimeMessage</span><span class="o">(</span><span class="n">mailSession</span><span class="o">);</span>
-</span><span class='line'>        <span class="k">try</span> <span class="o">{</span>
-</span><span class='line'>
-</span><span class='line'>            <span class="n">message</span><span class="o">.</span><span class="na">setFrom</span><span class="o">(</span><span class="k">new</span> <span class="n">InternetAddress</span><span class="o">(</span><span class="n">mailSession</span><span class="o">.</span><span class="na">getProperty</span><span class="o">(</span><span class="s">&quot;mail.from&quot;</span><span class="o">)));</span>
-</span><span class='line'>            <span class="n">InternetAddress</span><span class="o">[]</span> <span class="n">address</span> <span class="o">=</span> <span class="o">{</span><span class="k">new</span> <span class="n">InternetAddress</span><span class="o">(</span><span class="n">to</span><span class="o">)};</span>
-</span><span class='line'>            <span class="n">message</span><span class="o">.</span><span class="na">setRecipients</span><span class="o">(</span><span class="n">Message</span><span class="o">.</span><span class="na">RecipientType</span><span class="o">.</span><span class="na">TO</span><span class="o">,</span> <span class="n">address</span><span class="o">);</span>
-</span><span class='line'>            <span class="n">message</span><span class="o">.</span><span class="na">setSubject</span><span class="o">(</span><span class="n">subject</span><span class="o">);</span>
-</span><span class='line'>            <span class="n">message</span><span class="o">.</span><span class="na">setSentDate</span><span class="o">(</span><span class="k">new</span> <span class="n">Date</span><span class="o">());</span>
-</span><span class='line'>            <span class="n">message</span><span class="o">.</span><span class="na">setText</span><span class="o">(</span><span class="n">body</span><span class="o">);</span>
-</span><span class='line'>
-</span><span class='line'>            <span class="n">Transport</span><span class="o">.</span><span class="na">send</span><span class="o">(</span><span class="n">message</span><span class="o">);</span>
-</span><span class='line'>        <span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="n">MessagingException</span> <span class="n">ex</span><span class="o">)</span> <span class="o">{</span>
-</span><span class='line'>            <span class="n">ex</span><span class="o">.</span><span class="na">printStackTrace</span><span class="o">();</span>
-</span><span class='line'>        <span class="o">}</span>
-</span><span class='line'>    <span class="o">}</span>
-</span><span class='line'><span class="o">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>Look short !</p>
-
-<p>4- EmailServlet remind the same except using @Inject rather than @EJB</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="nd">@WebServlet</span><span class="o">(</span><span class="n">name</span> <span class="o">=</span> <span class="s">&quot;EmailServlet&quot;</span><span class="o">,</span> <span class="n">urlPatterns</span> <span class="o">=</span> <span class="o">{</span><span class="s">&quot;/EmailServlet&quot;</span><span class="o">})</span>
-</span><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">EmailServlet</span> <span class="kd">extends</span> <span class="n">HttpServlet</span> <span class="o">{</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="nd">@Inject</span>
-</span><span class='line'>    <span class="kd">private</span> <span class="n">EmailSessionBean</span> <span class="n">emailBean</span><span class="o">;</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="kd">protected</span> <span class="kt">void</span> <span class="nf">processRequest</span><span class="o">(</span><span class="n">HttpServletRequest</span> <span class="n">request</span><span class="o">,</span> <span class="n">HttpServletResponse</span> <span class="n">response</span><span class="o">)</span>
-</span><span class='line'>            <span class="kd">throws</span> <span class="n">ServletException</span><span class="o">,</span> <span class="n">IOException</span> <span class="o">{</span>
-</span><span class='line'> <span class="o">.........</span>
-</span><span class='line'>   <span class="o">}</span>
-</span><span class='line'> <span class="o">......</span>
-</span><span class='line'><span class="o">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<h2>Conclusion :</h2>
-
-
-<p>Let&#8217;s EE Server manager MailSession for us, keep configuration on server and thanks to Glassfish administration console managing JavaMail Session became easier.</p>
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2012/06/28/xml-rpc-using-scala/">XML-RPC Using Scala</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2012-06-28T02:03:00+02:00" pubdate data-updated="true">Jun 28<span>th</span>, 2012</time>
+<time datetime="2012-06-29T02:03:00+02:00" pubdate data-updated="true">Jun 29<span>th</span>, 2012</time>
         
       </p>
     
@@ -1887,6 +1702,191 @@ make sure the following field are filled in :</p>
 
     </article>
   
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012/06/28/sending-an-email-using-the-javamail-session-and-glassfish/">Sending an Email Using the JavaMail Session and Glassfish</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-06-28T02:18:00+02:00" pubdate data-updated="true">Jun 28<span>th</span>, 2012</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><h2>Purpose</h2>
+
+
+<p>This tutorial is a supplement to the article of oracle published here.
+After reading this later, I decided to share some tips about this EE environment JavaMail api configuration.</p>
+
+<h2>Introduction</h2>
+
+
+<p>Two years ago, we decided to move to JEE 6 for our enterprise solutions and take a lot of fun with new EJB 3.1 features and annotations. Glassfish has made our lives easier, it was very easy to declare variables using it&#8217;s administration console.
+Less complicated than using global resource environment for properties It is also the continuation to this tricks this tutorial delegate to Glassfish EE server managing mail session.</p>
+
+<h2>Prerequisites</h2>
+
+
+<p>Before starting this tutorial, you should:
+Fully understand of http://www.oracle.com/webfolder/technetwork/tutorials/obe/java/javamail/javamail.html</p>
+
+<p>Have access to an SMTP server. You must know the host name, port number, and security settings for your SMTP server. Web mail providers may offer SMTP access, view your email account settings or help to find further information. Be aware that your user name is often your full email address and not just the name that comes before the @ symbol.</p>
+
+<p>Have basic familiarity with Servlets and CDIs (helpful but not required)</p>
+
+<h2>Create a Java mail session resource :</h2>
+
+
+<p>To create and JavaMail Session :</p>
+
+<p>start galssfish server
+open admin console ( default localhost:4848)
+Go to Resources -> JavaMail Sessions -> click new to add new javaMail resource
+make sure the following field are filled in :</p>
+
+<p>Jndi name : EMailME for example, will be used later on lookup resource :</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="nd">@Resource</span><span class="o">(</span><span class="n">lookup</span> <span class="o">=</span> <span class="s">&quot;EMailME&quot;</span><span class="o">)</span>
+</span><span class='line'><span class="n">Mail</span> <span class="n">host</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>3-Default user
+4-Default sender will be used later on mailSession.getProperty(&#8220;mail.from&#8221;)
+5- For secure Mail add this advanced setting :</p>
+
+<ul>
+<li>mail.smtp.password : email password</li>
+<li>mail.smtp.port : email port</li>
+<li>mail.smtp.auth : true </li>
+</ul>
+
+
+<p>This screenshot summarizes all these parameters :</p>
+
+<p><img class="center" src="/images/mailee.jpg" width="640" height="424" title="Mail EE" alt="images"></p>
+
+<h2>II - Using email Service</h2>
+
+
+<p>This tutorial is a supplement to oracle one. We will use CDI with the same example.</p>
+
+<p>1 - MailSessionBean Will be a CDI bean with RequestScope
+2- Inject the full JavaMail Session as resource rather than create it</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="nd">@Named</span>
+</span><span class='line'><span class="nd">@RequestScoped</span>
+</span><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">EmailSessionBean</span> <span class="o">{</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="nd">@Resource</span><span class="o">(</span><span class="n">lookup</span> <span class="o">=</span> <span class="s">&quot;EMailME&quot;</span><span class="o">)</span>
+</span><span class='line'>    <span class="kd">private</span> <span class="n">Session</span> <span class="n">mailSession</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">sendEmail</span><span class="o">(</span><span class="n">String</span> <span class="n">to</span><span class="o">,</span> <span class="n">String</span> <span class="n">subject</span><span class="o">,</span> <span class="n">String</span> <span class="n">body</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>        <span class="n">MimeMessage</span> <span class="n">message</span> <span class="o">=</span> <span class="k">new</span> <span class="n">MimeMessage</span><span class="o">(</span><span class="n">mailSession</span><span class="o">);</span>
+</span><span class='line'>        <span class="k">try</span> <span class="o">{</span>
+</span><span class='line'>
+</span><span class='line'>            <span class="n">message</span><span class="o">.</span><span class="na">setFrom</span><span class="o">(</span><span class="k">new</span> <span class="n">InternetAddress</span><span class="o">(</span><span class="n">mailSession</span><span class="o">.</span><span class="na">getProperty</span><span class="o">(</span><span class="s">&quot;mail.from&quot;</span><span class="o">)));</span>
+</span><span class='line'>            <span class="n">InternetAddress</span><span class="o">[]</span> <span class="n">address</span> <span class="o">=</span> <span class="o">{</span><span class="k">new</span> <span class="n">InternetAddress</span><span class="o">(</span><span class="n">to</span><span class="o">)};</span>
+</span><span class='line'>            <span class="n">message</span><span class="o">.</span><span class="na">setRecipients</span><span class="o">(</span><span class="n">Message</span><span class="o">.</span><span class="na">RecipientType</span><span class="o">.</span><span class="na">TO</span><span class="o">,</span> <span class="n">address</span><span class="o">);</span>
+</span><span class='line'>            <span class="n">message</span><span class="o">.</span><span class="na">setSubject</span><span class="o">(</span><span class="n">subject</span><span class="o">);</span>
+</span><span class='line'>            <span class="n">message</span><span class="o">.</span><span class="na">setSentDate</span><span class="o">(</span><span class="k">new</span> <span class="n">Date</span><span class="o">());</span>
+</span><span class='line'>            <span class="n">message</span><span class="o">.</span><span class="na">setText</span><span class="o">(</span><span class="n">body</span><span class="o">);</span>
+</span><span class='line'>
+</span><span class='line'>            <span class="n">Transport</span><span class="o">.</span><span class="na">send</span><span class="o">(</span><span class="n">message</span><span class="o">);</span>
+</span><span class='line'>        <span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="n">MessagingException</span> <span class="n">ex</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>            <span class="n">ex</span><span class="o">.</span><span class="na">printStackTrace</span><span class="o">();</span>
+</span><span class='line'>        <span class="o">}</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Look short !</p>
+
+<p>4- EmailServlet remind the same except using @Inject rather than @EJB</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="nd">@WebServlet</span><span class="o">(</span><span class="n">name</span> <span class="o">=</span> <span class="s">&quot;EmailServlet&quot;</span><span class="o">,</span> <span class="n">urlPatterns</span> <span class="o">=</span> <span class="o">{</span><span class="s">&quot;/EmailServlet&quot;</span><span class="o">})</span>
+</span><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">EmailServlet</span> <span class="kd">extends</span> <span class="n">HttpServlet</span> <span class="o">{</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="nd">@Inject</span>
+</span><span class='line'>    <span class="kd">private</span> <span class="n">EmailSessionBean</span> <span class="n">emailBean</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">protected</span> <span class="kt">void</span> <span class="nf">processRequest</span><span class="o">(</span><span class="n">HttpServletRequest</span> <span class="n">request</span><span class="o">,</span> <span class="n">HttpServletResponse</span> <span class="n">response</span><span class="o">)</span>
+</span><span class='line'>            <span class="kd">throws</span> <span class="n">ServletException</span><span class="o">,</span> <span class="n">IOException</span> <span class="o">{</span>
+</span><span class='line'> <span class="o">.........</span>
+</span><span class='line'>   <span class="o">}</span>
+</span><span class='line'> <span class="o">......</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>Conclusion :</h2>
+
+
+<p>Let&#8217;s EE Server manager MailSession for us, keep configuration on server and thanks to Glassfish administration console managing JavaMail Session became easier.</p>
+</div>
+  
+  
+
+
+    </article>
+  
   <div class="pagination">
     
     <a href="/blog/archives">Blog Archives</a>
@@ -1923,11 +1923,11 @@ make sure the following field are filled in :</p>
       </li>
     
       <li class="post">
-        <a href="/blog/2012/06/28/sending-an-email-using-the-javamail-session-and-glassfish/">Sending an Email using the JavaMail Session and Glassfish</a>
+        <a href="/blog/2012/06/29/xml-rpc-using-scala/">XML-RPC using scala</a>
       </li>
     
       <li class="post">
-        <a href="/blog/2012/06/28/xml-rpc-using-scala/">XML-RPC using scala</a>
+        <a href="/blog/2012/06/28/sending-an-email-using-the-javamail-session-and-glassfish/">Sending an Email using the JavaMail Session and Glassfish</a>
       </li>
     
   </ul>
