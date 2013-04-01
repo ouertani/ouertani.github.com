@@ -4,7 +4,7 @@
   <title><![CDATA[Category: JEE | Ouertani Blog]]></title>
   <link href="http://ouertani.github.com/blog/categories/jee/atom.xml" rel="self"/>
   <link href="http://ouertani.github.com/"/>
-  <updated>2013-04-01T03:13:20+02:00</updated>
+  <updated>2013-04-01T03:17:00+02:00</updated>
   <id>http://ouertani.github.com/</id>
   <author>
     <name><![CDATA[Ouertani]]></name>
@@ -224,40 +224,49 @@ protected void processRequest(HttpServletRequest request, HttpServletResponse re
 
 
 <p>Two years ago, we decided to move to JEE 6 for our enterprise solutions and take a lot of fun with new EJB 3.1 features and annotations. Glassfish has made our lives easier, it was very easy to declare variables using it's administration console.
-Less complicated than using <b>ejb-jar.xml</b> are two methods using Glassfish server and resources :
-I- OLD FASHION WITH RESOURCE PER PARAM (SIMILAR TO ORACLE TUTORIAL)</p>
+Less complicated than using <b>ejb-jar.xml</b> are two methods using Glassfish server and resources :</p>
 
-<p>1- Declare an EJB with toBeInjected resource :
+<h2>I- OLD FASHION WITH RESOURCE PER PARAM (SIMILAR TO ORACLE TUTORIAL) </h2>
+
+
+<ol>
+<li>Declare an EJB with toBeInjected resource :</li>
 ```java
 import javax.annotation.Resource;
 import javax.ejb.Stateless;
-import javax.ejb.LocalBean;</p>
-
-<p>/<em>*
+import javax.ejb.LocalBean;
+ 
+/**
  *
  * @author slim
- </em>/
+ */
 @Stateless
 @LocalBean
 public class MyEjbBean {
   @Resource(lookup="resName")
-  protected String toBeInjected;</p>
+  protected String toBeInjected; 
+ 
+ 
+  ////
+   
+}
+```
+<li>Open admin console ( localhost:4848 by default ) -> Resources -> Custom Resources -> New -> and fill the informations as below</li>
+</ol>
 
-<p>  ////</p>
 
-<p>}
-```</p>
-
-<p>2 - Open admin console ( localhost:4848 by default ) -> Resources -> Custom Resources -> New -> and fill the informations as below
-<img class="center" src="/images/jndiee1.jpg" width="640" height="424" title="JNDI EE" alt="images"></p>
+<p><img class="center" src="/images/jndiee1.jpg" width="640" height="424" title="JNDI EE" alt="images"></p>
 
 <p>At first glance, it looks simple and fast forward but problems start after just after a first project.</p>
 
-<p>Problems ! Why ?
-We achieved more than 20 variables and some resource names begin to confuse them. I was very hard for our operations team to catch the name of the correct setting and update its value.
+<h3>Problems ! Why ?</h3>
+
+
+<p>We achieved more than 20 variables and some resource names begin to confuse them. I was very hard for our operations team to catch the name of the correct setting and update its value.
 It was necessary to group parameters resources into a single resource by project.</p>
 
-<p>NEXT FASHION : GROUPING RESOURCES</p>
+<h2>NEXT FASHION : GROUPING RESOURCES </h2>
+
 
 <p>In this section I will use scala (similar class can be translated easy to java).</p>
 
@@ -309,18 +318,18 @@ return ressource;
 ```
 The purpose of object factory is to read injectable parameters and populate a resource class</p>
 
-<ol start="3">
-<li>Back to Glassfish admininstration console, create a single resource ( see screenshot below) :</li>
+<p><li>Back to Glassfish admininstration console, create a single resource ( see screenshot below) :</li></p>
+
 <ol>
     <li>Jndi Name => the resource name to be used by project for example
     <li>Resource Type => check second radio button, and fill the resource full name ( with package)
     <li>Factory class => Our RessourceFactory class full name ( with package)
     <li>Add two (or more) properties to be injected in our resource class.</ol>
-<img class="center" src="/images/jndiee2.jpg" width="640" height="424" title="JNDI EE" alt="images">
 
-4- At the end we inject our resource in EJB class :
-</ol>
 
+<p><img class="center" src="/images/jndiee2.jpg" width="640" height="424" title="JNDI EE" alt="images"></p>
+
+<p><li>At the end we inject our resource in EJB class :</li></p>
 
 <p>```java
 @Stateless
