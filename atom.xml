@@ -4,7 +4,7 @@
   <title><![CDATA[Ouertani Blog]]></title>
   <link href="http://ouertani.github.com/atom.xml" rel="self"/>
   <link href="http://ouertani.github.com/"/>
-  <updated>2013-04-01T02:46:55+02:00</updated>
+  <updated>2013-04-01T02:50:19+02:00</updated>
   <id>http://ouertani.github.com/</id>
   <author>
     <name><![CDATA[Ouertani]]></name>
@@ -1985,15 +1985,18 @@ To create and JavaMail Session :
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>3-Default user
-4-Default sender will be used later on mailSession.getProperty(&#8220;mail.from&#8221;)
-5- For secure Mail add this advanced setting :</p>
+<ol start="4">
+<li>Default user</li>
+<li>Default sender will be used later on mailSession.getProperty(&#8220;mail.from&#8221;)</li>
+<li>For secure Mail add this advanced setting :
 
 <ul>
 <li>mail.smtp.password : email password</li>
 <li>mail.smtp.port : email port</li>
 <li>mail.smtp.auth : true </li>
 </ul>
+</li>
+</ol>
 
 
 <p>This screenshot summarizes all these parameters :</p>

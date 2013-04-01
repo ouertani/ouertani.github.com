@@ -4,7 +4,7 @@
   <title><![CDATA[Category: MAIL | Ouertani Blog]]></title>
   <link href="http://ouertani.github.com/blog/categories/mail/atom.xml" rel="self"/>
   <link href="http://ouertani.github.com/"/>
-  <updated>2013-04-01T02:46:55+02:00</updated>
+  <updated>2013-04-01T02:50:19+02:00</updated>
   <id>http://ouertani.github.com/</id>
   <author>
     <name><![CDATA[Ouertani]]></name>
@@ -62,16 +62,20 @@ To create and JavaMail Session :
 <code>java
 @Resource(lookup = "EMailME")
 Mail host
-</code>
-3-Default user
-4-Default sender will be used later on mailSession.getProperty("mail.from")
-5- For secure Mail add this advanced setting :</p>
+</code></p>
+
+<ol start="4">
+<li>Default user</li>
+<li>Default sender will be used later on mailSession.getProperty("mail.from")</li>
+<li>For secure Mail add this advanced setting :
 
 <ul>
 <li>mail.smtp.password : email password</li>
 <li>mail.smtp.port : email port</li>
 <li>mail.smtp.auth : true </li>
 </ul>
+</li>
+</ol>
 
 
 <p>This screenshot summarizes all these parameters :</p>
