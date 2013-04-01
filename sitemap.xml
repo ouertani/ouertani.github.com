@@ -1,6 +1,12 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <urlset xmlns='http://www.sitemaps.org/schemas/sitemap/0.9'>
     <url>
+        <loc>
+            http://ouertani.github.com/blog/2011/06/30/wsdl-integration-problem-two-declarations-cause-a-collision/
+        </loc>
+        <lastmod>2013-04-01T04:19:18+02:00</lastmod>
+    </url>
+    <url>
         <loc>http://ouertani.github.com/blog/2011/09/10/basic-ws-with-scala/</loc>
         <lastmod>2013-04-01T04:07:19+02:00</lastmod>
     </url>
@@ -62,11 +68,11 @@
     </url>
     <url>
         <loc>http://ouertani.github.com/blog/archives/</loc>
-        <lastmod>2013-04-01T04:07:19+02:00</lastmod>
+        <lastmod>2013-04-01T04:19:18+02:00</lastmod>
     </url>
     <url>
         <loc>http://ouertani.github.com/</loc>
-        <lastmod>2013-04-01T04:07:19+02:00</lastmod>
+        <lastmod>2013-04-01T04:19:18+02:00</lastmod>
     </url>
     <url>
         <loc>http://ouertani.github.com/robots.txt</loc>
