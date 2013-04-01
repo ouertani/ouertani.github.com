@@ -1,0 +1,295 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: JAX-WS | Ouertani Blog]]></title>
+  <link href="http://ouertani.github.com/blog/categories/jax-ws/atom.xml" rel="self"/>
+  <link href="http://ouertani.github.com/"/>
+  <updated>2013-04-01T03:25:39+02:00</updated>
+  <id>http://ouertani.github.com/</id>
+  <author>
+    <name><![CDATA[Ouertani]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Jaxws Header : Part 2 : Server Side]]></title>
+    <link href="http://ouertani.github.com/blog/2012/06/28/jaxws-header-part-2-server-side/"/>
+    <updated>2012-06-28T03:19:00+02:00</updated>
+    <id>http://ouertani.github.com/blog/2012/06/28/jaxws-header-part-2-server-side</id>
+    <content type="html"><![CDATA[<h2>Purpose</h2>
+
+
+<p>Manipulating JAXWS header on the server Side like reading WSS username token, logging saop message and publish a specific header.</p>
+
+<h2>Introduction</h2>
+
+
+<p>On Telecom IT environment and specially middelware solution web service communications are heavy used between solutions. This tutorial aims to introduce using handler on server side by publishing specific header, reading WSS UserToken or logging the soap message on console.</p>
+
+<p>This tutorial is Scala based, Java version can be easy translated.</p>
+
+<h2>Parse undeclared custom header</h2>
+
+
+<p>Let's consider We need to read WSS UserToken non published in our WSDL :
+```xml
+&lt;soapenv:Header></p>
+
+<pre><code>  &lt;wsse:Security  xmlns:wsse="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd" xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd"&gt;
+     &lt;wsse:UsernameToken wsu:Id="UsernameToken-1"&gt;
+        &lt;wsse:Username&gt;login&lt;/wsse:Username&gt;
+        &lt;wsse:Password Type="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-username-token-profile-1.0#PasswordText"&gt;XXXX&lt;/wsse:Password&gt;        
+     &lt;/wsse:UsernameToken&gt;
+  &lt;/wsse:Security&gt;
+</code></pre>
+
+<p> &lt;/soapenv:Header>
+<code>
+To parse this header we need to extend a SoapHandler, ovveride handle message class on put header and password on context, below a constant and full class
+</code>scala
+object AuthenticationHandlerConstants {</p>
+
+<p>  val REQUEST_USERID: String = "authn_userid";
+  val REQUEST_PASSWORD: String = "authn_password";
+  val AUTHN_PREFIX: String = "wsse";
+  val AUTHN_LNAME: String = "Security";
+  val AUTHN_URI: String = "http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd";
+  val AUTHN_STAUTS: String = "authnStatus";</p>
+
+<p>  val LOGIN: String = "login"
+  val PWD: String = "passwd"
+}
+<code>
+</code>scala
+import java.io.PrintStream;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Set;
+import javax.xml.namespace.QName;
+import javax.xml.soap.SOAPElement;</p>
+
+<p>import javax.xml.soap.SOAPHeader;
+import javax.xml.ws.handler.MessageContext;
+import javax.xml.ws.handler.soap.SOAPHandler;
+import javax.xml.ws.handler.soap.SOAPMessageContext;
+import org.apache.log4j.Logger;</p>
+
+<p>/<em>*
+ * @author Slim Ouertani
+ </em>/
+class SecuritySOAPHandler extends SOAPHandler[SOAPMessageContext] {</p>
+
+<p>  private val L = Logger.getLogger(classOf[SecuritySOAPHandler]);</p>
+
+<p>  override def getHeaders(): Set[QName] = {</p>
+
+<pre><code>val securityHeader = new QName("http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd", "Security", "wsse");
+val headers = new HashSet[QName]();
+headers.add(securityHeader);
+return headers;
+</code></pre>
+
+<p>  }</p>
+
+<p>  override def handleMessage(soapMessageContext: SOAPMessageContext): Boolean = {</p>
+
+<pre><code>try {
+  val outMessageIndicator = soapMessageContext.get(MessageContext.MESSAGE_OUTBOUND_PROPERTY).asInstanceOf[Boolean];
+  if (!outMessageIndicator) {
+    val envelope = soapMessageContext.getMessage().getSOAPPart().getEnvelope()
+    val header = envelope.getHeader()
+
+    if (header == null) {
+      L.warn("No headers found in the input SOAP request")
+    } else {
+      processSOAPHeader(header) match {
+        case Some(_processSOAPHeader) =&gt; {
+          soapMessageContext.put(AuthenticationHandlerConstants.AUTHN_STAUTS, java.lang.Boolean.TRUE);
+          soapMessageContext.put(AuthenticationHandlerConstants.LOGIN, _processSOAPHeader._1);
+          soapMessageContext.put(AuthenticationHandlerConstants.PWD, _processSOAPHeader._2);
+        }
+        case None =&gt; {
+          soapMessageContext.put(AuthenticationHandlerConstants.AUTHN_STAUTS, java.lang.Boolean.FALSE);
+          soapMessageContext.put(AuthenticationHandlerConstants.LOGIN, "");
+          soapMessageContext.put(AuthenticationHandlerConstants.PWD, "");
+        }
+      }
+    }
+  }
+} catch {
+  case ex: Exception =&gt; L.error(ex.getMessage(), ex);
+}
+soapMessageContext.setScope(AuthenticationHandlerConstants.AUTHN_STAUTS, MessageContext.Scope.APPLICATION);
+soapMessageContext.setScope(AuthenticationHandlerConstants.LOGIN, MessageContext.Scope.APPLICATION);
+soapMessageContext.setScope(AuthenticationHandlerConstants.PWD, MessageContext.Scope.APPLICATION);
+return true;
+</code></pre>
+
+<p>  }</p>
+
+<p>  private def processSOAPHeaderInfo(e: SOAPElement): (String,String) = {</p>
+
+<pre><code>var _id: String = null
+var _password: String = null
+
+val childElements = e.getChildElements(new QName(AuthenticationHandlerConstants.AUTHN_URI, "UsernameToken"));
+while (childElements.hasNext()) {
+  val usernameToken = childElements.next();
+  // loop through child elements
+
+  usernameToken match {
+
+    case child: SOAPElement =&gt; {
+
+      val childElements1 = child.getChildElements(new QName(AuthenticationHandlerConstants.AUTHN_URI, "Username"));
+      val childElements2 = child.getChildElements(new QName(AuthenticationHandlerConstants.AUTHN_URI, "Password"));
+
+      while (childElements1.hasNext()) {
+        val next = childElements1.next();
+        next match {
+          case l: SOAPElement =&gt; {
+            val value = l.getValue();
+
+            _id = value;
+          }
+        }
+      }
+      while (childElements2.hasNext()) {
+        val next = childElements2.next();
+        next match {
+          case l: SOAPElement =&gt; {
+            val value = l.getValue()
+
+            _password = value;
+          }
+        }
+      }
+    }
+  }
+}
+return (_id, _password);
+</code></pre>
+
+<p>  }</p>
+
+<p>  private def processSOAPHeader(sh: SOAPHeader): Option[(String,String)] = {</p>
+
+<pre><code>var authenticated: Option[(String,String)] = None
+
+val childElems = sh.getChildElements(new QName(
+  AuthenticationHandlerConstants.AUTHN_URI,
+  AuthenticationHandlerConstants.AUTHN_LNAME));
+
+// iterate through child elements
+while (childElems.hasNext()) {
+
+  val child = childElems.next().asInstanceOf[SOAPElement]
+  authenticated = Some(processSOAPHeaderInfo(child))
+}
+return authenticated
+</code></pre>
+
+<p>  }</p>
+
+<p>  override def handleFault(soapMessageContext: SOAPMessageContext): Boolean = false
+}
+<code>
+Unlike client side we need to add an xml file handler.xml to enable the previous handler
+h2&gt;on web service declaration:
+Chain this handler : @HandlerChain(file = "handler.xml")
+Inject WebServiceContext : @Resource private var wsContext: WebServiceContext = _
+Retrieve a messageContext : val msgContext = wsContext.getMessageContext()
+Check stored valued : val authnStatus = msgContext.get(AuthenticationHandlerConstants.AUTHN_STAUTS)
+</code> scala
+@WebService(serviceName = "WsService", targetNamespace = "http://slim.ouertani.me)
+@HandlerChain(file = "handler.xml")
+@Stateless()
+@Interceptors(Array(classOf[TracingInterceptor]))
+class WsService extends LogHelper{</p>
+
+<p>  @Resource private var wsContext: WebServiceContext = _</p>
+
+<p>  def authenticate() {</p>
+
+<pre><code>val msgContext = wsContext.getMessageContext()
+val authnStatus = msgContext.get(AuthenticationHandlerConstants.AUTHN_STAUTS)
+if (authnStatus == null || !authnStatus.asInstanceOf[Boolean]) {
+   L.warn("header authentification not found");
+  throw AuthenticationHeaderNotFound.toFaultResponse
+}
+
+try {
+  val login = msgContext.get("login").asInstanceOf[String]
+  val passwd = msgContext.get("passwd").asInstanceOf[String]
+  L.info("user " + login + "pwd" + passwd + "try this service")
+} catch {
+  case ex: Exception =&gt;
+    L.warn(" exception to parse header authentification", ex);
+    throw AuthenticationHeaderNotFound.toFaultResponse
+}
+</code></pre>
+
+<p>  }
+}
+```</p>
+
+<h2>Adding custom header</h2>
+
+
+<p>Publishing a custom header is easier than using the previous handler :</p>
+
+<p>1-First lets add a custom header class
+``` scala
+import scala.reflect.BeanProperty
+import javax.xml.bind.annotation.{XmlType , XmlAccessType, XmlElement, XmlAccessorType};
+/<em>*
+ * @author Slim Ouertani
+ </em>/
+@XmlAccessorType(XmlAccessType.FIELD)
+@XmlType(name = "Header", propOrder = Array(</p>
+
+<pre><code>"username",
+"password"
+</code></pre>
+
+<p>  ))
+class UsernameToken {
+   @BeanProperty  @XmlElement(required = true, nillable = false ) var username : String= ""
+   @BeanProperty  @XmlElement(required = true, nillable = false ) var password : String= ""
+}
+```</p>
+
+<p>2 - publish this header using @WebParam (name = "usernameToken",header = true)
+<code>scala
+def execute (@WebParam(name = "request" ) request : Request, @WebParam (name = "usernameToken",header = true) header) {
+  ....
+ }
+</code>
+3- retrieving user and password field are the same as accessing class properties :
+<code>scala
+val username = ""+header.getUsername()
+val password = ""+header.getPassword()
+</code>
+4- note that the preceding header is declared on WSDL method and produce this output on soapUI interface
+``` xml
+&lt;soapenv:Header></p>
+
+<pre><code>  &lt;ws:usernameToken&gt;
+     &lt;username&gt;login&lt;/username&gt;
+     &lt;password&gt;XXXXX&lt;/password&gt;
+  &lt;/ws:usernameToken&gt;
+</code></pre>
+
+<p>&lt;/soapenv:Header>
+```</p>
+
+<h2>Conclusion</h2>
+
+
+<p>Publishing specific header using JAX-WS is easier than using handler. Otherwise, handlers on server side are helpful for other purpose like logging I/O message.</p>
+]]></content>
+  </entry>
+  
+</feed>

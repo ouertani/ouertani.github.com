@@ -4,7 +4,7 @@
   <title><![CDATA[Ouertani Blog]]></title>
   <link href="http://ouertani.github.com/atom.xml" rel="self"/>
   <link href="http://ouertani.github.com/"/>
-  <updated>2013-04-01T03:18:09+02:00</updated>
+  <updated>2013-04-01T03:25:39+02:00</updated>
   <id>http://ouertani.github.com/</id>
   <author>
     <name><![CDATA[Ouertani]]></name>
@@ -1928,6 +1928,471 @@ Creating Bars From a Web Form</p>
 
 
 <p>Create XML message and parse it using scala is like a baby toy and makes using UCIP protocol easier and simpler. This sample can be generalized to the other UCIP messages like GetBalanceAndDate or GetAccountDetails and any other XML-RPC communication.</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Jaxws Header : Part 2 : Server Side]]></title>
+    <link href="http://ouertani.github.com/blog/2012/06/28/jaxws-header-part-2-server-side/"/>
+    <updated>2012-06-28T03:19:00+02:00</updated>
+    <id>http://ouertani.github.com/blog/2012/06/28/jaxws-header-part-2-server-side</id>
+    <content type="html"><![CDATA[<h2>Purpose</h2>
+
+
+<p>Manipulating JAXWS header on the server Side like reading WSS username token, logging saop message and publish a specific header.</p>
+
+<h2>Introduction</h2>
+
+
+<p>On Telecom IT environment and specially middelware solution web service communications are heavy used between solutions. This tutorial aims to introduce using handler on server side by publishing specific header, reading WSS UserToken or logging the soap message on console.</p>
+
+<p>This tutorial is Scala based, Java version can be easy translated.</p>
+
+<h2>Parse undeclared custom header</h2>
+
+
+<p>Let&#8217;s consider We need to read WSS UserToken non published in our WSDL :</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+</pre></td><td class='code'><pre><code class='xml'><span class='line'><span class="nt">&lt;soapenv:Header&gt;</span>
+</span><span class='line'>      <span class="nt">&lt;wsse:Security</span>  <span class="na">xmlns:wsse=</span><span class="s">&quot;http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd&quot;</span> <span class="na">xmlns:wsu=</span><span class="s">&quot;http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'>         <span class="nt">&lt;wsse:UsernameToken</span> <span class="na">wsu:Id=</span><span class="s">&quot;UsernameToken-1&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'>            <span class="nt">&lt;wsse:Username&gt;</span>login<span class="nt">&lt;/wsse:Username&gt;</span>
+</span><span class='line'>            <span class="nt">&lt;wsse:Password</span> <span class="na">Type=</span><span class="s">&quot;http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-username-token-profile-1.0#PasswordText&quot;</span><span class="nt">&gt;</span>XXXX<span class="nt">&lt;/wsse:Password&gt;</span>
+</span><span class='line'>         <span class="nt">&lt;/wsse:UsernameToken&gt;</span>
+</span><span class='line'>      <span class="nt">&lt;/wsse:Security&gt;</span>
+</span><span class='line'> <span class="nt">&lt;/soapenv:Header&gt;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>To parse this header we need to extend a SoapHandler, ovveride handle message class on put header and password on context, below a constant and full class</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+</pre></td><td class='code'><pre><code class='scala'><span class='line'><span class="k">object</span> <span class="nc">AuthenticationHandlerConstants</span> <span class="o">{</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="k">val</span> <span class="nc">REQUEST_USERID</span><span class="k">:</span> <span class="kt">String</span> <span class="o">=</span> <span class="s">&quot;authn_userid&quot;</span><span class="o">;</span>
+</span><span class='line'>  <span class="k">val</span> <span class="nc">REQUEST_PASSWORD</span><span class="k">:</span> <span class="kt">String</span> <span class="o">=</span> <span class="s">&quot;authn_password&quot;</span><span class="o">;</span>
+</span><span class='line'>  <span class="k">val</span> <span class="nc">AUTHN_PREFIX</span><span class="k">:</span> <span class="kt">String</span> <span class="o">=</span> <span class="s">&quot;wsse&quot;</span><span class="o">;</span>
+</span><span class='line'>  <span class="k">val</span> <span class="nc">AUTHN_LNAME</span><span class="k">:</span> <span class="kt">String</span> <span class="o">=</span> <span class="s">&quot;Security&quot;</span><span class="o">;</span>
+</span><span class='line'>  <span class="k">val</span> <span class="nc">AUTHN_URI</span><span class="k">:</span> <span class="kt">String</span> <span class="o">=</span> <span class="s">&quot;http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd&quot;</span><span class="o">;</span>
+</span><span class='line'>  <span class="k">val</span> <span class="nc">AUTHN_STAUTS</span><span class="k">:</span> <span class="kt">String</span> <span class="o">=</span> <span class="s">&quot;authnStatus&quot;</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="k">val</span> <span class="nc">LOGIN</span><span class="k">:</span> <span class="kt">String</span> <span class="o">=</span> <span class="s">&quot;login&quot;</span>
+</span><span class='line'>  <span class="k">val</span> <span class="nc">PWD</span><span class="k">:</span> <span class="kt">String</span> <span class="o">=</span> <span class="s">&quot;passwd&quot;</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+<span class='line-number'>38</span>
+<span class='line-number'>39</span>
+<span class='line-number'>40</span>
+<span class='line-number'>41</span>
+<span class='line-number'>42</span>
+<span class='line-number'>43</span>
+<span class='line-number'>44</span>
+<span class='line-number'>45</span>
+<span class='line-number'>46</span>
+<span class='line-number'>47</span>
+<span class='line-number'>48</span>
+<span class='line-number'>49</span>
+<span class='line-number'>50</span>
+<span class='line-number'>51</span>
+<span class='line-number'>52</span>
+<span class='line-number'>53</span>
+<span class='line-number'>54</span>
+<span class='line-number'>55</span>
+<span class='line-number'>56</span>
+<span class='line-number'>57</span>
+<span class='line-number'>58</span>
+<span class='line-number'>59</span>
+<span class='line-number'>60</span>
+<span class='line-number'>61</span>
+<span class='line-number'>62</span>
+<span class='line-number'>63</span>
+<span class='line-number'>64</span>
+<span class='line-number'>65</span>
+<span class='line-number'>66</span>
+<span class='line-number'>67</span>
+<span class='line-number'>68</span>
+<span class='line-number'>69</span>
+<span class='line-number'>70</span>
+<span class='line-number'>71</span>
+<span class='line-number'>72</span>
+<span class='line-number'>73</span>
+<span class='line-number'>74</span>
+<span class='line-number'>75</span>
+<span class='line-number'>76</span>
+<span class='line-number'>77</span>
+<span class='line-number'>78</span>
+<span class='line-number'>79</span>
+<span class='line-number'>80</span>
+<span class='line-number'>81</span>
+<span class='line-number'>82</span>
+<span class='line-number'>83</span>
+<span class='line-number'>84</span>
+<span class='line-number'>85</span>
+<span class='line-number'>86</span>
+<span class='line-number'>87</span>
+<span class='line-number'>88</span>
+<span class='line-number'>89</span>
+<span class='line-number'>90</span>
+<span class='line-number'>91</span>
+<span class='line-number'>92</span>
+<span class='line-number'>93</span>
+<span class='line-number'>94</span>
+<span class='line-number'>95</span>
+<span class='line-number'>96</span>
+<span class='line-number'>97</span>
+<span class='line-number'>98</span>
+<span class='line-number'>99</span>
+<span class='line-number'>100</span>
+<span class='line-number'>101</span>
+<span class='line-number'>102</span>
+<span class='line-number'>103</span>
+<span class='line-number'>104</span>
+<span class='line-number'>105</span>
+<span class='line-number'>106</span>
+<span class='line-number'>107</span>
+<span class='line-number'>108</span>
+<span class='line-number'>109</span>
+<span class='line-number'>110</span>
+<span class='line-number'>111</span>
+<span class='line-number'>112</span>
+<span class='line-number'>113</span>
+<span class='line-number'>114</span>
+<span class='line-number'>115</span>
+<span class='line-number'>116</span>
+<span class='line-number'>117</span>
+<span class='line-number'>118</span>
+<span class='line-number'>119</span>
+<span class='line-number'>120</span>
+<span class='line-number'>121</span>
+</pre></td><td class='code'><pre><code class='scala'><span class='line'><span class="k">import</span> <span class="nn">java.io.PrintStream</span><span class="o">;</span>
+</span><span class='line'><span class="k">import</span> <span class="nn">java.util.HashSet</span><span class="o">;</span>
+</span><span class='line'><span class="k">import</span> <span class="nn">java.util.Iterator</span><span class="o">;</span>
+</span><span class='line'><span class="k">import</span> <span class="nn">java.util.Set</span><span class="o">;</span>
+</span><span class='line'><span class="k">import</span> <span class="nn">javax.xml.namespace.QName</span><span class="o">;</span>
+</span><span class='line'><span class="k">import</span> <span class="nn">javax.xml.soap.SOAPElement</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">import</span> <span class="nn">javax.xml.soap.SOAPHeader</span><span class="o">;</span>
+</span><span class='line'><span class="k">import</span> <span class="nn">javax.xml.ws.handler.MessageContext</span><span class="o">;</span>
+</span><span class='line'><span class="k">import</span> <span class="nn">javax.xml.ws.handler.soap.SOAPHandler</span><span class="o">;</span>
+</span><span class='line'><span class="k">import</span> <span class="nn">javax.xml.ws.handler.soap.SOAPMessageContext</span><span class="o">;</span>
+</span><span class='line'><span class="k">import</span> <span class="nn">org.apache.log4j.Logger</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="cm">/**</span>
+</span><span class='line'><span class="cm"> * @author Slim Ouertani</span>
+</span><span class='line'><span class="cm"> */</span>
+</span><span class='line'><span class="k">class</span> <span class="nc">SecuritySOAPHandler</span> <span class="k">extends</span> <span class="nc">SOAPHandler</span><span class="o">[</span><span class="kt">SOAPMessageContext</span><span class="o">]</span> <span class="o">{</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="k">private</span> <span class="k">val</span> <span class="n">L</span> <span class="k">=</span> <span class="nc">Logger</span><span class="o">.</span><span class="n">getLogger</span><span class="o">(</span><span class="n">classOf</span><span class="o">[</span><span class="kt">SecuritySOAPHandler</span><span class="o">]);</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="k">override</span> <span class="k">def</span> <span class="n">getHeaders</span><span class="o">()</span><span class="k">:</span> <span class="kt">Set</span><span class="o">[</span><span class="kt">QName</span><span class="o">]</span> <span class="k">=</span> <span class="o">{</span>
+</span><span class='line'>    <span class="k">val</span> <span class="n">securityHeader</span> <span class="k">=</span> <span class="k">new</span> <span class="nc">QName</span><span class="o">(</span><span class="s">&quot;http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd&quot;</span><span class="o">,</span> <span class="s">&quot;Security&quot;</span><span class="o">,</span> <span class="s">&quot;wsse&quot;</span><span class="o">);</span>
+</span><span class='line'>    <span class="k">val</span> <span class="n">headers</span> <span class="k">=</span> <span class="k">new</span> <span class="nc">HashSet</span><span class="o">[</span><span class="kt">QName</span><span class="o">]();</span>
+</span><span class='line'>    <span class="n">headers</span><span class="o">.</span><span class="n">add</span><span class="o">(</span><span class="n">securityHeader</span><span class="o">);</span>
+</span><span class='line'>    <span class="k">return</span> <span class="n">headers</span><span class="o">;</span>
+</span><span class='line'>  <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="k">override</span> <span class="k">def</span> <span class="n">handleMessage</span><span class="o">(</span><span class="n">soapMessageContext</span><span class="k">:</span> <span class="kt">SOAPMessageContext</span><span class="o">)</span><span class="k">:</span> <span class="kt">Boolean</span> <span class="o">=</span> <span class="o">{</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="k">try</span> <span class="o">{</span>
+</span><span class='line'>      <span class="k">val</span> <span class="n">outMessageIndicator</span> <span class="k">=</span> <span class="n">soapMessageContext</span><span class="o">.</span><span class="n">get</span><span class="o">(</span><span class="nc">MessageContext</span><span class="o">.</span><span class="nc">MESSAGE_OUTBOUND_PROPERTY</span><span class="o">).</span><span class="n">asInstanceOf</span><span class="o">[</span><span class="kt">Boolean</span><span class="o">];</span>
+</span><span class='line'>      <span class="k">if</span> <span class="o">(!</span><span class="n">outMessageIndicator</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>        <span class="k">val</span> <span class="n">envelope</span> <span class="k">=</span> <span class="n">soapMessageContext</span><span class="o">.</span><span class="n">getMessage</span><span class="o">().</span><span class="n">getSOAPPart</span><span class="o">().</span><span class="n">getEnvelope</span><span class="o">()</span>
+</span><span class='line'>        <span class="k">val</span> <span class="n">header</span> <span class="k">=</span> <span class="n">envelope</span><span class="o">.</span><span class="n">getHeader</span><span class="o">()</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="k">if</span> <span class="o">(</span><span class="n">header</span> <span class="o">==</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>          <span class="n">L</span><span class="o">.</span><span class="n">warn</span><span class="o">(</span><span class="s">&quot;No headers found in the input SOAP request&quot;</span><span class="o">)</span>
+</span><span class='line'>        <span class="o">}</span> <span class="k">else</span> <span class="o">{</span>
+</span><span class='line'>          <span class="n">processSOAPHeader</span><span class="o">(</span><span class="n">header</span><span class="o">)</span> <span class="k">match</span> <span class="o">{</span>
+</span><span class='line'>            <span class="k">case</span> <span class="nc">Some</span><span class="o">(</span><span class="nc">_processSOAPHeader</span><span class="o">)</span> <span class="k">=&gt;</span> <span class="o">{</span>
+</span><span class='line'>              <span class="n">soapMessageContext</span><span class="o">.</span><span class="n">put</span><span class="o">(</span><span class="nc">AuthenticationHandlerConstants</span><span class="o">.</span><span class="nc">AUTHN_STAUTS</span><span class="o">,</span> <span class="n">java</span><span class="o">.</span><span class="n">lang</span><span class="o">.</span><span class="nc">Boolean</span><span class="o">.</span><span class="nc">TRUE</span><span class="o">);</span>
+</span><span class='line'>              <span class="n">soapMessageContext</span><span class="o">.</span><span class="n">put</span><span class="o">(</span><span class="nc">AuthenticationHandlerConstants</span><span class="o">.</span><span class="nc">LOGIN</span><span class="o">,</span> <span class="nc">_processSOAPHeader</span><span class="o">.</span><span class="n">_1</span><span class="o">);</span>
+</span><span class='line'>              <span class="n">soapMessageContext</span><span class="o">.</span><span class="n">put</span><span class="o">(</span><span class="nc">AuthenticationHandlerConstants</span><span class="o">.</span><span class="nc">PWD</span><span class="o">,</span> <span class="nc">_processSOAPHeader</span><span class="o">.</span><span class="n">_2</span><span class="o">);</span>
+</span><span class='line'>            <span class="o">}</span>
+</span><span class='line'>            <span class="k">case</span> <span class="nc">None</span> <span class="k">=&gt;</span> <span class="o">{</span>
+</span><span class='line'>              <span class="n">soapMessageContext</span><span class="o">.</span><span class="n">put</span><span class="o">(</span><span class="nc">AuthenticationHandlerConstants</span><span class="o">.</span><span class="nc">AUTHN_STAUTS</span><span class="o">,</span> <span class="n">java</span><span class="o">.</span><span class="n">lang</span><span class="o">.</span><span class="nc">Boolean</span><span class="o">.</span><span class="nc">FALSE</span><span class="o">);</span>
+</span><span class='line'>              <span class="n">soapMessageContext</span><span class="o">.</span><span class="n">put</span><span class="o">(</span><span class="nc">AuthenticationHandlerConstants</span><span class="o">.</span><span class="nc">LOGIN</span><span class="o">,</span> <span class="s">&quot;&quot;</span><span class="o">);</span>
+</span><span class='line'>              <span class="n">soapMessageContext</span><span class="o">.</span><span class="n">put</span><span class="o">(</span><span class="nc">AuthenticationHandlerConstants</span><span class="o">.</span><span class="nc">PWD</span><span class="o">,</span> <span class="s">&quot;&quot;</span><span class="o">);</span>
+</span><span class='line'>            <span class="o">}</span>
+</span><span class='line'>          <span class="o">}</span>
+</span><span class='line'>        <span class="o">}</span>
+</span><span class='line'>      <span class="o">}</span>
+</span><span class='line'>    <span class="o">}</span> <span class="k">catch</span> <span class="o">{</span>
+</span><span class='line'>      <span class="k">case</span> <span class="n">ex</span><span class="k">:</span> <span class="kt">Exception</span> <span class="o">=&gt;</span> <span class="n">L</span><span class="o">.</span><span class="n">error</span><span class="o">(</span><span class="n">ex</span><span class="o">.</span><span class="n">getMessage</span><span class="o">(),</span> <span class="n">ex</span><span class="o">);</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>    <span class="n">soapMessageContext</span><span class="o">.</span><span class="n">setScope</span><span class="o">(</span><span class="nc">AuthenticationHandlerConstants</span><span class="o">.</span><span class="nc">AUTHN_STAUTS</span><span class="o">,</span> <span class="nc">MessageContext</span><span class="o">.</span><span class="nc">Scope</span><span class="o">.</span><span class="nc">APPLICATION</span><span class="o">);</span>
+</span><span class='line'>    <span class="n">soapMessageContext</span><span class="o">.</span><span class="n">setScope</span><span class="o">(</span><span class="nc">AuthenticationHandlerConstants</span><span class="o">.</span><span class="nc">LOGIN</span><span class="o">,</span> <span class="nc">MessageContext</span><span class="o">.</span><span class="nc">Scope</span><span class="o">.</span><span class="nc">APPLICATION</span><span class="o">);</span>
+</span><span class='line'>    <span class="n">soapMessageContext</span><span class="o">.</span><span class="n">setScope</span><span class="o">(</span><span class="nc">AuthenticationHandlerConstants</span><span class="o">.</span><span class="nc">PWD</span><span class="o">,</span> <span class="nc">MessageContext</span><span class="o">.</span><span class="nc">Scope</span><span class="o">.</span><span class="nc">APPLICATION</span><span class="o">);</span>
+</span><span class='line'>    <span class="k">return</span> <span class="kc">true</span><span class="o">;</span>
+</span><span class='line'>  <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="k">private</span> <span class="k">def</span> <span class="n">processSOAPHeaderInfo</span><span class="o">(</span><span class="n">e</span><span class="k">:</span> <span class="kt">SOAPElement</span><span class="o">)</span><span class="k">:</span> <span class="o">(</span><span class="kt">String</span><span class="o">,</span><span class="kt">String</span><span class="o">)</span> <span class="k">=</span> <span class="o">{</span>
+</span><span class='line'>    <span class="k">var</span> <span class="nc">_id</span><span class="k">:</span> <span class="kt">String</span> <span class="o">=</span> <span class="kc">null</span>
+</span><span class='line'>    <span class="k">var</span> <span class="nc">_password</span><span class="k">:</span> <span class="kt">String</span> <span class="o">=</span> <span class="kc">null</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="k">val</span> <span class="n">childElements</span> <span class="k">=</span> <span class="n">e</span><span class="o">.</span><span class="n">getChildElements</span><span class="o">(</span><span class="k">new</span> <span class="nc">QName</span><span class="o">(</span><span class="nc">AuthenticationHandlerConstants</span><span class="o">.</span><span class="nc">AUTHN_URI</span><span class="o">,</span> <span class="s">&quot;UsernameToken&quot;</span><span class="o">));</span>
+</span><span class='line'>    <span class="k">while</span> <span class="o">(</span><span class="n">childElements</span><span class="o">.</span><span class="n">hasNext</span><span class="o">())</span> <span class="o">{</span>
+</span><span class='line'>      <span class="k">val</span> <span class="n">usernameToken</span> <span class="k">=</span> <span class="n">childElements</span><span class="o">.</span><span class="n">next</span><span class="o">();</span>
+</span><span class='line'>      <span class="c1">// loop through child elements</span>
+</span><span class='line'>
+</span><span class='line'>      <span class="n">usernameToken</span> <span class="k">match</span> <span class="o">{</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="k">case</span> <span class="n">child</span><span class="k">:</span> <span class="kt">SOAPElement</span> <span class="o">=&gt;</span> <span class="o">{</span>
+</span><span class='line'>
+</span><span class='line'>          <span class="k">val</span> <span class="n">childElements1</span> <span class="k">=</span> <span class="n">child</span><span class="o">.</span><span class="n">getChildElements</span><span class="o">(</span><span class="k">new</span> <span class="nc">QName</span><span class="o">(</span><span class="nc">AuthenticationHandlerConstants</span><span class="o">.</span><span class="nc">AUTHN_URI</span><span class="o">,</span> <span class="s">&quot;Username&quot;</span><span class="o">));</span>
+</span><span class='line'>          <span class="k">val</span> <span class="n">childElements2</span> <span class="k">=</span> <span class="n">child</span><span class="o">.</span><span class="n">getChildElements</span><span class="o">(</span><span class="k">new</span> <span class="nc">QName</span><span class="o">(</span><span class="nc">AuthenticationHandlerConstants</span><span class="o">.</span><span class="nc">AUTHN_URI</span><span class="o">,</span> <span class="s">&quot;Password&quot;</span><span class="o">));</span>
+</span><span class='line'>
+</span><span class='line'>          <span class="k">while</span> <span class="o">(</span><span class="n">childElements1</span><span class="o">.</span><span class="n">hasNext</span><span class="o">())</span> <span class="o">{</span>
+</span><span class='line'>            <span class="k">val</span> <span class="n">next</span> <span class="k">=</span> <span class="n">childElements1</span><span class="o">.</span><span class="n">next</span><span class="o">();</span>
+</span><span class='line'>            <span class="n">next</span> <span class="k">match</span> <span class="o">{</span>
+</span><span class='line'>              <span class="k">case</span> <span class="n">l</span><span class="k">:</span> <span class="kt">SOAPElement</span> <span class="o">=&gt;</span> <span class="o">{</span>
+</span><span class='line'>                <span class="k">val</span> <span class="n">value</span> <span class="k">=</span> <span class="n">l</span><span class="o">.</span><span class="n">getValue</span><span class="o">();</span>
+</span><span class='line'>
+</span><span class='line'>                <span class="nc">_id</span> <span class="k">=</span> <span class="n">value</span><span class="o">;</span>
+</span><span class='line'>              <span class="o">}</span>
+</span><span class='line'>            <span class="o">}</span>
+</span><span class='line'>          <span class="o">}</span>
+</span><span class='line'>          <span class="k">while</span> <span class="o">(</span><span class="n">childElements2</span><span class="o">.</span><span class="n">hasNext</span><span class="o">())</span> <span class="o">{</span>
+</span><span class='line'>            <span class="k">val</span> <span class="n">next</span> <span class="k">=</span> <span class="n">childElements2</span><span class="o">.</span><span class="n">next</span><span class="o">();</span>
+</span><span class='line'>            <span class="n">next</span> <span class="k">match</span> <span class="o">{</span>
+</span><span class='line'>              <span class="k">case</span> <span class="n">l</span><span class="k">:</span> <span class="kt">SOAPElement</span> <span class="o">=&gt;</span> <span class="o">{</span>
+</span><span class='line'>                <span class="k">val</span> <span class="n">value</span> <span class="k">=</span> <span class="n">l</span><span class="o">.</span><span class="n">getValue</span><span class="o">()</span>
+</span><span class='line'>
+</span><span class='line'>                <span class="nc">_password</span> <span class="k">=</span> <span class="n">value</span><span class="o">;</span>
+</span><span class='line'>              <span class="o">}</span>
+</span><span class='line'>            <span class="o">}</span>
+</span><span class='line'>          <span class="o">}</span>
+</span><span class='line'>        <span class="o">}</span>
+</span><span class='line'>      <span class="o">}</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>    <span class="k">return</span> <span class="o">(</span><span class="nc">_id</span><span class="o">,</span> <span class="nc">_password</span><span class="o">);</span>
+</span><span class='line'>  <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="k">private</span> <span class="k">def</span> <span class="n">processSOAPHeader</span><span class="o">(</span><span class="n">sh</span><span class="k">:</span> <span class="kt">SOAPHeader</span><span class="o">)</span><span class="k">:</span> <span class="kt">Option</span><span class="o">[(</span><span class="kt">String</span>,<span class="kt">String</span><span class="o">)]</span> <span class="k">=</span> <span class="o">{</span>
+</span><span class='line'>    <span class="k">var</span> <span class="n">authenticated</span><span class="k">:</span> <span class="kt">Option</span><span class="o">[(</span><span class="kt">String</span>,<span class="kt">String</span><span class="o">)]</span> <span class="k">=</span> <span class="nc">None</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="k">val</span> <span class="n">childElems</span> <span class="k">=</span> <span class="n">sh</span><span class="o">.</span><span class="n">getChildElements</span><span class="o">(</span><span class="k">new</span> <span class="nc">QName</span><span class="o">(</span>
+</span><span class='line'>      <span class="nc">AuthenticationHandlerConstants</span><span class="o">.</span><span class="nc">AUTHN_URI</span><span class="o">,</span>
+</span><span class='line'>      <span class="nc">AuthenticationHandlerConstants</span><span class="o">.</span><span class="nc">AUTHN_LNAME</span><span class="o">));</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="c1">// iterate through child elements</span>
+</span><span class='line'>    <span class="k">while</span> <span class="o">(</span><span class="n">childElems</span><span class="o">.</span><span class="n">hasNext</span><span class="o">())</span> <span class="o">{</span>
+</span><span class='line'>
+</span><span class='line'>      <span class="k">val</span> <span class="n">child</span> <span class="k">=</span> <span class="n">childElems</span><span class="o">.</span><span class="n">next</span><span class="o">().</span><span class="n">asInstanceOf</span><span class="o">[</span><span class="kt">SOAPElement</span><span class="o">]</span>
+</span><span class='line'>      <span class="n">authenticated</span> <span class="k">=</span> <span class="nc">Some</span><span class="o">(</span><span class="n">processSOAPHeaderInfo</span><span class="o">(</span><span class="n">child</span><span class="o">))</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>    <span class="k">return</span> <span class="n">authenticated</span>
+</span><span class='line'>  <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="k">override</span> <span class="k">def</span> <span class="n">handleFault</span><span class="o">(</span><span class="n">soapMessageContext</span><span class="k">:</span> <span class="kt">SOAPMessageContext</span><span class="o">)</span><span class="k">:</span> <span class="kt">Boolean</span> <span class="o">=</span> <span class="kc">false</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Unlike client side we need to add an xml file handler.xml to enable the previous handler
+h2>on web service declaration:
+Chain this handler : @HandlerChain(file = &#8220;handler.xml&#8221;)
+Inject WebServiceContext : @Resource private var wsContext: WebServiceContext = _
+Retrieve a messageContext : val msgContext = wsContext.getMessageContext()
+Check stored valued : val authnStatus = msgContext.get(AuthenticationHandlerConstants.AUTHN_STAUTS)</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+</pre></td><td class='code'><pre><code class='scala'><span class='line'><span class="nd">@WebService</span><span class="o">(</span><span class="n">serviceName</span> <span class="k">=</span> <span class="s">&quot;WsService&quot;</span><span class="o">,</span> <span class="n">targetNamespace</span> <span class="k">=</span> <span class="s">&quot;http://slim.ouertani.me)</span>
+</span><span class='line'><span class="s">@HandlerChain(file = &quot;</span><span class="n">handler</span><span class="o">.</span><span class="n">xml</span><span class="s">&quot;)</span>
+</span><span class='line'><span class="s">@Stateless()</span>
+</span><span class='line'><span class="s">@Interceptors(Array(classOf[TracingInterceptor]))</span>
+</span><span class='line'><span class="s">class WsService extends LogHelper{</span>
+</span><span class='line'><span class="s">   </span>
+</span><span class='line'><span class="s">  @Resource private var wsContext: WebServiceContext = _</span>
+</span><span class='line'><span class="s"> </span>
+</span><span class='line'><span class="s">  def authenticate() {</span>
+</span><span class='line'><span class="s"> </span>
+</span><span class='line'><span class="s">    val msgContext = wsContext.getMessageContext()</span>
+</span><span class='line'><span class="s">    val authnStatus = msgContext.get(AuthenticationHandlerConstants.AUTHN_STAUTS)</span>
+</span><span class='line'><span class="s">    if (authnStatus == null || !authnStatus.asInstanceOf[Boolean]) {</span>
+</span><span class='line'><span class="s">       L.warn(&quot;</span><span class="n">header</span> <span class="n">authentification</span> <span class="n">not</span> <span class="n">found</span><span class="s">&quot;);</span>
+</span><span class='line'><span class="s">      throw AuthenticationHeaderNotFound.toFaultResponse</span>
+</span><span class='line'><span class="s">    }</span>
+</span><span class='line'><span class="s"> </span>
+</span><span class='line'><span class="s">    try {</span>
+</span><span class='line'><span class="s">      val login = msgContext.get(&quot;</span><span class="n">login</span><span class="s">&quot;).asInstanceOf[String]</span>
+</span><span class='line'><span class="s">      val passwd = msgContext.get(&quot;</span><span class="n">passwd</span><span class="s">&quot;).asInstanceOf[String]</span>
+</span><span class='line'><span class="s">      L.info(&quot;</span><span class="n">user</span> <span class="s">&quot; + login + &quot;</span><span class="n">pwd</span><span class="s">&quot; + passwd + &quot;</span><span class="k">try</span> <span class="k">this</span> <span class="n">service</span><span class="s">&quot;)</span>
+</span><span class='line'><span class="s">    } catch {</span>
+</span><span class='line'><span class="s">      case ex: Exception =&gt;</span>
+</span><span class='line'><span class="s">        L.warn(&quot;</span> <span class="n">exception</span> <span class="n">to</span> <span class="n">parse</span> <span class="n">header</span> <span class="n">authentification</span><span class="err">&quot;</span><span class="o">,</span> <span class="n">ex</span><span class="o">);</span>
+</span><span class='line'>        <span class="k">throw</span> <span class="nc">AuthenticationHeaderNotFound</span><span class="o">.</span><span class="n">toFaultResponse</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>  <span class="o">}</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+
+
+<h2>Adding custom header</h2>
+
+
+<p>Publishing a custom header is easier than using the previous handler :</p>
+
+<p>1-First lets add a custom header class</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+</pre></td><td class='code'><pre><code class='scala'><span class='line'><span class="k">import</span> <span class="nn">scala.reflect.BeanProperty</span>
+</span><span class='line'><span class="k">import</span> <span class="nn">javax.xml.bind.annotation.</span><span class="o">{</span><span class="nc">XmlType</span> <span class="o">,</span> <span class="nc">XmlAccessType</span><span class="o">,</span> <span class="nc">XmlElement</span><span class="o">,</span> <span class="nc">XmlAccessorType</span><span class="o">};</span>
+</span><span class='line'><span class="cm">/**</span>
+</span><span class='line'><span class="cm"> * @author Slim Ouertani</span>
+</span><span class='line'><span class="cm"> */</span>
+</span><span class='line'><span class="nd">@XmlAccessorType</span><span class="o">(</span><span class="nc">XmlAccessType</span><span class="o">.</span><span class="nc">FIELD</span><span class="o">)</span>
+</span><span class='line'><span class="nd">@XmlType</span><span class="o">(</span><span class="n">name</span> <span class="k">=</span> <span class="s">&quot;Header&quot;</span><span class="o">,</span> <span class="n">propOrder</span> <span class="k">=</span> <span class="nc">Array</span><span class="o">(</span>
+</span><span class='line'>    <span class="s">&quot;username&quot;</span><span class="o">,</span>
+</span><span class='line'>    <span class="s">&quot;password&quot;</span>
+</span><span class='line'>  <span class="o">))</span>
+</span><span class='line'><span class="k">class</span> <span class="nc">UsernameToken</span> <span class="o">{</span>
+</span><span class='line'>   <span class="nd">@BeanProperty</span>  <span class="nd">@XmlElement</span><span class="o">(</span><span class="n">required</span> <span class="k">=</span> <span class="kc">true</span><span class="o">,</span> <span class="n">nillable</span> <span class="k">=</span> <span class="kc">false</span> <span class="o">)</span> <span class="k">var</span> <span class="n">username</span> <span class="k">:</span> <span class="kt">String</span><span class="o">=</span> <span class="s">&quot;&quot;</span>
+</span><span class='line'>   <span class="nd">@BeanProperty</span>  <span class="nd">@XmlElement</span><span class="o">(</span><span class="n">required</span> <span class="k">=</span> <span class="kc">true</span><span class="o">,</span> <span class="n">nillable</span> <span class="k">=</span> <span class="kc">false</span> <span class="o">)</span> <span class="k">var</span> <span class="n">password</span> <span class="k">:</span> <span class="kt">String</span><span class="o">=</span> <span class="s">&quot;&quot;</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>2 - publish this header using @WebParam (name = &#8220;usernameToken&#8221;,header = true)</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='scala'><span class='line'><span class="k">def</span> <span class="n">execute</span> <span class="o">(</span><span class="nd">@WebParam</span><span class="o">(</span><span class="n">name</span> <span class="k">=</span> <span class="s">&quot;request&quot;</span> <span class="o">)</span> <span class="n">request</span> <span class="k">:</span> <span class="kt">Request</span><span class="o">,</span> <span class="nd">@WebParam</span> <span class="o">(</span><span class="n">name</span> <span class="k">=</span> <span class="s">&quot;usernameToken&quot;</span><span class="o">,</span><span class="n">header</span> <span class="k">=</span> <span class="kc">true</span><span class="o">)</span> <span class="n">header</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>  <span class="o">....</span>
+</span><span class='line'> <span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>3- retrieving user and password field are the same as accessing class properties :</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='scala'><span class='line'><span class="k">val</span> <span class="n">username</span> <span class="k">=</span> <span class="s">&quot;&quot;</span><span class="o">+</span><span class="n">header</span><span class="o">.</span><span class="n">getUsername</span><span class="o">()</span>
+</span><span class='line'><span class="k">val</span> <span class="n">password</span> <span class="k">=</span> <span class="s">&quot;&quot;</span><span class="o">+</span><span class="n">header</span><span class="o">.</span><span class="n">getPassword</span><span class="o">()</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>4- note that the preceding header is declared on WSDL method and produce this output on soapUI interface</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='xml'><span class='line'><span class="nt">&lt;soapenv:Header&gt;</span>
+</span><span class='line'>      <span class="nt">&lt;ws:usernameToken&gt;</span>
+</span><span class='line'>         <span class="nt">&lt;username&gt;</span>login<span class="nt">&lt;/username&gt;</span>
+</span><span class='line'>         <span class="nt">&lt;password&gt;</span>XXXXX<span class="nt">&lt;/password&gt;</span>
+</span><span class='line'>      <span class="nt">&lt;/ws:usernameToken&gt;</span>
+</span><span class='line'><span class="nt">&lt;/soapenv:Header&gt;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>Conclusion</h2>
+
+
+<p>Publishing specific header using JAX-WS is easier than using handler. Otherwise, handlers on server side are helpful for other purpose like logging I/O message.</p>
 ]]></content>
   </entry>
   
