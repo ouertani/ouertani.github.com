@@ -4,7 +4,7 @@
   <title><![CDATA[Ouertani Blog]]></title>
   <link href="http://ouertani.github.com/atom.xml" rel="self"/>
   <link href="http://ouertani.github.com/"/>
-  <updated>2013-04-01T04:24:17+02:00</updated>
+  <updated>2013-04-01T04:24:53+02:00</updated>
   <id>http://ouertani.github.com/</id>
   <author>
     <name><![CDATA[Ouertani]]></name>
@@ -3887,7 +3887,8 @@ In this post, we present a strange and rare situation when requesting WS using a
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>And tell :  wsdl2java.sh -client -d . -verbose -b binding.xsd OldExistingWsService.wsdl</p>
+<p>And tell :
+ <blockquote><p>wsdl2java.sh -client -d . -verbose -b binding.xsd OldExistingWsService.wsdl</p></blockquote></p>
 
 <p>Note : to deal with old wsdl I used this schema bindings :</p>
 
