@@ -4,7 +4,7 @@
   <title><![CDATA[Category: XML/RPC | Ouertani Blog]]></title>
   <link href="http://ouertani.github.com/blog/categories/xml-slash-rpc/atom.xml" rel="self"/>
   <link href="http://ouertani.github.com/"/>
-  <updated>2013-04-01T02:14:10+02:00</updated>
+  <updated>2013-04-01T02:15:39+02:00</updated>
   <id>http://ouertani.github.com/</id>
   <author>
     <name><![CDATA[Ouertani]]></name>
@@ -43,7 +43,7 @@
 
 <p>Rather than using an precompiled version of XML-RPC library, we will do our home solution using httpclient library from apache :
 <code>xml
- &lt;dependency&gt;
+&lt;dependency&gt;
  &lt;groupId&gt;org.apache.httpcomponents&lt;/groupId&gt;
  &lt;artifactId&gt;httpclient&lt;/artifactId&gt;
  &lt;version&gt;4.1&lt;/version&gt;
@@ -127,7 +127,7 @@ finally {  client.getConnectionManager().shutdown() }
 <p>  }
 }
 ```
-XML-RPC is a Remote Procedure Calling protocol and the body of an XML-RPC request is formatted using XML. A procedure executes on the AIR server and the value it returns is also formatted in XML. The interface to the AIR server interface uses XML-RPC over HTTP. Sending an XML to update the main balance will be using this class</p>
+XML-RPC is a Remote Procedure Calling protocol and the body of an XML-RPC request is formatted using XML. A procedure executes on the AIR server and the value it returns is also formatted in XML. The interface to the AIR server interface uses XML-RPC over HTTP. Sending an XML to update the main balance will be using this class.</p>
 
 <p>5- UpdateBalanceAndDate class : generates an UpdateBalanceAndDate XML request message
 ```scala

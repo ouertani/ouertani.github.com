@@ -4,7 +4,7 @@
   <title><![CDATA[Ouertani Blog]]></title>
   <link href="http://ouertani.github.com/atom.xml" rel="self"/>
   <link href="http://ouertani.github.com/"/>
-  <updated>2013-04-01T02:14:10+02:00</updated>
+  <updated>2013-04-01T02:15:39+02:00</updated>
   <id>http://ouertani.github.com/</id>
   <author>
     <name><![CDATA[Ouertani]]></name>
@@ -1574,7 +1574,7 @@ Creating Bars From a Web Form</p>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
 <span class='line-number'>5</span>
-</pre></td><td class='code'><pre><code class='xml'><span class='line'> <span class="nt">&lt;dependency&gt;</span>
+</pre></td><td class='code'><pre><code class='xml'><span class='line'><span class="nt">&lt;dependency&gt;</span>
 </span><span class='line'> <span class="nt">&lt;groupId&gt;</span>org.apache.httpcomponents<span class="nt">&lt;/groupId&gt;</span>
 </span><span class='line'> <span class="nt">&lt;artifactId&gt;</span>httpclient<span class="nt">&lt;/artifactId&gt;</span>
 </span><span class='line'> <span class="nt">&lt;version&gt;</span>4.1<span class="nt">&lt;/version&gt;</span>
@@ -1707,7 +1707,7 @@ Creating Bars From a Web Form</p>
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>XML-RPC is a Remote Procedure Calling protocol and the body of an XML-RPC request is formatted using XML. A procedure executes on the AIR server and the value it returns is also formatted in XML. The interface to the AIR server interface uses XML-RPC over HTTP. Sending an XML to update the main balance will be using this class</p>
+<p>XML-RPC is a Remote Procedure Calling protocol and the body of an XML-RPC request is formatted using XML. A procedure executes on the AIR server and the value it returns is also formatted in XML. The interface to the AIR server interface uses XML-RPC over HTTP. Sending an XML to update the main balance will be using this class.</p>
 
 <p>5- UpdateBalanceAndDate class : generates an UpdateBalanceAndDate XML request message</p>
 
