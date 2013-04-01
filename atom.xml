@@ -4,7 +4,7 @@
   <title><![CDATA[Ouertani Blog]]></title>
   <link href="http://ouertani.github.com/atom.xml" rel="self"/>
   <link href="http://ouertani.github.com/"/>
-  <updated>2013-04-01T04:06:19+02:00</updated>
+  <updated>2013-04-01T04:07:23+02:00</updated>
   <id>http://ouertani.github.com/</id>
   <author>
     <name><![CDATA[Ouertani]]></name>
@@ -3428,8 +3428,9 @@ Consider the example to calculate the quotient and remainder using euclidean alg
 
 <ol>
 <li>Create a Request Class and don’t forget :</li>
-a – default constructor
-b – field access annotation
+    <ol>
+    <li>default constructor</li>
+    <li>field access annotation</li></ol>
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 </pre></td><td class='code'><pre><code class='scala'><span class='line'><span class="nd">@XmlAccessorType</span><span class="o">(</span><span class="nc">XmlAccessType</span><span class="o">.</span><span class="nc">FIELD</span><span class="o">)</span>
