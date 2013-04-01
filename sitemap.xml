@@ -1,6 +1,10 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <urlset xmlns='http://www.sitemaps.org/schemas/sitemap/0.9'>
     <url>
+        <loc>http://ouertani.github.com/blog/2010/12/06/scala-try-with-resources/</loc>
+        <lastmod>2013-04-01T04:37:01+02:00</lastmod>
+    </url>
+    <url>
         <loc>
             http://ouertani.github.com/blog/2011/06/30/wsdl-integration-problem-two-declarations-cause-a-collision/
         </loc>
@@ -63,20 +67,16 @@
         <lastmod>2013-03-31T18:23:20+02:00</lastmod>
     </url>
     <url>
-        <loc>http://ouertani.github.com/blog/2013/04/01/scala-try-with-resources/</loc>
-        <lastmod>2013-04-01T04:36:07+02:00</lastmod>
-    </url>
-    <url>
         <loc>http://ouertani.github.com/about/</loc>
         <lastmod>2013-03-31T04:11:33+02:00</lastmod>
     </url>
     <url>
         <loc>http://ouertani.github.com/blog/archives/</loc>
-        <lastmod>2013-04-01T04:36:07+02:00</lastmod>
+        <lastmod>2013-04-01T04:37:01+02:00</lastmod>
     </url>
     <url>
         <loc>http://ouertani.github.com/</loc>
-        <lastmod>2013-04-01T04:36:07+02:00</lastmod>
+        <lastmod>2013-04-01T04:37:01+02:00</lastmod>
     </url>
     <url>
         <loc>http://ouertani.github.com/robots.txt</loc>
