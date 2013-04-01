@@ -5,46 +5,12 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>Ouertani Blog</title>
+  <title>Scala try-with-resources - Ouertani Blog</title>
   <meta name="author" content="Ouertani">
 
   
-  <meta name="description" content="Have you ever had this duplication of code in java? 1
-2
-3
-4
-5
-6
-7
-8
-9
-10
-11
-12
-13
-14
-15
-16
-17
-18
-19
-20
-21
-22
-23
-24
-25
-26
-27
-28
-29
-30
-31
-32
-33
-34
-35 &hellip;">
-  
+  <meta name="description" content="step by step to implement try-with ressource java 7 features using scala">
+  <meta name="keywords" content="SCALA, try-with-ressource, JAVA 7">
 
   <!-- http://t.co/dKP3o1e -->
   <meta name="HandheldFriendly" content="True">
@@ -52,7 +18,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://ouertani.github.com">
+  <link rel="canonical" href="http://ouertani.github.com/blog/2013/04/01/scala-try-with-resources">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <link href="/atom.xml" rel="alternate" title="Ouertani Blog" type="application/atom+xml">
@@ -110,15 +76,12 @@
 </nav>
   <div id="main">
     <div id="content">
-      <div class="blog-index">
+      <div>
+<article class="hentry" role="article">
   
-  
-  
-    <article>
-      
   <header>
     
-      <h1 class="entry-title"><a href="/blog/2013/04/01/scala-try-with-resources/">Scala Try-with-resources</a></h1>
+      <h1 class="entry-title">Scala Try-with-resources</h1>
     
     
       <p class="meta">
@@ -141,7 +104,7 @@
   </header>
 
 
-  <div class="entry-content"><p>Have you ever had this duplication of code in java?</p>
+<div class="entry-content"><p>Have you ever had this duplication of code in java?</p>
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -488,65 +451,16 @@ Let&#8217;s open class by creation rich one:</p>
 </span></code></pre></td></tr></table></div></figure>
 
 </div>
-  
-  
 
 
-    </article>
-  
-  
-    <article>
+  <footer>
+    <p class="meta">
       
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2013/03/09/rest-with-scala-and-vert-dot-x/">Rest With Scala and Vert.x</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
   
 
+<span class="byline author vcard">Posted by <span class="fn">Ouertani</span></span>
 
-<time datetime="2013-03-09T00:24:00+01:00" pubdate data-updated="true">Mar 9<span>th</span>, 2013</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>A previous post introduced some features of using Scala with <a href="http://vertx.io/">Vert.x</a>. This post covers how to publish Rest web services in an elegant and simple fashion.</p>
-
-<p>As in the previous post, Examples in Java and Scala are presented, source code been hosted on GitHub as part of lang-scala <a href="https://github.com/ouertani/vert.x/tree/master/vertx-lang/vertx-lang-scala">https://github.com/ouertani/vert.x/tree/master/vertx-lang/vertx-lang-scala</a></p>
-
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2013/03/09/rest-with-scala-and-vert-dot-x/">Read on &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
-  
-    <article>
       
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2013/02/12/fun-with-scala-and-vert-dot-x/">Fun With Scala and Vert.x</a></h1>
-    
-    
-      <p class="meta">
-        
 
 
 
@@ -558,365 +472,44 @@ Let&#8217;s open class by creation rich one:</p>
   
 
 
-<time datetime="2013-02-12T18:43:00+01:00" pubdate data-updated="true">Feb 12<span>th</span>, 2013</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p><a href="http://vertx.io/">Vert.x</a> is a polyglot event-driven application framework that runs on the Java Virtual Machine (JAVA 7 is the minimum supported version). Like Node.js, Vert.x is asynchronous and scalable, and lets developers build modern and effective web applications.</p>
-
-<p>Being polyglot, Vert.x can be used in many flavors, among which : JavaScript,CoffeeScript, Ruby, Python,Groovy and Java. In order to enforce asynchronism and scalabity, Vert.x is built upon <a href="https://netty.io/">Netty</a>, leverage the <a href="http://en.wikipedia.org/wiki/Reactor_pattern">reactor pattern</a>, using a frightening number of handlers.</p>
-
-<p>This article aims at showing the powerful combination of Scala and Vert.x - the Java counterpart being provided as comparison.</p>
-
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2013/02/12/fun-with-scala-and-vert-dot-x/">Read on &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
-  
-    <article>
+<time datetime="2013-04-01T04:29:00+02:00" pubdate data-updated="true">Apr 1<span>st</span>, 2013</time>
       
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2012/10/18/getting-started-with-play-2-dot-1/">Play 2.1 Scala 2.10 and String Interpolation</a></h1>
-    
-    
-      <p class="meta">
-        
 
-
-
-
-
-
-
-
+<span class="categories">
   
+    <a class='category' href='/blog/categories/scala/'>SCALA</a>
+  
+</span>
 
 
-<time datetime="2012-10-18T19:00:00+02:00" pubdate data-updated="true">Oct 18<span>th</span>, 2012</time>
-        
-      </p>
+    </p>
     
-  </header>
-
-
-  <div class="entry-content"><p>Play Roadmap has been <a href="https://docs.google.com/document/d/1OEt6gZ3a-daSkNXqXGAM4jBs5LtuDkLZIzsWN9aeM1g/preview?sle=true">published</a>. The major feature will be the support of <a href="http://www.scala-lang.org/">scala 2.10</a> version.</p>
-
-<p>By using <a href="http://www.playframework.org/">Play 2.1</a> we can start profiting with <a href="https://docs.google.com/document/d/1NdxNxZYodPA-c4MLr33KzwzKFkzm9iW9POexT9PkJsU/edit">String interpolation</a></p>
-
+      <div class="sharing">
+  
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://ouertani.github.com/blog/2013/04/01/scala-try-with-resources/" data-via="ouertani" data-counturl="http://ouertani.github.com/blog/2013/04/01/scala-try-with-resources/" >Tweet</a>
+  
+  
+  
 </div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2012/10/18/getting-started-with-play-2-dot-1/">Read on &rarr;</a>
-    </footer>
-  
 
-
-    </article>
-  
-  
-    <article>
+    
+    <p class="meta">
       
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2012/10/09/play-2-dot-1/">Play 2.1 , Scala 2.10 and Slick 0.11.1</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2012-10-09T15:17:00+02:00" pubdate data-updated="true">Oct 9<span>th</span>, 2012</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>Starting from scala <a href="http://www.scala-lang.org/downloads">2.10</a> version , <a href="http://slick.typesafe.com/">Slick</a> will be by defaut the database manager. In addition, <a href="http://www.playframework.org/">Playframework</a>  also will be based on scala 2.10  since version 2.1.</p>
-
-<p>In this tutorial, I will try to present an example using the last version of slick and scalatest based on <a href="http://www.scala-lang.org/downloads">scala 2.10.0-M7</a> and a developpment version of <a href="https://github.com/playframework/Play20">playframework</a></p>
-
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2012/10/09/play-2-dot-1/">Read on &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
-  
-    <article>
+        <a class="basic-alignment left" href="/blog/2013/03/09/rest-with-scala-and-vert-dot-x/" title="Previous Post: Rest with Scala and Vert.x">&laquo; Rest with Scala and Vert.x</a>
       
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2012/09/26/xml-slash-rpc-driver-as-jca-scala-connector/">XML/RPC Driver as JCA Scala Connector</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2012-09-26T19:41:00+02:00" pubdate data-updated="true">Sep 26<span>th</span>, 2012</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>Interoperability and reusability are key features of SOA architecture.</p>
-
-<p>The <a href="http://en.wikipedia.org/wiki/Java_EE_Connector_Architecture">Java EE Connector architecture</a> defines a standard architecture for connecting the Java EE platform to heterogeneous EISs. This article presents an XML/RPC  adapter using a Scala JCA outbound connector to an IN/AIR legacy system.</p>
-
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2012/09/26/xml-slash-rpc-driver-as-jca-scala-connector/">Read on &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
-  
-    <article>
       
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2012/06/29/xml-rpc-using-scala/">XML-RPC Using Scala</a></h1>
-    
-    
-      <p class="meta">
-        
+    </p>
+  </footer>
+</article>
 
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2012-06-29T02:03:00+02:00" pubdate data-updated="true">Jun 29<span>th</span>, 2012</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><h2>Purpose</h2>
-
-
-<p>Calling remote procedure using XML-RPC and Scala.</p>
-
-<h2>Introduction</h2>
-
-
-<p>On Telecom IT environment and specially middelware solution, we will rarely do all the work but rather delegate some of business process to other tiers. Web service communications is heavy used between solutions. However, many IT node continues to support older protocols like XML-RPC. Ericsson Intelligent Network (IN) and its subsystem uses AIR Integration Protocol user communication(UCIP) based on a variant of XM-RPC.</p>
+  <section>
+    <h1>Comments</h1>
+    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+  </section>
 
 </div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2012/06/29/xml-rpc-using-scala/">Read on &rarr;</a>
-    </footer>
-  
 
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2012/06/28/jaxws-header-part-2-server-side/">Jaxws Header : Part 2 : Server Side</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2012-06-28T03:19:00+02:00" pubdate data-updated="true">Jun 28<span>th</span>, 2012</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><h2>Purpose</h2>
-
-
-<p>Manipulating JAXWS header on the server Side like reading WSS username token, logging saop message and publish a specific header.</p>
-
-<h2>Introduction</h2>
-
-
-<p>On Telecom IT environment and specially middelware solution web service communications are heavy used between solutions. This tutorial aims to introduce using handler on server side by publishing specific header, reading WSS UserToken or logging the soap message on console.</p>
-
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2012/06/28/jaxws-header-part-2-server-side/">Read on &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2012/06/28/sending-an-email-using-the-javamail-session-and-glassfish/">Sending an Email Using the JavaMail Session and Glassfish</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2012-06-28T02:18:00+02:00" pubdate data-updated="true">Jun 28<span>th</span>, 2012</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><h2>Purpose</h2>
-
-
-<p>This tutorial is a supplement to the article of oracle published <a href="http://www.oracle.com/webfolder/technetwork/tutorials/obe/java/javamail/javamail.html">here</a>.
-After reading this later, I decided to share some tips about this EE environment JavaMail api configuration.</p>
-
-<h2>Introduction</h2>
-
-
-<p>Two years ago, we decided to move to JEE 6 for our enterprise solutions and take a lot of fun with new EJB 3.1 features and annotations. Glassfish has made our lives easier, it was very easy to declare variables using it&#8217;s administration console.
-Less complicated than using global resource environment for properties It is also the continuation to this <a href="http://www.jroller.com/articles/jee-6-environmental-enterprise">tricks</a> this tutorial delegate to Glassfish EE server managing mail session.</p>
-
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2012/06/28/sending-an-email-using-the-javamail-session-and-glassfish/">Read on &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2012/06/27/jax-ws-header-part-1-the-client-side/">JAX-WS Header : Part 1 the Client Side</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2012-06-27T03:32:00+02:00" pubdate data-updated="true">Jun 27<span>th</span>, 2012</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><h2>Purpose</h2>
-
-
-<p>Manipulating JAXWS header on the client Side like adding WSS username token or logging saop message.</p>
-
-<h2>Introduction</h2>
-
-
-<p>On Telecom IT environment and specially middelware solution, we will rarely do all the work but rather delegate some of business process to other tiers. Web service communications is heavy used between solutions. This tutorial aims to introduce using handler on client side by adding WSS UserToken or logging the soap message on console.</p>
-
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2012/06/27/jax-ws-header-part-1-the-client-side/">Read on &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
-  <div class="pagination">
-    
-      <a class="prev" href="/blog/page/2/">&larr; Older</a>
-    
-    <a href="/blog/archives">Blog Archives</a>
-    
-  </div>
-</div>
 <aside class="sidebar">
   
     <a href="https://docs.google.com/open?id=0B3c0mmqYdPkobDdhV3ZWbnl2ek0"><img class="center" src="/images/oracle_certprof_clr_rgb.jpg" width="350" height="350" title="score 100%" alt="images"></a>
@@ -992,7 +585,7 @@ Less complicated than using global resource environment for properties It is als
 <section>
   <h1>Latest Tweets</h1>
   <ul id="tweets">
-    <li class="loading">Status updating&#8230;</li>
+    <li class="loading">Status updating...</li>
   </ul>
   
   <script>
@@ -1025,6 +618,7 @@ Less complicated than using global resource environment for properties It is als
   
 </aside>
 
+
     </div>
   </div>
   <footer role="contentinfo"><p>
@@ -1039,7 +633,10 @@ Less complicated than using global resource environment for properties It is als
       var disqus_shortname = 'ouertani';
       
         
-        var disqus_script = 'count.js';
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://ouertani.github.com/blog/2013/04/01/scala-try-with-resources/';
+        var disqus_url = 'http://ouertani.github.com/blog/2013/04/01/scala-try-with-resources/';
+        var disqus_script = 'embed.js';
       
     (function () {
       var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;

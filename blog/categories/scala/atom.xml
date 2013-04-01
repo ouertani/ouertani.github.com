@@ -4,7 +4,7 @@
   <title><![CDATA[Category: SCALA | Ouertani Blog]]></title>
   <link href="http://ouertani.github.com/blog/categories/scala/atom.xml" rel="self"/>
   <link href="http://ouertani.github.com/"/>
-  <updated>2013-04-01T04:27:17+02:00</updated>
+  <updated>2013-04-01T04:36:12+02:00</updated>
   <id>http://ouertani.github.com/</id>
   <author>
     <name><![CDATA[Ouertani]]></name>
@@ -12,6 +12,248 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Scala try-with-resources]]></title>
+    <link href="http://ouertani.github.com/blog/2013/04/01/scala-try-with-resources/"/>
+    <updated>2013-04-01T04:29:00+02:00</updated>
+    <id>http://ouertani.github.com/blog/2013/04/01/scala-try-with-resources</id>
+    <content type="html"><![CDATA[<p>Have you ever had this duplication of code in java?
+```java
+public void doQuery(String q) throws SQLException {</p>
+
+<pre><code>   PreparedStatement preparedStatement = null;
+   ResultSet resultSet = null;     
+   Connection conn = null;
+   try {
+       conn = getConnection();
+       preparedStatement = conn.prepareStatement(q);        
+       resultSet = preparedStatement.executeQuery();
+
+
+   } finally {
+       close(resultSet);
+       close(preparedStatement);
+       close(conn);           
+   }
+</code></pre>
+
+<p>   }</p>
+
+<pre><code>  private static void close(Connection connection) {
+   try {
+       if (connection != null) {
+           connection.close();
+       }
+   } catch (Exception e) {
+      error( e);
+   }
+</code></pre>
+
+<p>   }</p>
+
+<p>   private static void close(PreparedStatement ps) {</p>
+
+<pre><code>   try {
+       if (ps != null) {
+           ps.close();
+       }
+   } catch (Exception e) {
+      error( e);
+   }
+</code></pre>
+
+<p>   }</p>
+
+<p>   private static void close(ResultSet rs) {</p>
+
+<pre><code>   try {
+       if (rs != null) {
+           rs.close();
+       }
+   } catch (Exception e) {
+      error( e);
+   }
+</code></pre>
+
+<p>   }
+```</p>
+
+<p>we have duplicated the close method (using cascading try or not ) because Connection, PreparedStatement and ResultSet does not share the same interface (may be the future AutoCloseable interface).</p>
+
+<p>Next java version will introduce try-with ressource wich. We try to give the same behavior using scala futures.</p>
+
+<h2>I- BASIC ENHANCEMENT : ONE CLOSE METHOD</h2>
+
+
+<p>```scala
+@throws(classOf[SQLException])
+def doQuery( q:String)   {
+  var  preparedStatement:PreparedStatement = null;
+  var resultSet:ResultSet = null;
+  var conn:Connection = null;
+  try {</p>
+
+<pre><code>conn = getConnection()
+preparedStatement = conn.prepareStatement(q)
+resultSet = preparedStatement.executeQuery()
+</code></pre>
+
+<p>  } finally {</p>
+
+<pre><code>close(resultSet)
+close(preparedStatement)
+close(conn)
+</code></pre>
+
+<p>  }
+}
+def getConnection():Connection=null</p>
+
+<p>def close(x : {def close()}){
+  try {</p>
+
+<pre><code>      if (x != null) {
+          x.close();
+      }
+  } catch  {
+     case  e:Exception =&gt; error(e);
+  }
+</code></pre>
+
+<p>}
+```
+Scala is a full object ( Java is not). x : {def close()} means any class that has this method as signature.
+The best point here is that scala rather than other dynamic language do compilation check, the worst is the performance.</p>
+
+<h2>II- GENERIC CLOSE</h2>
+
+
+<p>We can use var args close version :
+<code>scala
+def close(x : {def close()}*){
+  x.foreach (close)    
+}
+</code>
+and
+<code>scala
+close(resultSet)
+close(preparedStatement)
+close(conn)
+</code>
+will be :
+<code>scala
+close(resultSet,preparedStatement,conn)
+</code></p>
+
+<h2>III- OPEN CLASS</h2>
+
+
+<p>What if we need to add close method to theses class even final ones?
+Let's open class by creation rich one:
+```scala
+class RichConnection (c:Connection){
+  def &lt;>(){</p>
+
+<pre><code>close(c)
+</code></pre>
+
+<p>  }
+}
+class RichPreparedStatement(p :PreparedStatement){
+  def &lt;>(){</p>
+
+<pre><code>close(p)
+</code></pre>
+
+<p>  }
+}
+class RichResultSet(r:ResultSet){
+  def  &lt;>(){</p>
+
+<pre><code>close(r)
+</code></pre>
+
+<p>  }
+}
+<code>
+and introduce implicit conversions :
+</code>scala
+implicit def toRichConnection(c:Connection):RichConnection= new RichConnection(c)
+implicit def toRichPreparedStatement(p:PreparedStatement):RichPreparedStatement= new RichPreparedStatement(p)
+implicit def toRichResultSet(r:ResultSet):RichResultSet= new RichResultSet (r)
+<code>
+and as the result the call will be :
+</code>scala
+finally {</p>
+
+<pre><code>  resultSet.&lt;&gt;
+  preparedStatement.&lt;&gt;
+  conn.&lt;&gt;
+}
+</code></pre>
+
+<p>```</p>
+
+<h2>IV- USING TYPES</h2>
+
+
+<p>define type :
+<code>scala
+type AutoCloseable={def close()}
+</code>
+and close definition will be
+```scala
+def close(x : AutoCloseable){</p>
+
+<pre><code> try {
+       if (x != null) {
+           x.close();
+       }
+   } catch  {
+      case  e:Exception =&gt; error(e);
+   }
+</code></pre>
+
+<p>  }
+ def close(x : AutoCloseable*){
+   x.foreach (close)  <br/>
+ }
+```</p>
+
+<h2>V-CHAINED TRY-WITH</h2>
+
+
+<p>we introduce a curring tryWith method as
+```scala
+def tryWith<a href="ac%20:A">A&lt;%AutoCloseable</a>(f: A=> Unit)
+{
+  try {</p>
+
+<pre><code>f
+</code></pre>
+
+<p>  } finally {
+   close(ac)
+  }
+}
+<code>
+tryWith enable us to use doQuery as :
+</code>scala
+def doQuery( q:String)   {
+   tryWith (getConnection()) { conn =></p>
+
+<pre><code> tryWith ( conn.prepareStatement(q)) {ps =&gt;
+   tryWith (ps.executeQuery()){rs =&gt;
+     }
+ }     
+</code></pre>
+
+<p>  }
+}
+```</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[JAX-WS Header : Part 1 the Client Side]]></title>
