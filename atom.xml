@@ -4,7 +4,7 @@
   <title><![CDATA[Ouertani Blog]]></title>
   <link href="http://ouertani.github.com/atom.xml" rel="self"/>
   <link href="http://ouertani.github.com/"/>
-  <updated>2013-04-01T02:44:11+02:00</updated>
+  <updated>2013-04-01T02:46:55+02:00</updated>
   <id>http://ouertani.github.com/</id>
   <author>
     <name><![CDATA[Ouertani]]></name>
@@ -1951,19 +1951,24 @@ Less complicated than using global resource environment for properties It is als
 <h2>Prerequisites</h2>
 
 
-<p>Before starting this tutorial, you should:
-<li>Fully understand of http://www.oracle.com/webfolder/technetwork/tutorials/obe/java/javamail/javamail.html</li></p>
 
-<p><li>Have access to an SMTP server. You must know the host name, port number, and security settings for your SMTP server. Web mail providers may offer SMTP access, view your email account settings or help to find further information. Be aware that your user name is often your full email address and not just the name that comes before the @ symbol.</li></p>
 
-<p><li>Have basic familiarity with Servlets and CDIs (helpful but not required)</li></p>
+<ol>Before starting this tutorial, you should:
+<li>Fully understand of <a href="http://www.oracle.com/webfolder/technetwork/tutorials/obe/java/javamail/javamail.html">http://www.oracle.com/webfolder/technetwork/tutorials/obe/java/javamail/javamail.html</a></li>
+<li>Have access to an SMTP server. You must know the host name, port number, and security settings for your SMTP server. Web mail providers may offer SMTP access, view your email account settings or help to find further information. Be aware that your user name is often your full email address and not just the name that comes before the @ symbol.</li>
+<li>Have basic familiarity with Servlets and CDIs (helpful but not required)</li>
+</ol>
+
+
+
 
 <h2>Create a Java mail session resource :</h2>
 
 
-<p>To create and JavaMail Session :</p>
+
 
 <ol>
+To create and JavaMail Session :
 <li>start galssfish server</li>
 <li>open admin console ( default localhost:4848)</li>
 <li>Go to Resources -> JavaMail Sessions -> click new to add new javaMail resource</li>
