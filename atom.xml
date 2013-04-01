@@ -4,7 +4,7 @@
   <title><![CDATA[Ouertani Blog]]></title>
   <link href="http://ouertani.github.com/atom.xml" rel="self"/>
   <link href="http://ouertani.github.com/"/>
-  <updated>2013-04-01T01:50:39+02:00</updated>
+  <updated>2013-04-01T02:10:53+02:00</updated>
   <id>http://ouertani.github.com/</id>
   <author>
     <name><![CDATA[Ouertani]]></name>
@@ -1535,6 +1535,368 @@ Creating Bars From a Web Form</p>
 
 
 <blockquote><p>Source code is based on JCA 1.6 specification and hosted on <a href="https://github.com/ouertani/TelcoCX">github</a>.</p></blockquote>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[XML-RPC using scala]]></title>
+    <link href="http://ouertani.github.com/blog/2012/06/28/xml-rpc-using-scala/"/>
+    <updated>2012-06-28T02:03:00+02:00</updated>
+    <id>http://ouertani.github.com/blog/2012/06/28/xml-rpc-using-scala</id>
+    <content type="html"><![CDATA[<h2>Purpose</h2>
+
+
+<p>Calling remote procedure using XML-RPC and Scala.</p>
+
+<h2>Introduction
+
+On Telecom IT environment and specially middelware solution, we will rarely do all the work but rather delegate some of business process to other tiers. Web service communications is heavy used between solutions. However, many IT node continues to support older protocols like XML-RPC. Ericsson Intelligent Network (IN) and its subsystem uses AIR Integration Protocol user communication(UCIP) based on a variant of XM-RPC.
+
+<h2>Why UCIP ?</h2>
+
+UCIP is intended for user self services such as Adjustments, Account Refill, and Account Inquiries and to extract account details. UCIP is an IP-based protocol used for integration towards the AIR server from the external application.
+<h2>Why Scala ?
+
+UCIP is an XML over HTTP based protocol, which makes it easy to integrate with a central integration point within a network. In addition, Scala can be used to easily create, parse, and process XML documents. XML data can be represented in Scala either by using a generic data representation, or with a data-specific data representation.
+<h2>Scala & XML-RPC</h2>
+
+Rather than using an precompiled version of XML-RPC library, we will do our home solution using httpclient library from apache :
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='xml'><span class='line'> <span class="nt">&lt;dependency&gt;</span>
+</span><span class='line'> <span class="nt">&lt;groupId&gt;</span>org.apache.httpcomponents<span class="nt">&lt;/groupId&gt;</span>
+</span><span class='line'> <span class="nt">&lt;artifactId&gt;</span>httpclient<span class="nt">&lt;/artifactId&gt;</span>
+</span><span class='line'> <span class="nt">&lt;version&gt;</span>4.1<span class="nt">&lt;/version&gt;</span>
+</span><span class='line'><span class="nt">&lt;/dependency&gt;</span>
+</span></code></pre></td></tr></table></div></figure>
+<h3>UPDATEBALANCEANDDATE</h3>
+
+
+The message UpdateBalanceAndDate is used to adjust balances and expiry dates on the main account and the dedicated accounts. The sample I chooses here is only to update main balance :
+
+Let&#8217;s start with some helpful class :
+
+1- InParameters class : contains In specific configuration like ip and port
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='scala'><span class='line'><span class="k">case</span> <span class="k">class</span> <span class="nc">InParameters</span><span class="o">(</span><span class="n">ip</span><span class="k">:</span><span class="kt">String</span><span class="o">,</span><span class="n">port</span><span class="k">:</span><span class="kt">Int</span><span class="o">,</span><span class="n">user</span><span class="k">:</span><span class="kt">String</span><span class="o">,</span><span class="n">pwd</span><span class="k">:</span><span class="kt">String</span><span class="o">,</span><span class="n">agent</span><span class="k">:</span><span class="kt">String</span><span class="o">,</span><span class="n">url</span><span class="k">:</span><span class="kt">String</span><span class="o">)</span>
+</span></code></pre></td></tr></table></div></figure>
+2- XMLRPCVo abstract class : groups all XML request message like the transaction generated Id and date
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class='scala'><span class='line'><span class="k">object</span> <span class="nc">XmlRpcVo</span> <span class="o">{</span>
+</span><span class='line'> <span class="k">val</span> <span class="n">f</span> <span class="k">=</span> <span class="k">new</span> <span class="nc">SimpleDateFormat</span><span class="o">(</span><span class="s">&quot;yyyyMMdd&#39;T&#39;HH:mm:ssZ&quot;</span><span class="o">);</span>
+</span><span class='line'><span class="o">}</span>
+</span><span class='line'><span class="k">abstract</span> <span class="k">class</span> <span class="nc">XmlRpcVo</span> <span class="o">{</span>
+</span><span class='line'> <span class="k">def</span> <span class="n">originTransactionID</span> <span class="k">=</span> <span class="nc">System</span> <span class="n">currentTimeMillis</span>
+</span><span class='line'> <span class="k">def</span> <span class="n">dateTime</span><span class="k">:</span><span class="kt">String</span><span class="o">=</span> <span class="nc">XmlRpcVo</span><span class="o">.</span><span class="n">f</span><span class="o">.</span><span class="n">format</span><span class="o">(</span><span class="k">new</span> <span class="nc">Date</span><span class="o">())</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+3- UpdateBalanceAndDateParameter class with extend our XMLRPCVo and contains all data needed by Update main balance operation like subscriber number
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='scala'><span class='line'><span class="k">case</span> <span class="k">class</span> <span class="nc">UpdateBalanceAndDateParameter</span><span class="o">(</span><span class="n">subscriberNumber</span><span class="k">:</span><span class="kt">String</span><span class="o">,</span>
+</span><span class='line'> <span class="n">originNodeType</span><span class="k">:</span><span class="kt">String</span><span class="o">,</span>
+</span><span class='line'> <span class="n">originHostName</span><span class="k">:</span><span class="kt">String</span><span class="o">,</span>
+</span><span class='line'> <span class="n">transactionCurrency</span><span class="k">:</span><span class="kt">String</span><span class="o">,</span>
+</span><span class='line'> <span class="n">amount</span><span class="k">:</span> <span class="kt">Int</span> <span class="o">)</span>
+</span><span class='line'><span class="k">extends</span> <span class="nc">XmlRpcVo</span>
+</span></code></pre></td></tr></table></div></figure>
+4-UCIP suggests to add custom header on XML-RPC message. XmlRpcHttpClient class dialogue with IN nodes using generic execute method 
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+</pre></td><td class='code'><pre><code class='scala'><span class='line'><span class="k">class</span> <span class="nc">XmlRpcHttpClient</span><span class="o">(</span><span class="n">inp</span> <span class="k">:</span><span class="kt">InParameters</span><span class="o">)</span> <span class="k">extends</span> <span class="nc">LogHelper</span><span class="o">{</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="k">private</span> <span class="k">val</span> <span class="n">httpclient</span><span class="k">:</span><span class="kt">DefaultHttpClient</span> <span class="o">=</span> <span class="n">client</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="k">private</span> <span class="o">[</span><span class="kt">this</span><span class="o">]</span> <span class="k">def</span> <span class="n">client</span><span class="o">()</span> <span class="k">=</span>
+</span><span class='line'>  <span class="o">{</span>
+</span><span class='line'>    <span class="k">val</span> <span class="n">httpclient</span> <span class="k">=</span> <span class="k">new</span> <span class="nc">DefaultHttpClient</span><span class="o">();</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="n">httpclient</span><span class="o">.</span><span class="n">getCredentialsProvider</span><span class="o">().</span><span class="n">setCredentials</span><span class="o">(</span>
+</span><span class='line'>      <span class="k">new</span> <span class="nc">AuthScope</span><span class="o">(</span><span class="n">inp</span><span class="o">.</span><span class="n">ip</span><span class="o">,</span> <span class="n">inp</span><span class="o">.</span><span class="n">port</span><span class="o">),</span>
+</span><span class='line'>      <span class="k">new</span> <span class="nc">UsernamePasswordCredentials</span><span class="o">(</span><span class="n">inp</span><span class="o">.</span><span class="n">user</span><span class="o">,</span> <span class="n">inp</span><span class="o">.</span><span class="n">pwd</span><span class="o">))</span>
+</span><span class='line'>
+</span><span class='line'>
+</span><span class='line'>    <span class="n">httpclient</span><span class="o">.</span><span class="n">getParams</span><span class="o">().</span><span class="n">setParameter</span><span class="o">(</span><span class="nc">CoreProtocolPNames</span><span class="o">.</span><span class="nc">USER_AGENT</span><span class="o">,</span> <span class="n">inp</span><span class="o">.</span><span class="n">agent</span><span class="o">)</span>
+</span><span class='line'>    <span class="n">httpclient</span>
+</span><span class='line'>  <span class="o">}</span>
+</span><span class='line'>  <span class="k">private</span> <span class="o">[</span><span class="kt">this</span><span class="o">]</span> <span class="k">def</span> <span class="n">poster</span><span class="o">(</span><span class="n">elem</span><span class="k">:</span><span class="kt">Elem</span><span class="o">)</span> <span class="o">={</span>
+</span><span class='line'>    <span class="k">val</span> <span class="n">httppost</span> <span class="k">=</span> <span class="k">new</span> <span class="nc">HttpPost</span><span class="o">(</span><span class="n">inp</span><span class="o">.</span><span class="n">url</span><span class="o">)</span>
+</span><span class='line'>    <span class="n">httppost</span><span class="o">.</span><span class="n">addHeader</span><span class="o">(</span><span class="s">&quot;Content-Type&quot;</span><span class="o">,</span> <span class="s">&quot;text/xml&quot;</span><span class="o">)</span>
+</span><span class='line'>    <span class="n">httppost</span><span class="o">.</span><span class="n">addHeader</span><span class="o">(</span><span class="s">&quot;Content-Disposition&quot;</span><span class="o">,</span> <span class="s">&quot;form-data; name=\&quot;fname\&quot;; filename=\&quot;request.xml\&quot;&quot;</span><span class="o">)</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="k">val</span> <span class="n">comment</span> <span class="k">=</span> <span class="k">new</span> <span class="nc">StringBody</span><span class="o">(</span><span class="s">&quot;&quot;</span><span class="o">+</span><span class="n">elem</span><span class="o">)</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="k">val</span> <span class="n">reqEntity</span> <span class="k">=</span> <span class="k">new</span> <span class="nc">MultipartEntity</span><span class="o">()</span>
+</span><span class='line'>    <span class="n">reqEntity</span><span class="o">.</span><span class="n">addPart</span><span class="o">(</span><span class="s">&quot;fname&quot;</span><span class="o">,</span> <span class="n">comment</span><span class="o">)</span>
+</span><span class='line'>    <span class="n">httppost</span><span class="o">.</span><span class="n">setEntity</span><span class="o">(</span><span class="n">reqEntity</span><span class="o">)</span>
+</span><span class='line'>    <span class="n">httppost</span>
+</span><span class='line'>  <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="k">def</span> <span class="n">execute</span><span class="o">(</span><span class="n">requestVo</span><span class="k">:</span><span class="kt">scala.xml.Elem</span><span class="o">)</span><span class="k">:</span><span class="kt">HttpResponse</span> <span class="o">=</span> <span class="o">{</span>
+</span><span class='line'>    <span class="k">try</span>     <span class="o">{</span> <span class="n">client</span><span class="o">.</span><span class="n">execute</span><span class="o">(</span><span class="n">poster</span><span class="o">(</span><span class="n">requestVo</span><span class="o">))}</span>
+</span><span class='line'>    <span class="k">catch</span>   <span class="o">{</span> <span class="k">case</span> <span class="n">e</span> <span class="k">=&gt;</span>  <span class="k">throw</span> <span class="k">new</span> <span class="n">connectionExecption</span><span class="o">(</span><span class="n">e</span><span class="o">)</span> <span class="o">}</span>
+</span><span class='line'>    <span class="k">finally</span> <span class="o">{</span>  <span class="n">client</span><span class="o">.</span><span class="n">getConnectionManager</span><span class="o">().</span><span class="n">shutdown</span><span class="o">()</span> <span class="o">}</span>
+</span><span class='line'>  <span class="o">}</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+XML-RPC is a Remote Procedure Calling protocol and the body of an XML-RPC request is formatted using XML. A procedure executes on the AIR server and the value it returns is also formatted in XML. The interface to the AIR server interface uses XML-RPC over HTTP. Sending an XML to update the main balance will be using this class
+
+5- UpdateBalanceAndDate class : generates an UpdateBalanceAndDate XML request message
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+<span class='line-number'>38</span>
+<span class='line-number'>39</span>
+<span class='line-number'>40</span>
+<span class='line-number'>41</span>
+<span class='line-number'>42</span>
+<span class='line-number'>43</span>
+<span class='line-number'>44</span>
+<span class='line-number'>45</span>
+<span class='line-number'>46</span>
+<span class='line-number'>47</span>
+<span class='line-number'>48</span>
+<span class='line-number'>49</span>
+<span class='line-number'>50</span>
+<span class='line-number'>51</span>
+<span class='line-number'>52</span>
+<span class='line-number'>53</span>
+<span class='line-number'>54</span>
+<span class='line-number'>55</span>
+<span class='line-number'>56</span>
+</pre></td><td class='code'><pre><code class='scala'><span class='line'><span class="k">class</span> <span class="nc">UpdateBalanceAndDate</span> <span class="o">(</span><span class="n">ubdp</span> <span class="k">:</span><span class="kt">UpdateBalanceAndDateParameter</span><span class="o">)</span>  <span class="o">{</span>
+</span><span class='line'>    <span class="k">def</span> <span class="n">request</span><span class="k">=</span>
+</span><span class='line'>      <span class="o">&lt;</span><span class="n">methodCall</span><span class="o">&gt;</span>
+</span><span class='line'>        <span class="o">&lt;</span><span class="n">methodName</span><span class="o">&gt;</span><span class="nc">UpdateBalanceAndDate</span><span class="o">&lt;/</span><span class="n">methodName</span><span class="o">&gt;</span>
+</span><span class='line'>        <span class="o">&lt;</span><span class="n">params</span><span class="o">&gt;</span>
+</span><span class='line'>          <span class="o">&lt;</span><span class="n">param</span><span class="o">&gt;</span>
+</span><span class='line'>            <span class="o">&lt;</span><span class="n">value</span><span class="o">&gt;</span>
+</span><span class='line'>              <span class="o">&lt;</span><span class="n">struct</span><span class="o">&gt;</span>
+</span><span class='line'>                <span class="o">&lt;</span><span class="n">member</span><span class="o">&gt;</span>
+</span><span class='line'>                  <span class="o">&lt;</span><span class="n">name</span><span class="o">&gt;</span><span class="n">originNodeType</span><span class="o">&lt;/</span><span class="n">name</span><span class="o">&gt;</span>
+</span><span class='line'>                  <span class="o">&lt;</span><span class="n">value</span><span class="o">&gt;</span>
+</span><span class='line'>                    <span class="o">&lt;</span><span class="n">string</span><span class="o">&gt;{</span><span class="n">ubdp</span><span class="o">.</span><span class="n">originNodeType</span><span class="o">}&lt;/</span><span class="n">string</span><span class="o">&gt;</span>
+</span><span class='line'>                  <span class="o">&lt;/</span><span class="n">value</span><span class="o">&gt;</span>
+</span><span class='line'>                <span class="o">&lt;/</span><span class="n">member</span><span class="o">&gt;</span>
+</span><span class='line'>                <span class="o">&lt;</span><span class="n">member</span><span class="o">&gt;</span>
+</span><span class='line'>                  <span class="o">&lt;</span><span class="n">name</span><span class="o">&gt;</span><span class="n">originHostName</span><span class="o">&lt;/</span><span class="n">name</span><span class="o">&gt;</span>
+</span><span class='line'>                  <span class="o">&lt;</span><span class="n">value</span><span class="o">&gt;</span>
+</span><span class='line'>                    <span class="o">&lt;</span><span class="n">string</span><span class="o">&gt;{</span><span class="n">ubdp</span><span class="o">.</span><span class="n">originHostName</span><span class="o">}&lt;/</span><span class="n">string</span><span class="o">&gt;</span>
+</span><span class='line'>                  <span class="o">&lt;/</span><span class="n">value</span><span class="o">&gt;</span>
+</span><span class='line'>                <span class="o">&lt;/</span><span class="n">member</span><span class="o">&gt;</span>
+</span><span class='line'>                <span class="o">&lt;</span><span class="n">member</span><span class="o">&gt;</span>
+</span><span class='line'>                  <span class="o">&lt;</span><span class="n">name</span><span class="o">&gt;</span><span class="n">originTransactionID</span><span class="o">&lt;/</span><span class="n">name</span><span class="o">&gt;</span>
+</span><span class='line'>                  <span class="o">&lt;</span><span class="n">value</span><span class="o">&gt;</span>
+</span><span class='line'>                    <span class="o">&lt;</span><span class="n">string</span><span class="o">&gt;{</span><span class="n">ubdp</span><span class="o">.</span><span class="n">originTransactionID</span><span class="o">}&lt;/</span><span class="n">string</span><span class="o">&gt;</span>
+</span><span class='line'>                  <span class="o">&lt;/</span><span class="n">value</span><span class="o">&gt;</span>
+</span><span class='line'>                <span class="o">&lt;/</span><span class="n">member</span><span class="o">&gt;</span>
+</span><span class='line'>                <span class="o">&lt;</span><span class="n">member</span><span class="o">&gt;</span>
+</span><span class='line'>                  <span class="o">&lt;</span><span class="n">name</span><span class="o">&gt;</span><span class="n">originTimeStamp</span><span class="o">&lt;/</span><span class="n">name</span><span class="o">&gt;</span>
+</span><span class='line'>                  <span class="o">&lt;</span><span class="n">value</span><span class="o">&gt;</span>
+</span><span class='line'>                    <span class="o">&lt;</span><span class="n">dateTime</span><span class="o">.</span><span class="n">iso8601</span><span class="o">&gt;{</span><span class="n">ubdp</span><span class="o">.</span><span class="n">dateTime</span><span class="o">}&lt;/</span><span class="n">dateTime</span><span class="o">.</span><span class="n">iso8601</span><span class="o">&gt;</span>
+</span><span class='line'>                  <span class="o">&lt;/</span><span class="n">value</span><span class="o">&gt;</span>
+</span><span class='line'>                <span class="o">&lt;/</span><span class="n">member</span><span class="o">&gt;</span>
+</span><span class='line'>                <span class="o">&lt;</span><span class="n">member</span><span class="o">&gt;</span>
+</span><span class='line'>                  <span class="o">&lt;</span><span class="n">name</span><span class="o">&gt;</span><span class="n">subscriberNumber</span><span class="o">&lt;/</span><span class="n">name</span><span class="o">&gt;</span>
+</span><span class='line'>                  <span class="o">&lt;</span><span class="n">value</span><span class="o">&gt;</span>
+</span><span class='line'>                    <span class="o">&lt;</span><span class="n">string</span><span class="o">&gt;{</span><span class="n">ubdp</span><span class="o">.</span><span class="n">subscriberNumber</span><span class="o">}&lt;/</span><span class="n">string</span><span class="o">&gt;</span>
+</span><span class='line'>                  <span class="o">&lt;/</span><span class="n">value</span><span class="o">&gt;</span>
+</span><span class='line'>                <span class="o">&lt;/</span><span class="n">member</span><span class="o">&gt;</span>
+</span><span class='line'>                <span class="o">&lt;</span><span class="n">member</span><span class="o">&gt;</span>
+</span><span class='line'>                  <span class="o">&lt;</span><span class="n">name</span><span class="o">&gt;</span><span class="n">transactionCurrency</span><span class="o">&lt;/</span><span class="n">name</span><span class="o">&gt;</span>
+</span><span class='line'>                  <span class="o">&lt;</span><span class="n">value</span><span class="o">&gt;</span>
+</span><span class='line'>                    <span class="o">&lt;</span><span class="n">string</span><span class="o">&gt;{</span><span class="n">ubdp</span><span class="o">.</span><span class="n">transactionCurrency</span><span class="o">}&lt;/</span><span class="n">string</span><span class="o">&gt;</span>
+</span><span class='line'>                  <span class="o">&lt;/</span><span class="n">value</span><span class="o">&gt;</span>
+</span><span class='line'>                <span class="o">&lt;/</span><span class="n">member</span><span class="o">&gt;</span>
+</span><span class='line'>                <span class="o">&lt;</span><span class="n">member</span><span class="o">&gt;</span>
+</span><span class='line'>                  <span class="o">&lt;</span><span class="n">name</span><span class="o">&gt;</span><span class="n">adjustmentAmountRelative</span><span class="o">&lt;/</span><span class="n">name</span><span class="o">&gt;</span>
+</span><span class='line'>                  <span class="o">&lt;</span><span class="n">value</span><span class="o">&gt;</span>
+</span><span class='line'>                    <span class="o">&lt;</span><span class="n">string</span><span class="o">&gt;{</span><span class="n">ubdp</span><span class="o">.</span><span class="n">amount</span><span class="o">}&lt;/</span><span class="n">string</span><span class="o">&gt;</span>
+</span><span class='line'>                  <span class="o">&lt;/</span><span class="n">value</span><span class="o">&gt;</span>
+</span><span class='line'>                <span class="o">&lt;/</span><span class="n">member</span><span class="o">&gt;</span>
+</span><span class='line'>              <span class="o">&lt;/</span><span class="n">struct</span><span class="o">&gt;</span>
+</span><span class='line'>            <span class="o">&lt;/</span><span class="n">value</span><span class="o">&gt;</span>
+</span><span class='line'>          <span class="o">&lt;/</span><span class="n">param</span><span class="o">&gt;</span>
+</span><span class='line'>        <span class="o">&lt;/</span><span class="n">params</span><span class="o">&gt;</span>
+</span><span class='line'>      <span class="o">&lt;/</span><span class="n">methodCall</span><span class="o">&gt;</span>
+</span><span class='line'>  <span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+6- UpdateBalanceAndDate companion object is used to parse response and validate the transaction
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+</pre></td><td class='code'><pre><code class='scala'><span class='line'><span class="k">object</span> <span class="nc">UpdateBalanceAndDate</span> <span class="o">{</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="nd">@throws</span> <span class="o">(</span><span class="n">classOf</span><span class="o">[</span><span class="kt">ClientProtocolException</span><span class="o">])</span>
+</span><span class='line'>  <span class="nd">@throws</span> <span class="o">(</span><span class="n">classOf</span><span class="o">[</span><span class="kt">IOException</span><span class="o">])</span>
+</span><span class='line'>  <span class="k">def</span>  <span class="n">getResponse</span><span class="o">(</span><span class="n">response</span><span class="k">:</span><span class="kt">HttpResponse</span> <span class="o">)</span><span class="k">:</span><span class="kt">Int</span><span class="o">=</span>  <span class="o">{</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="k">try</span> <span class="o">{</span>
+</span><span class='line'>      <span class="k">val</span> <span class="n">entity</span> <span class="k">=</span> <span class="n">response</span><span class="o">.</span><span class="n">getEntity</span><span class="o">();</span>
+</span><span class='line'>      <span class="k">if</span> <span class="o">(</span><span class="n">entity</span> <span class="o">!=</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>        <span class="k">val</span> <span class="n">s</span> <span class="k">=</span> <span class="nc">EntityUtils</span><span class="o">.</span><span class="n">toString</span><span class="o">(</span><span class="n">entity</span><span class="o">)</span>
+</span><span class='line'>        <span class="k">val</span> <span class="n">elem</span> <span class="k">=</span>  <span class="nc">XML</span><span class="o">.</span><span class="n">loadString</span><span class="o">(</span><span class="n">s</span><span class="o">)</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="k">val</span> <span class="n">tuple</span><span class="k">=</span>   <span class="k">for</span> <span class="o">{</span>
+</span><span class='line'>          <span class="n">x</span> <span class="k">&lt;-</span> <span class="o">(</span><span class="n">elem</span> <span class="o">\\</span> <span class="s">&quot;member&quot;</span><span class="o">)</span>
+</span><span class='line'>          <span class="n">name</span> <span class="k">=</span> <span class="o">(</span><span class="n">x</span> <span class="o">\</span> <span class="s">&quot;name&quot;</span> <span class="o">)</span> <span class="o">.</span><span class="n">text</span>
+</span><span class='line'>          <span class="n">code</span> <span class="k">=</span> <span class="o">(</span> <span class="n">x</span>  <span class="o">\</span> <span class="s">&quot;value&quot;</span>  <span class="o">\</span> <span class="s">&quot;i4&quot;</span> <span class="o">).</span><span class="n">text</span>  <span class="k">if</span><span class="o">(</span><span class="n">name</span> <span class="o">==</span> <span class="s">&quot;responseCode&quot;</span><span class="o">)</span>
+</span><span class='line'>            <span class="o">}</span> <span class="k">yield</span> <span class="o">(</span><span class="n">code</span><span class="o">)</span>
+</span><span class='line'>
+</span><span class='line'>          <span class="k">if</span><span class="o">(</span><span class="n">tuple</span><span class="o">.</span><span class="n">size</span> <span class="o">==</span> <span class="mi">1</span><span class="o">)</span>  <span class="o">{</span>
+</span><span class='line'>            <span class="k">return</span> <span class="n">tuple</span><span class="o">(</span><span class="mi">0</span><span class="o">).</span><span class="n">toInt</span>
+</span><span class='line'>          <span class="o">}</span>
+</span><span class='line'>          <span class="k">return</span> <span class="nc">RESPONSE_PARSE_EXCEPTION</span>
+</span><span class='line'>        <span class="o">}</span>
+</span><span class='line'>        <span class="k">else</span> <span class="o">{</span> <span class="k">return</span> <span class="nc">NULL_RESPONSE</span>  <span class="o">}</span>
+</span><span class='line'>      <span class="o">}</span>
+</span><span class='line'>      <span class="k">catch</span> <span class="o">{</span>
+</span><span class='line'>        <span class="k">case</span> <span class="k">_</span> <span class="k">=&gt;</span>  <span class="k">return</span>  <span class="nc">UNEXCEPTED_ERROR_WHILE_PARSE_RESPONSE</span>
+</span><span class='line'>      <span class="o">}</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>  <span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+7- UpdateBalanceAndDateController controlleur class orchestrate requests and utilities class
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+</pre></td><td class='code'><pre><code class='scala'><span class='line'><span class="k">class</span> <span class="nc">UpdateBalanceAndDateController</span> <span class="o">{</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="k">def</span> <span class="n">update</span><span class="o">(</span><span class="n">inp</span><span class="k">:</span> <span class="kt">InParameters</span><span class="o">,</span> <span class="n">ubdp</span> <span class="k">:</span> <span class="kt">UpdateBalanceAndDateParameter</span> <span class="o">)</span><span class="k">:</span><span class="kt">Int</span><span class="o">={</span>
+</span><span class='line'>    <span class="k">try</span> <span class="o">{</span>
+</span><span class='line'>      <span class="k">val</span> <span class="n">c</span> <span class="k">=</span> <span class="k">new</span> <span class="nc">XmlRpcHttpClient</span><span class="o">(</span><span class="n">inp</span><span class="o">)</span>
+</span><span class='line'>      <span class="k">val</span> <span class="n">ubd</span> <span class="k">=</span> <span class="k">new</span>  <span class="nc">UpdateBalanceAndDate</span> <span class="o">(</span><span class="n">ubdp</span><span class="o">)</span>
+</span><span class='line'>      <span class="k">val</span> <span class="n">rep</span><span class="k">=</span>  <span class="n">c</span> <span class="n">execute</span><span class="o">(</span><span class="n">ubd</span><span class="o">.</span><span class="n">request</span><span class="o">)</span>
+</span><span class='line'>      <span class="k">return</span> <span class="nc">UpdateBalanceAndDate</span><span class="o">.</span><span class="n">getResponse</span><span class="o">(</span><span class="n">rep</span> <span class="o">)</span>
+</span><span class='line'>    <span class="o">}</span><span class="k">catch</span> <span class="o">{</span>
+</span><span class='line'>      <span class="k">case</span> <span class="n">e</span><span class="k">:</span><span class="kt">connectionExecption</span> <span class="o">=&gt;</span> <span class="k">return</span> <span class="nc">AIR_EXCEPTION</span>
+</span><span class='line'>      <span class="k">case</span> <span class="n">e</span> <span class="k">=&gt;</span>  <span class="k">return</span> <span class="nc">UNEXPECTED_CONNECTION__EXCEPTION</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>  <span class="o">}</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+<h2>Conclusion</h2>
+
+Create XML message and parse it using scala is like a baby toy and makes using UCIP protocol easier and simpler. This sample can be generalized to the other UCIP messages like GetBalanceAndDate or GetAccountDetails and any other XML-RPC communication.
 
 ]]></content>
   </entry>
