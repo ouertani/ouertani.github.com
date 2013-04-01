@@ -11,21 +11,21 @@ description: UCIP Scala driver using XML/RPC
 <h2>Purpose</h2>
 
 Calling remote procedure using XML-RPC and Scala.
-<h2>Introduction
+<h2>Introduction</h2>
 
 On Telecom IT environment and specially middelware solution, we will rarely do all the work but rather delegate some of business process to other tiers. Web service communications is heavy used between solutions. However, many IT node continues to support older protocols like XML-RPC. Ericsson Intelligent Network (IN) and its subsystem uses AIR Integration Protocol user communication(UCIP) based on a variant of XM-RPC.
 
 <h2>Why UCIP ?</h2>
 
 UCIP is intended for user self services such as Adjustments, Account Refill, and Account Inquiries and to extract account details. UCIP is an IP-based protocol used for integration towards the AIR server from the external application.
-<h2>Why Scala ?
+<h2>Why Scala ?</h2>
 
 UCIP is an XML over HTTP based protocol, which makes it easy to integrate with a central integration point within a network. In addition, Scala can be used to easily create, parse, and process XML documents. XML data can be represented in Scala either by using a generic data representation, or with a data-specific data representation.
 <h2>Scala & XML-RPC</h2>
 
 Rather than using an precompiled version of XML-RPC library, we will do our home solution using httpclient library from apache :
 ```xml
- <dependency>
+<dependency>
  <groupId>org.apache.httpcomponents</groupId>
  <artifactId>httpclient</artifactId>
  <version>4.1</version>
@@ -99,7 +99,7 @@ class XmlRpcHttpClient(inp :InParameters) extends LogHelper{
   }
 }
 ```
-XML-RPC is a Remote Procedure Calling protocol and the body of an XML-RPC request is formatted using XML. A procedure executes on the AIR server and the value it returns is also formatted in XML. The interface to the AIR server interface uses XML-RPC over HTTP. Sending an XML to update the main balance will be using this class
+XML-RPC is a Remote Procedure Calling protocol and the body of an XML-RPC request is formatted using XML. A procedure executes on the AIR server and the value it returns is also formatted in XML. The interface to the AIR server interface uses XML-RPC over HTTP. Sending an XML to update the main balance will be using this class.
 
 5- UpdateBalanceAndDate class : generates an UpdateBalanceAndDate XML request message
 ```scala
