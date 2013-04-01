@@ -1733,34 +1733,37 @@ Creating Bars From a Web Form</p>
   <div class="entry-content"><h2>Purpose</h2>
 
 
-<p>This tutorial is a supplement to the article of oracle published here.
+<p>This tutorial is a supplement to the article of oracle published <a href="http://www.oracle.com/webfolder/technetwork/tutorials/obe/java/javamail/javamail.html">here</a>.
 After reading this later, I decided to share some tips about this EE environment JavaMail api configuration.</p>
 
 <h2>Introduction</h2>
 
 
 <p>Two years ago, we decided to move to JEE 6 for our enterprise solutions and take a lot of fun with new EJB 3.1 features and annotations. Glassfish has made our lives easier, it was very easy to declare variables using it&#8217;s administration console.
-Less complicated than using global resource environment for properties It is also the continuation to this tricks this tutorial delegate to Glassfish EE server managing mail session.</p>
+Less complicated than using global resource environment for properties It is also the continuation to this <a href="http://www.jroller.com/articles/jee-6-environmental-enterprise">tricks</a> this tutorial delegate to Glassfish EE server managing mail session.</p>
 
 <h2>Prerequisites</h2>
 
 
 <p>Before starting this tutorial, you should:
-Fully understand of http://www.oracle.com/webfolder/technetwork/tutorials/obe/java/javamail/javamail.html</p>
+<li>Fully understand of http://www.oracle.com/webfolder/technetwork/tutorials/obe/java/javamail/javamail.html</li></p>
 
-<p>Have access to an SMTP server. You must know the host name, port number, and security settings for your SMTP server. Web mail providers may offer SMTP access, view your email account settings or help to find further information. Be aware that your user name is often your full email address and not just the name that comes before the @ symbol.</p>
+<p><li>Have access to an SMTP server. You must know the host name, port number, and security settings for your SMTP server. Web mail providers may offer SMTP access, view your email account settings or help to find further information. Be aware that your user name is often your full email address and not just the name that comes before the @ symbol.</li></p>
 
-<p>Have basic familiarity with Servlets and CDIs (helpful but not required)</p>
+<p><li>Have basic familiarity with Servlets and CDIs (helpful but not required)</li></p>
 
 <h2>Create a Java mail session resource :</h2>
 
 
 <p>To create and JavaMail Session :</p>
 
-<p>start galssfish server
-open admin console ( default localhost:4848)
-Go to Resources -> JavaMail Sessions -> click new to add new javaMail resource
-make sure the following field are filled in :</p>
+<ol>
+<li>start galssfish server</li>
+<li>open admin console ( default localhost:4848)</li>
+<li>Go to Resources -> JavaMail Sessions -> click new to add new javaMail resource</li>
+<li>make sure the following field are filled in :</li>
+</ol>
+
 
 <p>Jndi name : EMailME for example, will be used later on lookup resource :</p>
 
