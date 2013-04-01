@@ -8,6 +8,12 @@
     </url>
     <url>
         <loc>
+            http://ouertani.github.com/blog/2012/06/27/jax-ws-header-part-1-the-client-side/
+        </loc>
+        <lastmod>2013-04-01T03:37:15+02:00</lastmod>
+    </url>
+    <url>
+        <loc>
             http://ouertani.github.com/blog/2012/06/28/sending-an-email-using-the-javamail-session-and-glassfish/
         </loc>
         <lastmod>2013-04-01T02:53:48+02:00</lastmod>
@@ -48,11 +54,11 @@
     </url>
     <url>
         <loc>http://ouertani.github.com/blog/archives/</loc>
-        <lastmod>2013-04-01T03:29:37+02:00</lastmod>
+        <lastmod>2013-04-01T03:37:15+02:00</lastmod>
     </url>
     <url>
         <loc>http://ouertani.github.com/</loc>
-        <lastmod>2013-04-01T03:29:37+02:00</lastmod>
+        <lastmod>2013-04-01T03:37:15+02:00</lastmod>
     </url>
     <url>
         <loc>http://ouertani.github.com/robots.txt</loc>

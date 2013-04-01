@@ -2400,6 +2400,411 @@ To create and JavaMail Session :
       
   <header>
     
+      <h1 class="entry-title"><a href="/blog/2012/06/27/jax-ws-header-part-1-the-client-side/">JAX-WS Header : Part 1 the Client Side</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-06-27T03:32:00+02:00" pubdate data-updated="true">Jun 27<span>th</span>, 2012</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><h2>Purpose</h2>
+
+
+<p>Manipulating JAXWS header on the client Side like adding WSS username token or logging saop message.</p>
+
+<h2>Introduction</h2>
+
+
+<p>On Telecom IT environment and specially middelware solution, we will rarely do all the work but rather delegate some of business process to other tiers. Web service communications is heavy used between solutions. This tutorial aims to introduce using handler on client side by adding WSS UserToken or logging the soap message on console.</p>
+
+<h2>Adding undeclared custom header</h2>
+
+
+<p>Some Ws client needs to add a custom header which are not declared on WSDL. Adding WSS Username Token is like adding this XML snippet on header element:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+</pre></td><td class='code'><pre><code class='xml'><span class='line'><span class="nt">&lt;soapenv:Header&gt;</span>
+</span><span class='line'>      <span class="nt">&lt;wsse:Security</span>  <span class="na">xmlns:wsse=</span><span class="s">&quot;http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd&quot;</span> <span class="na">xmlns:wsu=</span><span class="s">&quot;http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'>         <span class="nt">&lt;wsse:UsernameToken</span> <span class="na">wsu:Id=</span><span class="s">&quot;UsernameToken-1&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'>            <span class="nt">&lt;wsse:Username&gt;</span>login<span class="nt">&lt;/wsse:Username&gt;</span>
+</span><span class='line'>            <span class="nt">&lt;wsse:Password</span> <span class="na">Type=</span><span class="s">&quot;http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-username-token-profile-1.0#PasswordText&quot;</span><span class="nt">&gt;</span>XXXX<span class="nt">&lt;/wsse:Password&gt;</span>
+</span><span class='line'>         <span class="nt">&lt;/wsse:UsernameToken&gt;</span>
+</span><span class='line'>      <span class="nt">&lt;/wsse:Security&gt;</span>
+</span><span class='line'> <span class="nt">&lt;/soapenv:Header&gt;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Unlike <a href="http://docs.oracle.com/javaee/5/api/javax/xml/ws/handler/LogicalHandler.html">LogicalHandler</a> SOAPHandler have access to the entire Soap Message. Let&#8217;s create an WSSUsernameTokenSecurityHandler Local Stateless Bean extending SOAPHandler to produce the previous header.
+Below the WSSUsernameTokenSecurityHandler class</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+<span class='line-number'>38</span>
+<span class='line-number'>39</span>
+<span class='line-number'>40</span>
+<span class='line-number'>41</span>
+<span class='line-number'>42</span>
+<span class='line-number'>43</span>
+<span class='line-number'>44</span>
+<span class='line-number'>45</span>
+<span class='line-number'>46</span>
+<span class='line-number'>47</span>
+<span class='line-number'>48</span>
+<span class='line-number'>49</span>
+<span class='line-number'>50</span>
+<span class='line-number'>51</span>
+<span class='line-number'>52</span>
+<span class='line-number'>53</span>
+<span class='line-number'>54</span>
+<span class='line-number'>55</span>
+<span class='line-number'>56</span>
+<span class='line-number'>57</span>
+<span class='line-number'>58</span>
+<span class='line-number'>59</span>
+<span class='line-number'>60</span>
+<span class='line-number'>61</span>
+<span class='line-number'>62</span>
+<span class='line-number'>63</span>
+<span class='line-number'>64</span>
+<span class='line-number'>65</span>
+<span class='line-number'>66</span>
+<span class='line-number'>67</span>
+<span class='line-number'>68</span>
+<span class='line-number'>69</span>
+<span class='line-number'>70</span>
+<span class='line-number'>71</span>
+<span class='line-number'>72</span>
+<span class='line-number'>73</span>
+<span class='line-number'>74</span>
+<span class='line-number'>75</span>
+<span class='line-number'>76</span>
+<span class='line-number'>77</span>
+<span class='line-number'>78</span>
+<span class='line-number'>79</span>
+<span class='line-number'>80</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kn">package</span> <span class="n">me</span><span class="o">.</span><span class="na">slim</span><span class="o">.</span><span class="na">ouertani</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="kn">import</span> <span class="nn">java.util.Set</span><span class="o">;</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">java.util.TreeSet</span><span class="o">;</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">javax.annotation.Resource</span><span class="o">;</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">javax.ejb.LocalBean</span><span class="o">;</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">javax.ejb.Stateless</span><span class="o">;</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">javax.xml.namespace.QName</span><span class="o">;</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">javax.xml.soap.*</span><span class="o">;</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">javax.xml.ws.handler.MessageContext</span><span class="o">;</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">javax.xml.ws.handler.soap.SOAPHandler</span><span class="o">;</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">javax.xml.ws.handler.soap.SOAPMessageContext</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="nd">@Stateless</span>
+</span><span class='line'><span class="nd">@LocalBean</span>
+</span><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">WSSUsernameTokenSecurityHandler</span> <span class="kd">implements</span> <span class="n">SOAPHandler</span><span class="o">&lt;</span><span class="n">SOAPMessageContext</span><span class="o">&gt;</span> <span class="o">{</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="nd">@Resource</span><span class="o">(</span><span class="n">lookup</span> <span class="o">=</span> <span class="s">&quot;login&quot;</span><span class="o">)</span>
+</span><span class='line'>    <span class="kd">private</span> <span class="n">String</span> <span class="n">login</span><span class="o">;</span>
+</span><span class='line'>    <span class="nd">@Resource</span><span class="o">(</span><span class="n">lookup</span> <span class="o">=</span> <span class="s">&quot;pwd&quot;</span><span class="o">)</span>
+</span><span class='line'>    <span class="kd">private</span> <span class="n">String</span> <span class="n">pwd</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">public</span> <span class="nf">WSSUsernameTokenSecurityHandler</span><span class="o">()</span> <span class="o">{</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="nd">@Override</span>
+</span><span class='line'>    <span class="kd">public</span> <span class="kt">boolean</span> <span class="nf">handleMessage</span><span class="o">(</span><span class="n">SOAPMessageContext</span> <span class="n">context</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="n">Boolean</span> <span class="n">outboundProperty</span> <span class="o">=</span>
+</span><span class='line'>                <span class="o">(</span><span class="n">Boolean</span><span class="o">)</span> <span class="n">context</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="n">MessageContext</span><span class="o">.</span><span class="na">MESSAGE_OUTBOUND_PROPERTY</span><span class="o">);</span>
+</span><span class='line'>        <span class="k">if</span> <span class="o">(</span><span class="n">outboundProperty</span><span class="o">.</span><span class="na">booleanValue</span><span class="o">())</span> <span class="o">{</span>
+</span><span class='line'>
+</span><span class='line'>            <span class="k">try</span> <span class="o">{</span>
+</span><span class='line'>                <span class="n">SOAPEnvelope</span> <span class="n">envelope</span> <span class="o">=</span> <span class="n">context</span><span class="o">.</span><span class="na">getMessage</span><span class="o">().</span><span class="na">getSOAPPart</span><span class="o">().</span><span class="na">getEnvelope</span><span class="o">();</span>
+</span><span class='line'>                <span class="n">SOAPFactory</span> <span class="n">factory</span> <span class="o">=</span> <span class="n">SOAPFactory</span><span class="o">.</span><span class="na">newInstance</span><span class="o">();</span>
+</span><span class='line'>                <span class="n">String</span> <span class="n">prefix</span> <span class="o">=</span> <span class="s">&quot;wsse&quot;</span><span class="o">;</span>
+</span><span class='line'>                <span class="n">String</span> <span class="n">uri</span> <span class="o">=</span> <span class="s">&quot;http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd&quot;</span><span class="o">;</span>
+</span><span class='line'>                <span class="n">SOAPElement</span> <span class="n">securityElem</span> <span class="o">=</span>
+</span><span class='line'>                        <span class="n">factory</span><span class="o">.</span><span class="na">createElement</span><span class="o">(</span><span class="s">&quot;Security&quot;</span><span class="o">,</span> <span class="n">prefix</span><span class="o">,</span> <span class="n">uri</span><span class="o">);</span>
+</span><span class='line'>                <span class="n">SOAPElement</span> <span class="n">tokenElem</span> <span class="o">=</span>
+</span><span class='line'>                        <span class="n">factory</span><span class="o">.</span><span class="na">createElement</span><span class="o">(</span><span class="s">&quot;UsernameToken&quot;</span><span class="o">,</span> <span class="n">prefix</span><span class="o">,</span> <span class="n">uri</span><span class="o">);</span>
+</span><span class='line'>                <span class="n">tokenElem</span><span class="o">.</span><span class="na">addAttribute</span><span class="o">(</span><span class="n">QName</span><span class="o">.</span><span class="na">valueOf</span><span class="o">(</span><span class="s">&quot;wsu:Id&quot;</span><span class="o">),</span> <span class="s">&quot;UsernameToken-2&quot;</span><span class="o">);</span>
+</span><span class='line'>                <span class="n">tokenElem</span><span class="o">.</span><span class="na">addAttribute</span><span class="o">(</span><span class="n">QName</span><span class="o">.</span><span class="na">valueOf</span><span class="o">(</span><span class="s">&quot;xmlns:wsu&quot;</span><span class="o">),</span> <span class="s">&quot;http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd&quot;</span><span class="o">);</span>
+</span><span class='line'>                <span class="n">SOAPElement</span> <span class="n">userElem</span> <span class="o">=</span>
+</span><span class='line'>                        <span class="n">factory</span><span class="o">.</span><span class="na">createElement</span><span class="o">(</span><span class="s">&quot;Username&quot;</span><span class="o">,</span> <span class="n">prefix</span><span class="o">,</span> <span class="n">uri</span><span class="o">);</span>
+</span><span class='line'>                <span class="n">userElem</span><span class="o">.</span><span class="na">addTextNode</span><span class="o">(</span><span class="n">login</span><span class="o">);</span>
+</span><span class='line'>                <span class="n">SOAPElement</span> <span class="n">pwdElem</span> <span class="o">=</span>
+</span><span class='line'>                        <span class="n">factory</span><span class="o">.</span><span class="na">createElement</span><span class="o">(</span><span class="s">&quot;Password&quot;</span><span class="o">,</span> <span class="n">prefix</span><span class="o">,</span> <span class="n">uri</span><span class="o">);</span>
+</span><span class='line'>                <span class="n">pwdElem</span><span class="o">.</span><span class="na">addTextNode</span><span class="o">(</span><span class="n">pwd</span><span class="o">);</span>
+</span><span class='line'>                <span class="n">pwdElem</span><span class="o">.</span><span class="na">addAttribute</span><span class="o">(</span><span class="n">QName</span><span class="o">.</span><span class="na">valueOf</span><span class="o">(</span><span class="s">&quot;Type&quot;</span><span class="o">),</span> <span class="s">&quot;http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-username-token-profile-1.0#PasswordText&quot;</span><span class="o">);</span>
+</span><span class='line'>                <span class="n">tokenElem</span><span class="o">.</span><span class="na">addChildElement</span><span class="o">(</span><span class="n">userElem</span><span class="o">);</span>
+</span><span class='line'>                <span class="n">tokenElem</span><span class="o">.</span><span class="na">addChildElement</span><span class="o">(</span><span class="n">pwdElem</span><span class="o">);</span>
+</span><span class='line'>                <span class="n">securityElem</span><span class="o">.</span><span class="na">addChildElement</span><span class="o">(</span><span class="n">tokenElem</span><span class="o">);</span>
+</span><span class='line'>                <span class="n">SOAPHeader</span> <span class="n">header</span> <span class="o">=</span> <span class="n">envelope</span><span class="o">.</span><span class="na">addHeader</span><span class="o">();</span>
+</span><span class='line'>                <span class="n">header</span><span class="o">.</span><span class="na">addChildElement</span><span class="o">(</span><span class="n">securityElem</span><span class="o">);</span>
+</span><span class='line'>
+</span><span class='line'>            <span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="n">Exception</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>                <span class="n">e</span><span class="o">.</span><span class="na">printStackTrace</span><span class="o">();</span>
+</span><span class='line'>            <span class="o">}</span>
+</span><span class='line'>        <span class="o">}</span> <span class="k">else</span> <span class="o">{</span>
+</span><span class='line'>            <span class="c1">// inbound</span>
+</span><span class='line'>        <span class="o">}</span>
+</span><span class='line'>        <span class="k">return</span> <span class="kc">true</span><span class="o">;</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="nd">@Override</span>
+</span><span class='line'>    <span class="kd">public</span> <span class="n">Set</span><span class="o">&lt;</span><span class="n">QName</span><span class="o">&gt;</span> <span class="nf">getHeaders</span><span class="o">()</span> <span class="o">{</span>
+</span><span class='line'>        <span class="k">return</span> <span class="k">new</span> <span class="nf">TreeSet</span><span class="o">();</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="nd">@Override</span>
+</span><span class='line'>    <span class="kd">public</span> <span class="kt">boolean</span> <span class="nf">handleFault</span><span class="o">(</span><span class="n">SOAPMessageContext</span> <span class="n">context</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>        <span class="k">return</span> <span class="kc">false</span><span class="o">;</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="nd">@Override</span>
+</span><span class='line'>    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">close</span><span class="o">(</span><span class="n">MessageContext</span> <span class="n">context</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>        <span class="c1">//</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Next, declare the StatelessBean and inject both Webservice via @WebServiceRef and WSSUsernameTokenSecurityHandler via @EJB. A callback init method will add a HandlerResolver to the service. Below the full implementation</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="nd">@Stateless</span>
+</span><span class='line'><span class="nd">@LocalBean</span>
+</span><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">WebServiceClientBean</span> <span class="o">{</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="nd">@WebServiceRef</span><span class="o">()</span>
+</span><span class='line'>    <span class="kd">private</span> <span class="n">WsService</span> <span class="n">service</span><span class="o">;</span>
+</span><span class='line'>    <span class="nd">@EJB</span>
+</span><span class='line'>    <span class="kd">private</span> <span class="n">WSSUsernameTokenSecurityHandler</span> <span class="n">wSSUsernameTokenSecurityHandler</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="nd">@PostConstruct</span>
+</span><span class='line'>    <span class="kd">private</span> <span class="kt">void</span> <span class="nf">init</span><span class="o">()</span> <span class="o">{</span>
+</span><span class='line'>        <span class="n">service</span><span class="o">.</span><span class="na">setHandlerResolver</span><span class="o">(</span> <span class="k">new</span> <span class="n">HandlerResolver</span><span class="o">()</span> <span class="o">{</span>
+</span><span class='line'>
+</span><span class='line'>            <span class="nd">@Override</span>
+</span><span class='line'>            <span class="kd">public</span> <span class="n">List</span><span class="o">&lt;</span><span class="n">Handler</span><span class="o">&gt;</span> <span class="nf">getHandlerChain</span><span class="o">(</span><span class="n">PortInfo</span> <span class="n">portInfo</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>                <span class="n">List</span><span class="o">&lt;</span><span class="n">Handler</span><span class="o">&gt;</span> <span class="n">handlerList</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ArrayList</span><span class="o">&lt;</span><span class="n">Handler</span><span class="o">&gt;();</span>
+</span><span class='line'>                <span class="n">handlerList</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="n">wSSUsernameTokenSecurityHandler</span><span class="o">);</span>
+</span><span class='line'>                <span class="k">return</span> <span class="n">handlerList</span><span class="o">;</span>
+</span><span class='line'>            <span class="o">}</span>
+</span><span class='line'>        <span class="o">});</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="kd">public</span> <span class="n">WsResponse</span> <span class="nf">getService</span><span class="o">(</span><span class="n">WsRequest</span> <span class="n">wsRequest</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>        <span class="n">WsPort</span> <span class="n">port</span> <span class="o">=</span> <span class="n">service</span><span class="o">.</span><span class="na">getPort</span><span class="o">();</span>
+</span><span class='line'>        <span class="k">return</span> <span class="n">port</span><span class="o">.</span><span class="na">invoqueService</span><span class="o">(</span><span class="n">wsRequest</span><span class="o">);</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>Logging SOAP messages</h2>
+
+
+<p>Logging exchange xml message can be also using handlers, below the scala snippet handler used to log both in and out messages:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+</pre></td><td class='code'><pre><code class='scala'><span class='line'><span class="k">class</span> <span class="nc">RequestResponsePrinter</span>  <span class="k">extends</span> <span class="nc">SOAPHandler</span><span class="o">[</span><span class="kt">SOAPMessageContext</span><span class="o">]</span> <span class="k">with</span> <span class="nc">LogHelper</span> <span class="o">{</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">override</span> <span class="k">def</span> <span class="n">getHeaders</span><span class="o">()</span><span class="k">:</span> <span class="kt">Set</span><span class="o">[</span><span class="kt">QName</span><span class="o">]</span> <span class="k">=</span> <span class="o">{</span>
+</span><span class='line'>    <span class="k">return</span> <span class="k">new</span> <span class="nc">TreeSet</span><span class="o">();</span>
+</span><span class='line'>  <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="k">override</span> <span class="k">def</span> <span class="n">handleMessage</span><span class="o">(</span><span class="n">context</span><span class="k">:</span> <span class="kt">SOAPMessageContext</span><span class="o">)</span><span class="k">:</span> <span class="kt">Boolean</span> <span class="o">=</span> <span class="o">{</span>
+</span><span class='line'>    <span class="k">val</span> <span class="n">sb</span> <span class="k">=</span> <span class="k">new</span> <span class="nc">ToStringBuilder</span><span class="o">(</span><span class="k">this</span><span class="o">).</span><span class="n">append</span><span class="o">(</span><span class="s">&quot;Call operation&quot;</span><span class="o">,</span> <span class="s">&quot;handleMessage&quot;</span><span class="o">);</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="n">L</span><span class="o">.</span><span class="n">debug</span><span class="o">(</span><span class="n">sb</span><span class="o">);</span>
+</span><span class='line'>    <span class="k">val</span> <span class="n">outboundProperty</span> <span class="k">=</span> <span class="n">context</span><span class="o">.</span><span class="n">get</span><span class="o">(</span><span class="nc">MessageContext</span><span class="o">.</span><span class="nc">MESSAGE_OUTBOUND_PROPERTY</span><span class="o">).</span><span class="n">asInstanceOf</span><span class="o">[</span><span class="kt">Boolean</span><span class="o">]</span>
+</span><span class='line'>
+</span><span class='line'>
+</span><span class='line'>      <span class="k">try</span> <span class="o">{</span>
+</span><span class='line'>            <span class="k">val</span> <span class="n">msg</span> <span class="k">=</span> <span class="n">context</span><span class="o">.</span><span class="n">getMessage</span><span class="o">()</span>
+</span><span class='line'>            <span class="k">val</span> <span class="n">out</span> <span class="k">=</span> <span class="k">new</span> <span class="nc">ByteArrayOutputStream</span><span class="o">();</span>
+</span><span class='line'>            <span class="n">msg</span><span class="o">.</span><span class="n">writeTo</span><span class="o">(</span><span class="n">out</span><span class="o">);</span>
+</span><span class='line'>            <span class="k">val</span> <span class="n">strMsg</span> <span class="k">=</span> <span class="k">new</span> <span class="nc">String</span><span class="o">(</span><span class="n">out</span><span class="o">.</span><span class="n">toByteArray</span><span class="o">());</span>
+</span><span class='line'>            <span class="n">L</span><span class="o">.</span><span class="n">debug</span><span class="o">(</span><span class="s">&quot;outbound  : &quot;</span><span class="o">+</span><span class="n">outboundProperty</span><span class="o">.</span><span class="n">booleanValue</span><span class="o">()+</span><span class="s">&quot; [&quot;</span> <span class="o">+</span> <span class="n">strMsg</span> <span class="o">+</span> <span class="s">&quot;]&quot;</span><span class="o">);</span>
+</span><span class='line'>
+</span><span class='line'>      <span class="o">}</span> <span class="k">catch</span> <span class="o">{</span>
+</span><span class='line'>        <span class="k">case</span> <span class="n">e</span><span class="k">:</span> <span class="kt">Exception</span> <span class="o">=&gt;</span>
+</span><span class='line'>          <span class="n">L</span><span class="o">.</span><span class="n">error</span><span class="o">(</span><span class="n">sb</span><span class="o">.</span><span class="n">append</span><span class="o">(</span><span class="s">&quot;EXCEPTION&quot;</span><span class="o">,</span> <span class="n">e</span><span class="o">.</span><span class="n">getMessage</span><span class="o">()),</span> <span class="n">e</span><span class="o">);</span>
+</span><span class='line'>      <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="k">return</span> <span class="kc">true</span><span class="o">;</span>
+</span><span class='line'>  <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="k">override</span> <span class="k">def</span> <span class="n">handleFault</span><span class="o">(</span><span class="n">context</span><span class="k">:</span> <span class="kt">SOAPMessageContext</span><span class="o">)</span><span class="k">:</span> <span class="kt">Boolean</span> <span class="o">=</span> <span class="o">{</span>
+</span><span class='line'>    <span class="k">return</span> <span class="kc">false</span><span class="o">;</span>
+</span><span class='line'>  <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="k">override</span> <span class="k">def</span> <span class="n">close</span><span class="o">(</span><span class="n">context</span><span class="k">:</span> <span class="kt">MessageContext</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>    <span class="c1">//</span>
+</span><span class='line'>  <span class="o">}</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>scala version of Handler resolver</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+</pre></td><td class='code'><pre><code class='scala'><span class='line'><span class="k">new</span> <span class="nc">HandlerResolver</span><span class="o">()</span> <span class="o">{</span>
+</span><span class='line'>
+</span><span class='line'>      <span class="k">override</span> <span class="k">def</span> <span class="n">getHandlerChain</span><span class="o">(</span><span class="n">portInfo</span><span class="k">:</span> <span class="kt">PortInfo</span><span class="o">)</span><span class="k">:</span> <span class="kt">java.util.List</span><span class="o">[</span><span class="kt">javax.xml.ws.handler.Handler</span><span class="o">[</span><span class="k">_</span> <span class="k">&lt;:</span> <span class="kt">javax.xml.ws.handler.MessageContext</span><span class="o">]]</span> <span class="k">=</span> <span class="o">{</span>
+</span><span class='line'>        <span class="k">import</span> <span class="nn">scala.collection.mutable.ArrayBuffer</span>
+</span><span class='line'>        <span class="k">val</span> <span class="n">handlerList</span> <span class="k">=</span> <span class="nc">ArrayBuffer</span><span class="o">[</span><span class="kt">Handler</span><span class="o">[</span><span class="k">_</span> <span class="k">&lt;:</span> <span class="kt">javax.xml.ws.handler.MessageContext</span><span class="o">]]()</span>
+</span><span class='line'>        <span class="n">handlerList</span> <span class="o">+=</span> <span class="k">new</span> <span class="nc">RequestResponsePrinter</span><span class="o">()</span>
+</span><span class='line'>        <span class="k">return</span> <span class="n">handlerList</span>
+</span><span class='line'>
+</span><span class='line'>      <span class="o">}</span>
+</span><span class='line'>    <span class="o">};</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>Conclusion</h2>
+
+
+<p>We have heavily used handler on client side. On the server side things can change a bit, to be continued &#8230;</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
       <h1 class="entry-title"><a href="/blog/2012/06/24/ee-6-environmental-enterprise-entries-and-glassfish/">EE 6 Environmental Enterprise Entries and Glassfish</a></h1>
     
     
@@ -2656,6 +3061,10 @@ It was necessary to group parameters resources into a single resource by project
       </li>
     
       <li class="post">
+        <a href="/blog/2012/06/27/jax-ws-header-part-1-the-client-side/">JAX-WS Header : Part 1 the Client Side</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2012/06/24/ee-6-environmental-enterprise-entries-and-glassfish/">EE 6 Environmental Enterprise Entries and Glassfish</a>
       </li>
     
@@ -2663,7 +3072,7 @@ It was necessary to group parameters resources into a single resource by project
 </section>
 <section>
   <h1>Tag Cloud</h1>
-    <span id="tag-cloud"><a href='/blog/categories/glassfish' style='font-size: 110.0%'>Glassfish(1)</a> <a href='/blog/categories/jax-ws' style='font-size: 110.0%'>JAX-WS(1)</a> <a href='/blog/categories/jca' style='font-size: 110.0%'>JCA(1)</a> <a href='/blog/categories/jee' style='font-size: 140.0%'>JEE(4)</a> <a href='/blog/categories/jndi' style='font-size: 110.0%'>JNDI(1)</a> <a href='/blog/categories/mail' style='font-size: 110.0%'>MAIL(1)</a> <a href='/blog/categories/play' style='font-size: 120.0%'>Play(2)</a> <a href='/blog/categories/rest' style='font-size: 110.0%'>Rest(1)</a> <a href='/blog/categories/rpc' style='font-size: 110.0%'>RPC(1)</a> <a href='/blog/categories/scala' style='font-size: 110.0%'>SCALA(1)</a> <a href='/blog/categories/scala' style='font-size: 160.0%'>Scala(6)</a> <a href='/blog/categories/ucip' style='font-size: 110.0%'>Ucip(1)</a> <a href='/blog/categories/ucip' style='font-size: 110.0%'>UCIP(1)</a> <a href='/blog/categories/vert-x' style='font-size: 120.0%'>Vert.x(2)</a> <a href='/blog/categories/xml' style='font-size: 110.0%'>XML(1)</a> <a href='/blog/categories/xml-rpc' style='font-size: 110.0%'>XML/RPC(1)</a> </span>
+    <span id="tag-cloud"><a href='/blog/categories/glassfish' style='font-size: 110.0%'>Glassfish(1)</a> <a href='/blog/categories/jax-ws' style='font-size: 120.0%'>JAX-WS(2)</a> <a href='/blog/categories/jca' style='font-size: 110.0%'>JCA(1)</a> <a href='/blog/categories/jee' style='font-size: 150.0%'>JEE(5)</a> <a href='/blog/categories/jndi' style='font-size: 110.0%'>JNDI(1)</a> <a href='/blog/categories/mail' style='font-size: 110.0%'>MAIL(1)</a> <a href='/blog/categories/play' style='font-size: 120.0%'>Play(2)</a> <a href='/blog/categories/rest' style='font-size: 110.0%'>Rest(1)</a> <a href='/blog/categories/rpc' style='font-size: 110.0%'>RPC(1)</a> <a href='/blog/categories/scala' style='font-size: 120.0%'>SCALA(2)</a> <a href='/blog/categories/scala' style='font-size: 160.0%'>Scala(6)</a> <a href='/blog/categories/ucip' style='font-size: 110.0%'>Ucip(1)</a> <a href='/blog/categories/ucip' style='font-size: 110.0%'>UCIP(1)</a> <a href='/blog/categories/vert-x' style='font-size: 120.0%'>Vert.x(2)</a> <a href='/blog/categories/xml' style='font-size: 110.0%'>XML(1)</a> <a href='/blog/categories/xml-rpc' style='font-size: 110.0%'>XML/RPC(1)</a> </span>
 </section>
 
 <section>
