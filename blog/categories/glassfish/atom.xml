@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Glassfish | Ouertani Blog]]></title>
   <link href="http://ouertani.github.com/blog/categories/glassfish/atom.xml" rel="self"/>
   <link href="http://ouertani.github.com/"/>
-  <updated>2013-04-01T02:52:36+02:00</updated>
+  <updated>2013-04-01T02:53:56+02:00</updated>
   <id>http://ouertani.github.com/</id>
   <author>
     <name><![CDATA[Ouertani]]></name>
@@ -123,8 +123,10 @@ public void sendEmail(String to, String subject, String body) {
 ```
 Look short !</p>
 
-<p>4- EmailServlet remind the same except using @Inject rather than @EJB
-```java
+<ol start="3"><li>EmailServlet remind the same except using @Inject rather than @EJB</li></ol>
+
+
+<p>```java
 @WebServlet(name = "EmailServlet", urlPatterns = {"/EmailServlet"})
 public class EmailServlet extends HttpServlet {</p>
 
