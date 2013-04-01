@@ -6,6 +6,12 @@
     </url>
     <url>
         <loc>
+            http://ouertani.github.com/blog/2012/06/28/sending-an-email-using-the-javamail-session-and-glassfish/
+        </loc>
+        <lastmod>2013-04-01T02:38:29+02:00</lastmod>
+    </url>
+    <url>
+        <loc>
             http://ouertani.github.com/blog/2012/09/26/xml-slash-rpc-driver-as-jca-scala-connector/
         </loc>
         <lastmod>2013-04-01T01:25:59+02:00</lastmod>
@@ -32,11 +38,11 @@
     </url>
     <url>
         <loc>http://ouertani.github.com/blog/archives/</loc>
-        <lastmod>2013-04-01T02:15:35+02:00</lastmod>
+        <lastmod>2013-04-01T02:38:29+02:00</lastmod>
     </url>
     <url>
         <loc>http://ouertani.github.com/</loc>
-        <lastmod>2013-04-01T02:15:35+02:00</lastmod>
+        <lastmod>2013-04-01T02:38:29+02:00</lastmod>
     </url>
     <url>
         <loc>http://ouertani.github.com/robots.txt</loc>
