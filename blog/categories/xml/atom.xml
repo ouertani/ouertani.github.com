@@ -4,7 +4,7 @@
   <title><![CDATA[Category: XML | Ouertani Blog]]></title>
   <link href="http://ouertani.github.com/blog/categories/xml/atom.xml" rel="self"/>
   <link href="http://ouertani.github.com/"/>
-  <updated>2013-04-01T04:24:53+02:00</updated>
+  <updated>2013-04-01T04:27:17+02:00</updated>
   <id>http://ouertani.github.com/</id>
   <author>
     <name><![CDATA[Ouertani]]></name>
@@ -198,13 +198,12 @@ trying to generate java client code from this wsdl will causes : <b>(wsdl2java.s
 &lt;jxb:bindings version="2.0" xmlns:jxb="http://java.sun.com/xml/ns/jaxb" xmlns:xs="http://www.w3.org/2001/XMLSchema">
   &lt;jxb:bindings schemalocation="file:OldExistingWsService.xsd" node="/xs:schema"></p>
 
-<p> &lt;jxb:bindings node=".//xs:element[@name='_a']"></p>
-
-<pre><code>        &lt;jxb:property name="oldA"&gt;
-   &lt;/jxb:property&gt;&lt;/jxb:bindings&gt;
+<pre><code>&lt;jxb:bindings node=".//xs:element[@name='_a']"&gt;
+ &lt;jxb:property name="oldA"&gt;&lt;/jxb:property&gt;
+&lt;/jxb:bindings&gt;
 </code></pre>
 
-<p>  &lt;/jxb:bindings>
+<p> &lt;/jxb:bindings>
 &lt;/jxb:bindings>
 ```
 And tell :
@@ -215,20 +214,14 @@ And tell :
 &lt;jaxws:bindings xmlns:jxb="http://java.sun.com/xml/ns/jaxb" xmlns="http://java.sun.com/xml/ns/jaxws" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:jaxws="http://java.sun.com/xm
 l/ns/jaxws" wsdllocation="test.wsdl" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:tns1="VOLARISWS"></p>
 
-<pre><code>   &lt;jaxws:schemabindings&gt;
+<pre><code>&lt;jaxws:schemabindings&gt;
+    &lt;jaxws:bindings node="wsdl:definitions"&gt;
+        &lt;jaxws:bindings node=".//xs:element[@name='_a']"&gt;
+            &lt;jxb:property name="oldA"&gt;&lt;/jxb:property&gt;
+        &lt;/jaxws:bindings&gt;
+    &lt;/jaxws:bindings&gt;
+&lt;/jaxws:schemabindings&gt;
 </code></pre>
-
-<p>&lt;jaxws:bindings node="wsdl:definitions">
-  &lt;jaxws:bindings node=".//xs:element[@name='_a']"></p>
-
-<pre><code>        &lt;jxb:property name="oldA"&gt;
-   &lt;/jxb:property&gt;&lt;/jaxws:bindings&gt;
-
-
-&lt;/jaxws:bindings&gt;
-</code></pre>
-
-<p> &lt;/jaxws:schemabindings></p>
 
 <p>&lt;/jaxws:bindings>
 ```
