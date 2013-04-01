@@ -4,7 +4,7 @@
   <title><![CDATA[Ouertani Blog]]></title>
   <link href="http://ouertani.github.com/atom.xml" rel="self"/>
   <link href="http://ouertani.github.com/"/>
-  <updated>2013-04-01T03:47:58+02:00</updated>
+  <updated>2013-04-01T03:49:32+02:00</updated>
   <id>http://ouertani.github.com/</id>
   <author>
     <name><![CDATA[Ouertani]]></name>
@@ -3259,60 +3259,73 @@ It was necessary to group parameters resources into a single resource by project
 <span class='line-number'>4</span>
 <span class='line-number'>5</span>
 <span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
 </pre></td><td class='code'><pre><code class='scala'><span class='line'><span class="k">def</span> <span class="n">handle</span><span class="o">(</span><span class="n">op</span><span class="k">:</span> <span class="kt">TOperation</span> <span class="o">)</span> <span class="k">=</span> <span class="n">op</span> <span class="k">match</span> <span class="o">{</span>
 </span><span class='line'>    <span class="k">case</span>   <span class="nc">Add</span><span class="o">(</span><span class="n">x</span><span class="o">)</span> <span class="k">=&gt;</span> <span class="n">count</span> <span class="o">+=</span><span class="n">x</span>
 </span><span class='line'>    <span class="k">case</span>   <span class="nc">Sub</span><span class="o">(</span><span class="n">x</span><span class="o">)</span> <span class="k">=&gt;</span> <span class="n">count</span> <span class="o">-=</span><span class="n">x</span>
 </span><span class='line'>    <span class="k">case</span>   <span class="n">s</span><span class="k">:</span><span class="kt">Sum</span> <span class="o">=&gt;</span>  <span class="n">sendJMSMessageToTt</span><span class="o">(</span> <span class="nc">Count</span> <span class="o">(</span><span class="n">count</span><span class="o">))</span>
 </span><span class='line'>    <span class="k">case</span>   <span class="n">c</span><span class="k">:</span><span class="kt">Count</span> <span class="o">=&gt;</span> <span class="n">L</span><span class="o">.</span><span class="n">warn</span> <span class="o">(</span><span class="s">&quot;Wrong message destination!&quot;</span><span class="o">)</span>
 </span><span class='line'>  <span class="o">}</span>
-</span><span class='line'>  <span class="err">```</span>
-</span><span class='line'><span class="nc">Very</span> <span class="n">easy</span> <span class="k">with</span> <span class="n">pattern</span> <span class="n">matching</span><span class="o">!</span>
-</span><span class='line'>
-</span><span class='line'><span class="nc">The</span> <span class="n">sendJmsMessageToIt</span> <span class="n">method</span> <span class="n">can</span> <span class="n">be</span> <span class="n">done</span> <span class="n">like</span> <span class="n">the</span> <span class="n">following</span>
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p> scala
-@Resource(mappedName = &#8220;jms/Rep&#8221;)
- var  queue :Queue=<em>
- @Resource(mappedName = &#8220;jms/RepFactory&#8221;)
- var  factory:ConnectionFactory=</em></p>
+<p>Very easy with pattern matching!</p>
 
-<p> private [ws ] def sendJMSMessageToTt( messageData:Count)  {
-   def  createJMSMessageForjmsTt( session:Session,  messageData:Count):Message={</p>
+<p>The sendJmsMessageToIt method can be done like the following</p>
 
-<pre><code> val om = session.createObjectMessage()
- om.setObject(messageData)
- om
-</code></pre>
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+</pre></td><td class='code'><pre><code class='scala'><span class='line'><span class="nd">@Resource</span><span class="o">(</span><span class="n">mappedName</span> <span class="k">=</span> <span class="s">&quot;jms/Rep&quot;</span><span class="o">)</span>
+</span><span class='line'> <span class="k">var</span>  <span class="n">queue</span> <span class="k">:</span><span class="kt">Queue</span><span class="o">=</span><span class="k">_</span>
+</span><span class='line'> <span class="nd">@Resource</span><span class="o">(</span><span class="n">mappedName</span> <span class="k">=</span> <span class="s">&quot;jms/RepFactory&quot;</span><span class="o">)</span>
+</span><span class='line'> <span class="k">var</span>  <span class="n">factory</span><span class="k">:</span><span class="kt">ConnectionFactory</span><span class="o">=</span><span class="k">_</span>
+</span><span class='line'>
+</span><span class='line'> <span class="k">private</span> <span class="o">[</span><span class="kt">ws</span> <span class="o">]</span> <span class="k">def</span> <span class="n">sendJMSMessageToTt</span><span class="o">(</span> <span class="n">messageData</span><span class="k">:</span><span class="kt">Count</span><span class="o">)</span>  <span class="o">{</span>
+</span><span class='line'>   <span class="k">def</span>  <span class="n">createJMSMessageForjmsTt</span><span class="o">(</span> <span class="n">session</span><span class="k">:</span><span class="kt">Session</span><span class="o">,</span>  <span class="n">messageData</span><span class="k">:</span><span class="kt">Count</span><span class="o">)</span><span class="k">:</span><span class="kt">Message</span><span class="o">={</span>
+</span><span class='line'>     <span class="k">val</span> <span class="n">om</span> <span class="k">=</span> <span class="n">session</span><span class="o">.</span><span class="n">createObjectMessage</span><span class="o">()</span>
+</span><span class='line'>     <span class="n">om</span><span class="o">.</span><span class="n">setObject</span><span class="o">(</span><span class="n">messageData</span><span class="o">)</span>
+</span><span class='line'>     <span class="n">om</span>
+</span><span class='line'>   <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>   <span class="k">def</span> <span class="n">tryWith</span><span class="o">[</span><span class="kt">A</span><span class="k">&lt;%</span><span class="o">{</span> <span class="kt">def</span> <span class="kt">close</span><span class="o">()}](</span><span class="n">ac</span> <span class="k">:</span><span class="kt">A</span><span class="o">)(</span><span class="n">f</span><span class="k">:</span> <span class="kt">A</span><span class="o">=&gt;</span> <span class="nc">Unit</span><span class="o">)</span>
+</span><span class='line'>   <span class="o">{</span>
+</span><span class='line'>     <span class="k">try</span> <span class="o">{</span><span class="n">f</span><span class="o">}</span> <span class="k">finally</span> <span class="o">{</span> <span class="n">ac</span><span class="o">.</span><span class="n">close</span> <span class="o">}</span>
+</span><span class='line'>   <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>   <span class="n">tryWith</span><span class="o">(</span><span class="n">factory</span><span class="o">.</span><span class="n">createConnection</span><span class="o">()){</span>
+</span><span class='line'>     <span class="n">connection</span> <span class="k">=&gt;</span> <span class="n">tryWith</span><span class="o">(</span><span class="n">connection</span><span class="o">.</span><span class="n">createSession</span><span class="o">(</span><span class="kc">false</span><span class="o">,</span> <span class="nc">Session</span><span class="o">.</span><span class="nc">AUTO_ACKNOWLEDGE</span><span class="o">))</span> <span class="o">{</span>
+</span><span class='line'>        <span class="n">session</span> <span class="k">=&gt;</span>  <span class="n">tryWith</span><span class="o">(</span> <span class="n">session</span> <span class="n">createProducer</span> <span class="n">queue</span> <span class="o">){</span>
+</span><span class='line'>                <span class="n">messageProducer</span> <span class="k">=&gt;</span> <span class="n">messageProducer</span><span class="o">.</span><span class="n">send</span><span class="o">(</span><span class="n">createJMSMessageForjmsTt</span><span class="o">(</span><span class="n">session</span><span class="o">,</span> <span class="n">messageData</span><span class="o">))</span>
+</span><span class='line'>       <span class="o">}</span>
+</span><span class='line'>     <span class="o">}</span>
+</span><span class='line'>   <span class="o">}</span>
+</span><span class='line'> <span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
 
-<p>   }</p>
 
-<p>   def tryWith<a href="ac%20:A">A&lt;%{ def close()}</a>(f: A=> Unit)
-   {</p>
-
-<pre><code> try {f} finally { ac.close }
-</code></pre>
-
-<p>   }</p>
-
-<p>   tryWith(factory.createConnection()){</p>
-
-<pre><code> connection =&gt; tryWith(connection.createSession(false, Session.AUTO_ACKNOWLEDGE)) {
-    session =&gt;  tryWith( session createProducer queue ){
-            messageProducer =&gt; messageProducer.send(createJMSMessageForjmsTt(session, messageData))
-   }
- }
-</code></pre>
-
-<p>   }
- }
- &#8220;`
-Here we used an old trick to manage resources : <a href="http://www.jroller.com/ouertani/entry/scala_try_with_resources">http://www.jroller.com/ouertani/entry/scala_try_with_resources</a></p>
+<p>Here we used an old trick to manage resources : <a href="http://www.jroller.com/ouertani/entry/scala_try_with_resources">http://www.jroller.com/ouertani/entry/scala_try_with_resources</a></p>
 ]]></content>
   </entry>
   
