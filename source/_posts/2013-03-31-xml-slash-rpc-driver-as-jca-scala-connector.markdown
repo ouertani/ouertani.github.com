@@ -3,15 +3,15 @@ layout: post
 title: "XML/RPC driver as JCA Scala connector"
 date: 2012-09-26 19:41
 comments: true
-categories: [JCA, JEE, SCALA, XML, UCIP, RPC]
+categories: [JCA, JEE, Scala, XML, Ucip, RPC]
 
-keywords: JCA, JEE, SCALA, XML, UCIP, RPC
+keywords: JCA, JEE, SCALA, XML, Ucip, RPC
 description: JCA JEE Connecter using UCIP Scala driver
 ---
 Interoperability and reusability are key features of SOA architecture.  
 
 The <a href="http://en.wikipedia.org/wiki/Java_EE_Connector_Architecture">Java EE Connector architecture</a> defines a standard architecture for connecting the Java EE platform to heterogeneous EISs. This article presents an XML/RPC  adapter using a Scala JCA outbound connector to an IN/AIR legacy system.
-
+<!-- more -->
 <h2>JCA and integration</h2>
 
 {% blockquote JCA 1.6 p 35 %}

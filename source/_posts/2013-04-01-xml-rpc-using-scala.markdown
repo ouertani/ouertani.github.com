@@ -1,11 +1,11 @@
 ---
 layout: post
 title: "XML-RPC using scala"
-date: 2012-06-28 02:03
+date: 2012-06-29 02:03
 comments: true
 categories: [Scala, Ucip, XML/RPC] 
 
-keywords: SCALA, XML, UCIP, RPC
+keywords: Scala, XML, Ucip, RPC
 description: UCIP Scala driver using XML/RPC
 ---
 <h2>Purpose</h2>
@@ -14,7 +14,7 @@ Calling remote procedure using XML-RPC and Scala.
 <h2>Introduction</h2>
 
 On Telecom IT environment and specially middelware solution, we will rarely do all the work but rather delegate some of business process to other tiers. Web service communications is heavy used between solutions. However, many IT node continues to support older protocols like XML-RPC. Ericsson Intelligent Network (IN) and its subsystem uses AIR Integration Protocol user communication(UCIP) based on a variant of XM-RPC.
-
+<!-- more -->
 <h2>Why UCIP ?</h2>
 
 UCIP is intended for user self services such as Adjustments, Account Refill, and Account Inquiries and to extract account details. UCIP is an IP-based protocol used for integration towards the AIR server from the external application.

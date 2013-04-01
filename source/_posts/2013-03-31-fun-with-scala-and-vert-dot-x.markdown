@@ -14,7 +14,7 @@ description: Vert.x using Scala power
 Being polyglot, Vert.x can be used in many flavors, among which : JavaScript,CoffeeScript, Ruby, Python,Groovy and Java. In order to enforce asynchronism and scalabity, Vert.x is built upon <a href="https://netty.io/">Netty</a>, leverage the <a href="http://en.wikipedia.org/wiki/Reactor_pattern">reactor pattern</a>, using a frightening number of handlers.
 
 This article aims at showing the powerful combination of Scala and Vert.x - the Java counterpart being provided as comparison.
-
+<!-- more -->
 Note : the source code are hosted on GitHub as part of lang-scala <a href="https://github.com/ouertani/vert.x/tree/master/vertx-lang/vertx-lang-scala">https://github.com/ouertani/vert.x/tree/master/vertx-lang/vertx-lang-scala</a>
 
 Vert.x supports many components :

@@ -11,7 +11,7 @@ description: Play 2.1 using Scala 2.10 and Slick
 Starting from scala <a href="http://www.scala-lang.org/downloads">2.10</a> version , <a href="http://slick.typesafe.com/">Slick</a> will be by defaut the database manager. In addition, <a href="http://www.playframework.org/">Playframework</a>  also will be based on scala 2.10  since version 2.1.
 
 In this tutorial, I will try to present an example using the last version of slick and scalatest based on <a href="http://www.scala-lang.org/downloads">scala 2.10.0-M7</a> and a developpment version of <a href="https://github.com/playframework/Play20">playframework</a>  
-
+<!-- more -->
 This post follow this <a href="http://www.artima.com/articles/play2_scala_squeryl.html">famous tutorial</a> !
 
 
