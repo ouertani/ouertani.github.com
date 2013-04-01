@@ -4,7 +4,7 @@
   <title><![CDATA[Category: JAXB | Ouertani Blog]]></title>
   <link href="http://ouertani.github.com/blog/categories/jaxb/atom.xml" rel="self"/>
   <link href="http://ouertani.github.com/"/>
-  <updated>2013-04-01T04:23:14+02:00</updated>
+  <updated>2013-04-01T04:24:17+02:00</updated>
   <id>http://ouertani.github.com/</id>
   <author>
     <name><![CDATA[Ouertani]]></name>
@@ -126,7 +126,7 @@ trying to generate java client code from this wsdl will causes : <b>(wsdl2java.s
 
 <ol>By quick solution, I means :
 <li>tell cxf to resolve name collision with : -autoNameResolution command line argument</li>
-<li>tell jaxb to not remove underscores with : jaxb:globalBindings underscoreBinding="asCharInWord"</li>
+<li>tell jaxb to not remove underscores with : <a href="http://stackoverflow.com/questions/2163719/tell-jaxb-to-not-remove-underscores">jaxb:globalBindings underscoreBinding="asCharInWord"</a></li>
 </ol>
 
 
