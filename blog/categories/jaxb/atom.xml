@@ -4,7 +4,7 @@
   <title><![CDATA[Category: JAXB | Ouertani Blog]]></title>
   <link href="http://ouertani.github.com/blog/categories/jaxb/atom.xml" rel="self"/>
   <link href="http://ouertani.github.com/"/>
-  <updated>2013-04-01T04:19:23+02:00</updated>
+  <updated>2013-04-01T04:20:38+02:00</updated>
   <id>http://ouertani.github.com/</id>
   <author>
     <name><![CDATA[Ouertani]]></name>
@@ -117,7 +117,7 @@ OldExistingWsService.xsd
 ```
 trying to generate java client code from this wsdl will causes : (wsdl2java.sh -client -d . -verbose OldExistingWsService.wsdl)</p>
 
-<p style="font-color:red"> org.apache.cxf.tools.common.ToolException: Thrown by JAXB: Two declarations cause a collision in the ObjectFactory class. at line 17 column 1 of schema file:/OldExistingWsService.xsd</p>
+<p style="color:red;"> org.apache.cxf.tools.common.ToolException: Thrown by JAXB: Two declarations cause a collision in the ObjectFactory class. at line 17 column 1 of schema file:/OldExistingWsService.xsd</p>
 
 
 <p>The problem is where a and _a are generate the same property, getter and setter methods names which generate exception.</p>
