@@ -9,7 +9,7 @@
   <meta name="author" content="Ouertani">
 
   
-  <meta name="description" content="A previous post introduced some features of using Scala with Vert.x. This post covers how to publish Rest web services in an elegant and simple &hellip;">
+  <meta name="description" content="PURPOSE This tutorial is a supplement to the article of oracle published here. After reading this later, I decided to share some tips about this EE &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -78,6 +78,206 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2013/06/24/ee-6-environmental-enterprise-entries-and-glassfish/">EE 6 Environmental Enterprise Entries and Glassfish</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-06-24T02:55:00+02:00" pubdate data-updated="true">Jun 24<span>th</span>, 2013</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><h2>PURPOSE</h2>
+
+
+<p>This tutorial is a supplement to the article of oracle published <a href="http://www.oracle.com/webfolder/technetwork/tutorials/obe/java/env_entry/env_entry.html.">here</a>. After reading <a href="http://www.oracle.com/webfolder/technetwork/tutorials/obe/java/env_entry/env_entry.html.">this later</a>, I decided to share some tips about this EE environment configuration.</p>
+
+<h2>INTRODUCTION</h2>
+
+
+<p>Two years ago, we decided to move to JEE 6 for our enterprise solutions and take a lot of fun with new EJB 3.1 features and annotations. Glassfish has made our lives easier, it was very easy to declare variables using it&#8217;s administration console.
+Less complicated than using <b>ejb-jar.xml</b> are two methods using Glassfish server and resources :
+I- OLD FASHION WITH RESOURCE PER PARAM (SIMILAR TO ORACLE TUTORIAL)</p>
+
+<p>1- Declare an EJB with toBeInjected resource :</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kn">import</span> <span class="nn">javax.annotation.Resource</span><span class="o">;</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">javax.ejb.Stateless</span><span class="o">;</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">javax.ejb.LocalBean</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="cm">/**</span>
+</span><span class='line'><span class="cm"> *</span>
+</span><span class='line'><span class="cm"> * @author slim</span>
+</span><span class='line'><span class="cm"> */</span>
+</span><span class='line'><span class="nd">@Stateless</span>
+</span><span class='line'><span class="nd">@LocalBean</span>
+</span><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">MyEjbBean</span> <span class="o">{</span>
+</span><span class='line'>  <span class="nd">@Resource</span><span class="o">(</span><span class="n">lookup</span><span class="o">=</span><span class="s">&quot;resName&quot;</span><span class="o">)</span>
+</span><span class='line'>  <span class="kd">protected</span> <span class="n">String</span> <span class="n">toBeInjected</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'>
+</span><span class='line'>  <span class="c1">////</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>2 - Open admin console ( localhost:4848 by default ) -> Resources -> Custom Resources -> New -> and fill the informations as below
+<img class="center" src="/images/jndiee1.jpg" width="640" height="424" title="JNDI EE" alt="images"></p>
+
+<p>At first glance, it looks simple and fast forward but problems start after just after a first project.</p>
+
+<p>Problems ! Why ?
+We achieved more than 20 variables and some resource names begin to confuse them. I was very hard for our operations team to catch the name of the correct setting and update its value.
+It was necessary to group parameters resources into a single resource by project.</p>
+
+<p>NEXT FASHION : GROUPING RESOURCES</p>
+
+<p>In this section I will use scala (similar class can be translated easy to java).</p>
+
+<p>1 - First of all, we need to create our single resource class as simple bean</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kn">package</span> <span class="n">me</span><span class="o">.</span><span class="na">slim</span><span class="o">.</span><span class="na">ouertani</span>
+</span><span class='line'><span class="kd">class</span> <span class="nc">Ressource</span> <span class="o">{</span>
+</span><span class='line'>  <span class="n">var</span> <span class="n">param1</span> <span class="o">:</span> <span class="n">String</span> <span class="o">=</span> <span class="n">_</span>
+</span><span class='line'>  <span class="n">var</span> <span class="n">parma2</span> <span class="o">:</span> <span class="n">String</span> <span class="o">=</span> <span class="n">_</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>2 - Next, let&#8217;s create a resource factory class :</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kn">package</span> <span class="n">me</span><span class="o">.</span><span class="na">slim</span><span class="o">.</span><span class="na">ouertani</span>
+</span><span class='line'><span class="kd">class</span> <span class="nc">RessourceFactory</span> <span class="kd">extends</span> <span class="n">ObjectFactory</span> <span class="o">{</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="n">override</span> <span class="n">def</span> <span class="nf">getObjectInstance</span><span class="o">(</span><span class="nl">obj:</span> <span class="n">Object</span><span class="o">,</span> <span class="nl">name:</span> <span class="n">javax</span><span class="o">.</span><span class="na">naming</span><span class="o">.</span><span class="na">Name</span><span class="o">,</span> <span class="nl">nameCtx:</span> <span class="n">javax</span><span class="o">.</span><span class="na">naming</span><span class="o">.</span><span class="na">Context</span><span class="o">,</span> <span class="nl">environment:</span> <span class="n">Hashtable</span><span class="o">[</span><span class="n">_</span><span class="o">,</span> <span class="n">_</span><span class="o">]):</span> <span class="n">Object</span> <span class="o">=</span> <span class="o">{</span>
+</span><span class='line'>    <span class="n">val</span> <span class="n">ressource</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Ressource</span><span class="o">();</span>
+</span><span class='line'>    <span class="n">val</span> <span class="n">reference</span> <span class="o">=</span> <span class="n">obj</span><span class="o">.</span><span class="na">asInstanceOf</span><span class="o">[</span><span class="n">Reference</span><span class="o">];</span>
+</span><span class='line'>    <span class="n">val</span> <span class="n">attributes</span> <span class="o">=</span> <span class="n">reference</span><span class="o">.</span><span class="na">getAll</span><span class="o">();</span>
+</span><span class='line'>    <span class="k">while</span> <span class="o">(</span><span class="n">attributes</span><span class="o">.</span><span class="na">hasMoreElements</span><span class="o">())</span> <span class="o">{</span>
+</span><span class='line'>      <span class="n">val</span> <span class="n">refAddr</span> <span class="o">=</span> <span class="n">attributes</span><span class="o">.</span><span class="na">nextElement</span><span class="o">().</span><span class="na">asInstanceOf</span><span class="o">[</span><span class="n">RefAddr</span><span class="o">];</span>
+</span><span class='line'>      <span class="n">init</span><span class="o">(</span><span class="n">ressource</span><span class="o">,</span> <span class="n">refAddr</span><span class="o">.</span><span class="na">getType</span><span class="o">(),</span> <span class="n">refAddr</span><span class="o">.</span><span class="na">getContent</span><span class="o">());</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>    <span class="k">return</span> <span class="n">ressource</span><span class="o">;</span>
+</span><span class='line'>  <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="kd">private</span><span class="o">[</span><span class="k">this</span><span class="o">]</span> <span class="n">def</span> <span class="nf">init</span><span class="o">(</span><span class="nl">ressource:</span> <span class="n">Ressource</span><span class="o">,</span> <span class="nl">tipe:</span> <span class="n">String</span><span class="o">,</span> <span class="nl">content:</span> <span class="n">Object</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>    <span class="n">tipe</span> <span class="n">match</span> <span class="o">{</span>
+</span><span class='line'>
+</span><span class='line'>      <span class="k">case</span> <span class="s">&quot;param1&quot;</span> <span class="o">=&gt;</span> <span class="n">ressource</span><span class="o">.</span><span class="na">param1</span> <span class="o">=</span> <span class="n">content</span><span class="o">.</span><span class="na">toString</span><span class="o">()</span>
+</span><span class='line'>      <span class="k">case</span> <span class="s">&quot;param2&quot;</span> <span class="o">=&gt;</span> <span class="n">ressource</span><span class="o">.</span><span class="na">param2</span> <span class="o">=</span> <span class="n">content</span><span class="o">.</span><span class="na">toString</span><span class="o">()</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>  <span class="o">}</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>The purpose of object factory is to read injectable parameters and populate a resource class</p>
+
+<p>3 - Back to Glassfish admininstration console, create a single resource ( see screenshot below) :
+Jndi Name => the resource name to be used by project for example
+Resource Type => check second radio button, and fill the resource full name ( with package)
+Factory class => Our RessourceFactory class full name ( with package)
+Add two (or more) properties to be injected in our resource class.
+<img class="center" src="/images/jndiee2.jpg" width="640" height="424" title="JNDI EE" alt="images"></p>
+
+<p>4- At the end we inject our resource in EJB class :</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="nd">@Stateless</span>
+</span><span class='line'><span class="nd">@LocalBean</span>
+</span><span class='line'><span class="kd">class</span> <span class="nc">MyEjbBean</span> <span class="o">{</span>
+</span><span class='line'>  <span class="nd">@Resource</span><span class="o">(</span><span class="n">lookup</span><span class="o">=</span><span class="s">&quot;globalRes&quot;</span><span class="o">)</span>
+</span><span class='line'>  <span class="kd">protected</span> <span class="n">var</span> <span class="nl">res:</span><span class="n">Ressource</span><span class="o">=</span> <span class="n">_</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="c1">/// res.param1</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>CONCLUSION</p>
+
+<p>Having a single resource per project facilitates business management and thanks to Glassfish administration console managing JNDI became easier.</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -1918,6 +2118,10 @@ To create and JavaMail Session :
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2013/06/24/ee-6-environmental-enterprise-entries-and-glassfish/">EE 6 Environmental Enterprise Entries and Glassfish</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2013/03/09/rest-with-scala-and-vert-dot-x/">Rest with Scala and Vert.x</a>
       </li>
     
@@ -1949,7 +2153,7 @@ To create and JavaMail Session :
 </section>
 <section>
   <h1>Tag Cloud</h1>
-    <span id="tag-cloud"><a href='/blog/categories/glassfish' style='font-size: 112.0%'>Glassfish(1)</a> <a href='/blog/categories/jca' style='font-size: 112.0%'>JCA(1)</a> <a href='/blog/categories/jee' style='font-size: 124.0%'>JEE(2)</a> <a href='/blog/categories/mail' style='font-size: 112.0%'>MAIL(1)</a> <a href='/blog/categories/play' style='font-size: 124.0%'>Play(2)</a> <a href='/blog/categories/rest' style='font-size: 112.0%'>Rest(1)</a> <a href='/blog/categories/rpc' style='font-size: 112.0%'>RPC(1)</a> <a href='/blog/categories/scala' style='font-size: 112.0%'>SCALA(1)</a> <a href='/blog/categories/scala' style='font-size: 160.0%'>Scala(5)</a> <a href='/blog/categories/ucip' style='font-size: 112.0%'>Ucip(1)</a> <a href='/blog/categories/ucip' style='font-size: 112.0%'>UCIP(1)</a> <a href='/blog/categories/vert-x' style='font-size: 124.0%'>Vert.x(2)</a> <a href='/blog/categories/xml' style='font-size: 112.0%'>XML(1)</a> <a href='/blog/categories/xml-rpc' style='font-size: 112.0%'>XML/RPC(1)</a> </span>
+    <span id="tag-cloud"><a href='/blog/categories/glassfish' style='font-size: 112.0%'>Glassfish(1)</a> <a href='/blog/categories/jca' style='font-size: 112.0%'>JCA(1)</a> <a href='/blog/categories/jee' style='font-size: 136.0%'>JEE(3)</a> <a href='/blog/categories/jndi' style='font-size: 112.0%'>JNDI(1)</a> <a href='/blog/categories/mail' style='font-size: 112.0%'>MAIL(1)</a> <a href='/blog/categories/play' style='font-size: 124.0%'>Play(2)</a> <a href='/blog/categories/rest' style='font-size: 112.0%'>Rest(1)</a> <a href='/blog/categories/rpc' style='font-size: 112.0%'>RPC(1)</a> <a href='/blog/categories/scala' style='font-size: 112.0%'>SCALA(1)</a> <a href='/blog/categories/scala' style='font-size: 160.0%'>Scala(5)</a> <a href='/blog/categories/ucip' style='font-size: 112.0%'>UCIP(1)</a> <a href='/blog/categories/ucip' style='font-size: 112.0%'>Ucip(1)</a> <a href='/blog/categories/vert-x' style='font-size: 124.0%'>Vert.x(2)</a> <a href='/blog/categories/xml' style='font-size: 112.0%'>XML(1)</a> <a href='/blog/categories/xml-rpc' style='font-size: 112.0%'>XML/RPC(1)</a> </span>
 </section>
 
 <section>
