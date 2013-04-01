@@ -4,7 +4,7 @@
   <title><![CDATA[Ouertani Blog]]></title>
   <link href="http://ouertani.github.com/atom.xml" rel="self"/>
   <link href="http://ouertani.github.com/"/>
-  <updated>2013-04-01T03:17:00+02:00</updated>
+  <updated>2013-04-01T03:18:09+02:00</updated>
   <id>http://ouertani.github.com/</id>
   <author>
     <name><![CDATA[Ouertani]]></name>
@@ -2283,7 +2283,8 @@ It was necessary to group parameters resources into a single resource by project
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>CONCLUSION</p>
+<h2>CONCLUSION</h2>
+
 
 <p>Having a single resource per project facilitates business management and thanks to Glassfish administration console managing JNDI became easier.</p>
 ]]></content>
