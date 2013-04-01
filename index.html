@@ -1779,7 +1779,7 @@ To create and JavaMail Session :
 </span></code></pre></td></tr></table></div></figure>
 
 
-<ol start="4">
+<ol start="5">
 <li>Default user</li>
 <li>Default sender will be used later on mailSession.getProperty(&#8220;mail.from&#8221;)</li>
 <li>For secure Mail add this advanced setting :
@@ -1802,8 +1802,11 @@ To create and JavaMail Session :
 
 <p>This tutorial is a supplement to oracle one. We will use CDI with the same example.</p>
 
-<p>1 - MailSessionBean Will be a CDI bean with RequestScope
-2- Inject the full JavaMail Session as resource rather than create it</p>
+<ol>
+    <li>MailSessionBean Will be a CDI bean with RequestScope</li>
+    <li>Inject the full JavaMail Session as resource rather than create it</li>
+</ol>
+
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
