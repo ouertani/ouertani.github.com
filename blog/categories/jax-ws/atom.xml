@@ -4,7 +4,7 @@
   <title><![CDATA[Category: JAX-WS | Ouertani Blog]]></title>
   <link href="http://ouertani.github.com/blog/categories/jax-ws/atom.xml" rel="self"/>
   <link href="http://ouertani.github.com/"/>
-  <updated>2013-04-01T03:25:39+02:00</updated>
+  <updated>2013-04-01T03:29:40+02:00</updated>
   <id>http://ouertani.github.com/</id>
   <author>
     <name><![CDATA[Ouertani]]></name>
@@ -195,14 +195,21 @@ return authenticated
 
 <p>  override def handleFault(soapMessageContext: SOAPMessageContext): Boolean = false
 }
-<code>
-Unlike client side we need to add an xml file handler.xml to enable the previous handler
-h2&gt;on web service declaration:
-Chain this handler : @HandlerChain(file = "handler.xml")
-Inject WebServiceContext : @Resource private var wsContext: WebServiceContext = _
-Retrieve a messageContext : val msgContext = wsContext.getMessageContext()
-Check stored valued : val authnStatus = msgContext.get(AuthenticationHandlerConstants.AUTHN_STAUTS)
-</code> scala
+```
+Unlike client side we need to add an xml file handler.xml to enable the previous handler</p>
+
+<h3>on web service declaration: </h3>
+
+
+<ol>
+    <li>Chain this handler : @HandlerChain(file = "handler.xml")</li>
+    <li>Inject WebServiceContext : @Resource private var wsContext: WebServiceContext = _</li>
+    <li>Retrieve a messageContext : val msgContext = wsContext.getMessageContext()</li>
+    <li>Check stored valued : val authnStatus = msgContext.get(AuthenticationHandlerConstants.AUTHN_STAUTS)</li>
+</ol>
+
+
+<p>``` scala
 @WebService(serviceName = "WsService", targetNamespace = "http://slim.ouertani.me)
 @HandlerChain(file = "handler.xml")
 @Stateless()
@@ -238,42 +245,43 @@ try {
 <h2>Adding custom header</h2>
 
 
-<p>Publishing a custom header is easier than using the previous handler :</p>
 
-<p>1-First lets add a custom header class
+
+<ol>Publishing a custom header is easier than using the previous handler :
+
+<li>First lets add a custom header class</li> 
 ``` scala
 import scala.reflect.BeanProperty
 import javax.xml.bind.annotation.{XmlType , XmlAccessType, XmlElement, XmlAccessorType};
-/<em>*
+/**
  * @author Slim Ouertani
- </em>/
+ */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "Header", propOrder = Array(</p>
-
-<pre><code>"username",
-"password"
-</code></pre>
-
-<p>  ))
+@XmlType(name = "Header", propOrder = Array(
+    "username",
+    "password"
+  ))
 class UsernameToken {
    @BeanProperty  @XmlElement(required = true, nillable = false ) var username : String= ""
    @BeanProperty  @XmlElement(required = true, nillable = false ) var password : String= ""
 }
-```</p>
+```
 
-<p>2 - publish this header using @WebParam (name = "usernameToken",header = true)
-<code>scala
+<li>publish this header using @WebParam (name = "usernameToken",header = true)</li>
+``` scala
 def execute (@WebParam(name = "request" ) request : Request, @WebParam (name = "usernameToken",header = true) header) {
   ....
  }
-</code>
-3- retrieving user and password field are the same as accessing class properties :
-<code>scala
+```
+<li>retrieving user and password field are the same as accessing class properties :</li>
+``` scala
 val username = ""+header.getUsername()
 val password = ""+header.getPassword()
-</code>
-4- note that the preceding header is declared on WSDL method and produce this output on soapUI interface
-``` xml
+```
+<li>note that the preceding header is declared on WSDL method and produce this output on soapUI interface </li></ol>
+
+
+<p>``` xml
 &lt;soapenv:Header></p>
 
 <pre><code>  &lt;ws:usernameToken&gt;

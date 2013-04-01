@@ -2040,12 +2040,18 @@ Creating Bars From a Web Form</p>
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>Unlike client side we need to add an xml file handler.xml to enable the previous handler
-h2>on web service declaration:
-Chain this handler : @HandlerChain(file = &#8220;handler.xml&#8221;)
-Inject WebServiceContext : @Resource private var wsContext: WebServiceContext = _
-Retrieve a messageContext : val msgContext = wsContext.getMessageContext()
-Check stored valued : val authnStatus = msgContext.get(AuthenticationHandlerConstants.AUTHN_STAUTS)</p>
+<p>Unlike client side we need to add an xml file handler.xml to enable the previous handler</p>
+
+<h3>on web service declaration: </h3>
+
+
+<ol>
+    <li>Chain this handler : @HandlerChain(file = &#8220;handler.xml&#8221;)</li>
+    <li>Inject WebServiceContext : @Resource private var wsContext: WebServiceContext = _</li>
+    <li>Retrieve a messageContext : val msgContext = wsContext.getMessageContext()</li>
+    <li>Check stored valued : val authnStatus = msgContext.get(AuthenticationHandlerConstants.AUTHN_STAUTS)</li>
+</ol>
+
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -2111,10 +2117,11 @@ Check stored valued : val authnStatus = msgContext.get(AuthenticationHandlerCons
 <h2>Adding custom header</h2>
 
 
-<p>Publishing a custom header is easier than using the previous handler :</p>
 
-<p>1-First lets add a custom header class</p>
 
+<ol>Publishing a custom header is easier than using the previous handler :
+
+<li>First lets add a custom header class</li> 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
@@ -2145,9 +2152,7 @@ Check stored valued : val authnStatus = msgContext.get(AuthenticationHandlerCons
 </span><span class='line'><span class="o">}</span>
 </span></code></pre></td></tr></table></div></figure>
 
-
-<p>2 - publish this header using @WebParam (name = &#8220;usernameToken&#8221;,header = true)</p>
-
+<li>publish this header using @WebParam (name = &#8220;usernameToken&#8221;,header = true)</li>
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
@@ -2155,18 +2160,14 @@ Check stored valued : val authnStatus = msgContext.get(AuthenticationHandlerCons
 </span><span class='line'>  <span class="o">....</span>
 </span><span class='line'> <span class="o">}</span>
 </span></code></pre></td></tr></table></div></figure>
-
-
-<p>3- retrieving user and password field are the same as accessing class properties :</p>
-
+<li>retrieving user and password field are the same as accessing class properties :</li>
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 </pre></td><td class='code'><pre><code class='scala'><span class='line'><span class="k">val</span> <span class="n">username</span> <span class="k">=</span> <span class="s">&quot;&quot;</span><span class="o">+</span><span class="n">header</span><span class="o">.</span><span class="n">getUsername</span><span class="o">()</span>
 </span><span class='line'><span class="k">val</span> <span class="n">password</span> <span class="k">=</span> <span class="s">&quot;&quot;</span><span class="o">+</span><span class="n">header</span><span class="o">.</span><span class="n">getPassword</span><span class="o">()</span>
 </span></code></pre></td></tr></table></div></figure>
+<li>note that the preceding header is declared on WSDL method and produce this output on soapUI interface </li></ol>
 
-
-<p>4- note that the preceding header is declared on WSDL method and produce this output on soapUI interface</p>
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
