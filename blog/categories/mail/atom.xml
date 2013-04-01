@@ -4,7 +4,7 @@
   <title><![CDATA[Category: MAIL | Ouertani Blog]]></title>
   <link href="http://ouertani.github.com/blog/categories/mail/atom.xml" rel="self"/>
   <link href="http://ouertani.github.com/"/>
-  <updated>2013-04-01T03:49:32+02:00</updated>
+  <updated>2013-04-01T03:51:55+02:00</updated>
   <id>http://ouertani.github.com/</id>
   <author>
     <name><![CDATA[Ouertani]]></name>
@@ -29,6 +29,9 @@ After reading this later, I decided to share some tips about this EE environment
 
 <p>Two years ago, we decided to move to JEE 6 for our enterprise solutions and take a lot of fun with new EJB 3.1 features and annotations. Glassfish has made our lives easier, it was very easy to declare variables using it's administration console.
 Less complicated than using global resource environment for properties It is also the continuation to this <a href="http://www.jroller.com/articles/jee-6-environmental-enterprise">tricks</a> this tutorial delegate to Glassfish EE server managing mail session.</p>
+
+<!-- more -->
+
 
 <h2>Prerequisites</h2>
 

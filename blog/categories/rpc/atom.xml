@@ -4,7 +4,7 @@
   <title><![CDATA[Category: RPC | Ouertani Blog]]></title>
   <link href="http://ouertani.github.com/blog/categories/rpc/atom.xml" rel="self"/>
   <link href="http://ouertani.github.com/"/>
-  <updated>2013-04-01T03:49:32+02:00</updated>
+  <updated>2013-04-01T03:51:55+02:00</updated>
   <id>http://ouertani.github.com/</id>
   <author>
     <name><![CDATA[Ouertani]]></name>
@@ -21,6 +21,9 @@
     <content type="html"><![CDATA[<p>Interoperability and reusability are key features of SOA architecture.</p>
 
 <p>The <a href="http://en.wikipedia.org/wiki/Java_EE_Connector_Architecture">Java EE Connector architecture</a> defines a standard architecture for connecting the Java EE platform to heterogeneous EISs. This article presents an XML/RPC  adapter using a Scala JCA outbound connector to an IN/AIR legacy system.</p>
+
+<!-- more -->
+
 
 <h2>JCA and integration</h2>
 

@@ -4,7 +4,7 @@
   <title><![CDATA[Category: XML/RPC | Ouertani Blog]]></title>
   <link href="http://ouertani.github.com/blog/categories/xml-slash-rpc/atom.xml" rel="self"/>
   <link href="http://ouertani.github.com/"/>
-  <updated>2013-04-01T03:49:32+02:00</updated>
+  <updated>2013-04-01T03:51:55+02:00</updated>
   <id>http://ouertani.github.com/</id>
   <author>
     <name><![CDATA[Ouertani]]></name>
@@ -27,6 +27,9 @@
 
 
 <p>On Telecom IT environment and specially middelware solution, we will rarely do all the work but rather delegate some of business process to other tiers. Web service communications is heavy used between solutions. However, many IT node continues to support older protocols like XML-RPC. Ericsson Intelligent Network (IN) and its subsystem uses AIR Integration Protocol user communication(UCIP) based on a variant of XM-RPC.</p>
+
+<!-- more -->
+
 
 <h2>Why UCIP ?</h2>
 

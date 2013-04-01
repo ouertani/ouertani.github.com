@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Vert.x | Ouertani Blog]]></title>
   <link href="http://ouertani.github.com/blog/categories/vert-dot-x/atom.xml" rel="self"/>
   <link href="http://ouertani.github.com/"/>
-  <updated>2013-04-01T03:49:32+02:00</updated>
+  <updated>2013-04-01T03:51:55+02:00</updated>
   <id>http://ouertani.github.com/</id>
   <author>
     <name><![CDATA[Ouertani]]></name>
@@ -349,6 +349,9 @@ public String getContent() {
 <p>Being polyglot, Vert.x can be used in many flavors, among which : JavaScript,CoffeeScript, Ruby, Python,Groovy and Java. In order to enforce asynchronism and scalabity, Vert.x is built upon <a href="https://netty.io/">Netty</a>, leverage the <a href="http://en.wikipedia.org/wiki/Reactor_pattern">reactor pattern</a>, using a frightening number of handlers.</p>
 
 <p>This article aims at showing the powerful combination of Scala and Vert.x - the Java counterpart being provided as comparison.</p>
+
+<!-- more -->
+
 
 <p>Note : the source code are hosted on GitHub as part of lang-scala <a href="https://github.com/ouertani/vert.x/tree/master/vertx-lang/vertx-lang-scala">https://github.com/ouertani/vert.x/tree/master/vertx-lang/vertx-lang-scala</a></p>
 

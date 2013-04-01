@@ -4,7 +4,7 @@
   <title><![CDATA[Category: JAX-WS | Ouertani Blog]]></title>
   <link href="http://ouertani.github.com/blog/categories/jax-ws/atom.xml" rel="self"/>
   <link href="http://ouertani.github.com/"/>
-  <updated>2013-04-01T03:49:32+02:00</updated>
+  <updated>2013-04-01T03:51:55+02:00</updated>
   <id>http://ouertani.github.com/</id>
   <author>
     <name><![CDATA[Ouertani]]></name>
@@ -27,6 +27,9 @@
 
 
 <p>On Telecom IT environment and specially middelware solution web service communications are heavy used between solutions. This tutorial aims to introduce using handler on server side by publishing specific header, reading WSS UserToken or logging the soap message on console.</p>
+
+<!-- more -->
+
 
 <p>This tutorial is Scala based, Java version can be easy translated.</p>
 
@@ -314,6 +317,9 @@ val password = ""+header.getPassword()
 
 
 <p>On Telecom IT environment and specially middelware solution, we will rarely do all the work but rather delegate some of business process to other tiers. Web service communications is heavy used between solutions. This tutorial aims to introduce using handler on client side by adding WSS UserToken or logging the soap message on console.</p>
+
+<!-- more -->
+
 
 <h2>Adding undeclared custom header</h2>
 

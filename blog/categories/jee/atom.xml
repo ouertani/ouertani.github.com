@@ -4,7 +4,7 @@
   <title><![CDATA[Category: JEE | Ouertani Blog]]></title>
   <link href="http://ouertani.github.com/blog/categories/jee/atom.xml" rel="self"/>
   <link href="http://ouertani.github.com/"/>
-  <updated>2013-04-01T03:49:32+02:00</updated>
+  <updated>2013-04-01T03:51:55+02:00</updated>
   <id>http://ouertani.github.com/</id>
   <author>
     <name><![CDATA[Ouertani]]></name>
@@ -21,6 +21,9 @@
     <content type="html"><![CDATA[<p>Interoperability and reusability are key features of SOA architecture.</p>
 
 <p>The <a href="http://en.wikipedia.org/wiki/Java_EE_Connector_Architecture">Java EE Connector architecture</a> defines a standard architecture for connecting the Java EE platform to heterogeneous EISs. This article presents an XML/RPC  adapter using a Scala JCA outbound connector to an IN/AIR legacy system.</p>
+
+<!-- more -->
+
 
 <h2>JCA and integration</h2>
 
@@ -87,6 +90,9 @@ var airConnectorFactory : AirConnectorFactory = _</p>
 
 
 <p>On Telecom IT environment and specially middelware solution web service communications are heavy used between solutions. This tutorial aims to introduce using handler on server side by publishing specific header, reading WSS UserToken or logging the soap message on console.</p>
+
+<!-- more -->
+
 
 <p>This tutorial is Scala based, Java version can be easy translated.</p>
 
@@ -377,6 +383,9 @@ After reading this later, I decided to share some tips about this EE environment
 <p>Two years ago, we decided to move to JEE 6 for our enterprise solutions and take a lot of fun with new EJB 3.1 features and annotations. Glassfish has made our lives easier, it was very easy to declare variables using it's administration console.
 Less complicated than using global resource environment for properties It is also the continuation to this <a href="http://www.jroller.com/articles/jee-6-environmental-enterprise">tricks</a> this tutorial delegate to Glassfish EE server managing mail session.</p>
 
+<!-- more -->
+
+
 <h2>Prerequisites</h2>
 
 
@@ -511,6 +520,9 @@ protected void processRequest(HttpServletRequest request, HttpServletResponse re
 
 
 <p>On Telecom IT environment and specially middelware solution, we will rarely do all the work but rather delegate some of business process to other tiers. Web service communications is heavy used between solutions. This tutorial aims to introduce using handler on client side by adding WSS UserToken or logging the soap message on console.</p>
+
+<!-- more -->
+
 
 <h2>Adding undeclared custom header</h2>
 
@@ -740,8 +752,12 @@ new HandlerResolver() {</p>
 <h2>INTRODUCTION</h2>
 
 
-<p>Two years ago, we decided to move to JEE 6 for our enterprise solutions and take a lot of fun with new EJB 3.1 features and annotations. Glassfish has made our lives easier, it was very easy to declare variables using it's administration console.
-Less complicated than using <b>ejb-jar.xml</b> are two methods using Glassfish server and resources :</p>
+<p>Two years ago, we decided to move to JEE 6 for our enterprise solutions and take a lot of fun with new EJB 3.1 features and annotations. Glassfish has made our lives easier, it was very easy to declare variables using it's administration console.</p>
+
+<!-- more -->
+
+
+<p>Less complicated than using <b>ejb-jar.xml</b> are two methods using Glassfish server and resources :</p>
 
 <h2>I- OLD FASHION WITH RESOURCE PER PARAM (SIMILAR TO ORACLE TUTORIAL) </h2>
 

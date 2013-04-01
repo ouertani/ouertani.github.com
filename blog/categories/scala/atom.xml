@@ -4,7 +4,7 @@
   <title><![CDATA[Category: SCALA | Ouertani Blog]]></title>
   <link href="http://ouertani.github.com/blog/categories/scala/atom.xml" rel="self"/>
   <link href="http://ouertani.github.com/"/>
-  <updated>2013-04-01T03:49:32+02:00</updated>
+  <updated>2013-04-01T03:51:55+02:00</updated>
   <id>http://ouertani.github.com/</id>
   <author>
     <name><![CDATA[Ouertani]]></name>
@@ -27,6 +27,9 @@
 
 
 <p>On Telecom IT environment and specially middelware solution, we will rarely do all the work but rather delegate some of business process to other tiers. Web service communications is heavy used between solutions. This tutorial aims to introduce using handler on client side by adding WSS UserToken or logging the soap message on console.</p>
+
+<!-- more -->
+
 
 <h2>Adding undeclared custom header</h2>
 
@@ -251,6 +254,9 @@ new HandlerResolver() {</p>
     <content type="html"><![CDATA[<p>While I am Akka fun, Typesafe follower, in this post I will continue presenting scala on JEE 6 environment and introduce basic message driven bean (MDB ) using scala language.</p>
 
 <p>As an example let's take a simple one MDB that will consome operation command like add and substract and my be asked to replay by the result</p>
+
+<!-- more -->
+
 
 <h2>I- Exchange API</h2>
 

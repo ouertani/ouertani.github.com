@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Play | Ouertani Blog]]></title>
   <link href="http://ouertani.github.com/blog/categories/play/atom.xml" rel="self"/>
   <link href="http://ouertani.github.com/"/>
-  <updated>2013-04-01T03:49:32+02:00</updated>
+  <updated>2013-04-01T03:51:55+02:00</updated>
   <id>http://ouertani.github.com/</id>
   <author>
     <name><![CDATA[Ouertani]]></name>
@@ -107,6 +107,9 @@ Short and concise !</p>
     <content type="html"><![CDATA[<p>Starting from scala <a href="http://www.scala-lang.org/downloads">2.10</a> version , <a href="http://slick.typesafe.com/">Slick</a> will be by defaut the database manager. In addition, <a href="http://www.playframework.org/">Playframework</a>  also will be based on scala 2.10  since version 2.1.</p>
 
 <p>In this tutorial, I will try to present an example using the last version of slick and scalatest based on <a href="http://www.scala-lang.org/downloads">scala 2.10.0-M7</a> and a developpment version of <a href="https://github.com/playframework/Play20">playframework</a></p>
+
+<!-- more -->
+
 
 <p>This post follow this <a href="http://www.artima.com/articles/play2_scala_squeryl.html">famous tutorial</a> !</p>
 
