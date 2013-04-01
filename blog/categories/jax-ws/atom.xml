@@ -4,7 +4,7 @@
   <title><![CDATA[Category: JAX-WS | Ouertani Blog]]></title>
   <link href="http://ouertani.github.com/blog/categories/jax-ws/atom.xml" rel="self"/>
   <link href="http://ouertani.github.com/"/>
-  <updated>2013-04-01T03:37:20+02:00</updated>
+  <updated>2013-04-01T03:39:13+02:00</updated>
   <id>http://ouertani.github.com/</id>
   <author>
     <name><![CDATA[Ouertani]]></name>
@@ -334,7 +334,7 @@ val password = ""+header.getPassword()
 <code>
 Unlike &lt;a href="http://docs.oracle.com/javaee/5/api/javax/xml/ws/handler/LogicalHandler.html"&gt;LogicalHandler&lt;/a&gt; SOAPHandler have access to the entire Soap Message. Let's create an WSSUsernameTokenSecurityHandler Local Stateless Bean extending SOAPHandler to produce the previous header.
 Below the WSSUsernameTokenSecurityHandler class
-</code> java
+</code> java WSSUsernameTokenSecurityHandler.java
 package me.slim.ouertani;</p>
 
 <p>import java.util.Set;
@@ -419,7 +419,7 @@ public void close(MessageContext context) {
 <p>}
 <code>
 Next, declare the StatelessBean and inject both Webservice via @WebServiceRef and WSSUsernameTokenSecurityHandler via @EJB. A callback init method will add a HandlerResolver to the service. Below the full implementation
-</code> java
+</code> java WebServiceClientBean.java
 @Stateless
 @LocalBean
 public class WebServiceClientBean {</p>
@@ -457,7 +457,7 @@ private void init() {
 
 
 <p>Logging exchange xml message can be also using handlers, below the scala snippet handler used to log both in and out messages:
-``` scala
+``` scala RequestResponsePrinter.scala
 class RequestResponsePrinter  extends SOAPHandler[SOAPMessageContext] with LogHelper {</p>
 
 <p>override def getHeaders(): Set[QName] = {</p>
@@ -506,9 +506,9 @@ return true;
 
 <p>  }
 }
-<code>
-scala version of Handler resolver
-</code> scala
+```</p>
+
+<p>``` scala scala version of Handler resolver HandlerResolver.scala
 new HandlerResolver() {</p>
 
 <pre><code>  override def getHandlerChain(portInfo: PortInfo): java.util.List[javax.xml.ws.handler.Handler[_ &lt;: javax.xml.ws.handler.MessageContext]] = {
