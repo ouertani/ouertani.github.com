@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Ucip | Ouertani Blog]]></title>
   <link href="http://ouertani.github.com/blog/categories/ucip/atom.xml" rel="self"/>
   <link href="http://ouertani.github.com/"/>
-  <updated>2013-04-01T02:11:35+02:00</updated>
+  <updated>2013-04-01T02:13:28+02:00</updated>
   <id>http://ouertani.github.com/</id>
   <author>
     <name><![CDATA[Ouertani]]></name>
@@ -23,13 +23,16 @@
 
 <p>Calling remote procedure using XML-RPC and Scala.</p>
 
-<h2>Introduction
+<h2>Introduction</h2>
 
-On Telecom IT environment and specially middelware solution, we will rarely do all the work but rather delegate some of business process to other tiers. Web service communications is heavy used between solutions. However, many IT node continues to support older protocols like XML-RPC. Ericsson Intelligent Network (IN) and its subsystem uses AIR Integration Protocol user communication(UCIP) based on a variant of XM-RPC.
+
+<p>On Telecom IT environment and specially middelware solution, we will rarely do all the work but rather delegate some of business process to other tiers. Web service communications is heavy used between solutions. However, many IT node continues to support older protocols like XML-RPC. Ericsson Intelligent Network (IN) and its subsystem uses AIR Integration Protocol user communication(UCIP) based on a variant of XM-RPC.</p>
 
 <h2>Why UCIP ?</h2>
 
-UCIP is intended for user self services such as Adjustments, Account Refill, and Account Inquiries and to extract account details. UCIP is an IP-based protocol used for integration towards the AIR server from the external application.
+
+<p>UCIP is intended for user self services such as Adjustments, Account Refill, and Account Inquiries and to extract account details. UCIP is an IP-based protocol used for integration towards the AIR server from the external application.</p>
+
 <h2>Why Scala ?
 
 UCIP is an XML over HTTP based protocol, which makes it easy to integrate with a central integration point within a network. In addition, Scala can be used to easily create, parse, and process XML documents. XML data can be represented in Scala either by using a generic data representation, or with a data-specific data representation.
