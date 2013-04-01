@@ -18,7 +18,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://ouertani.github.com/blog/2013/06/24/ee-6-environmental-enterprise-entries-and-glassfish">
+  <link rel="canonical" href="http://ouertani.github.com/blog/2012/06/24/ee-6-environmental-enterprise-entries-and-glassfish">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <link href="/atom.xml" rel="alternate" title="Ouertani Blog" type="application/atom+xml">
@@ -97,7 +97,7 @@
   
 
 
-<time datetime="2013-06-24T02:55:00+02:00" pubdate data-updated="true">Jun 24<span>th</span>, 2013</time>
+<time datetime="2012-06-24T02:55:00+02:00" pubdate data-updated="true">Jun 24<span>th</span>, 2012</time>
         
       </p>
     
@@ -170,7 +170,8 @@ It was necessary to group parameters resources into a single resource by project
 
 <p>In this section I will use scala (similar class can be translated easy to java).</p>
 
-<p>1 - First of all, we need to create our single resource class as simple bean</p>
+<ol>
+<li>First of all, we need to create our single resource class as simple bean</li>
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -184,8 +185,9 @@ It was necessary to group parameters resources into a single resource by project
 </span><span class='line'><span class="o">}</span>
 </span></code></pre></td></tr></table></div></figure>
 
+<li>Next, let&#8217;s create a resource factory class :</li>
+</ol>
 
-<p>2 - Next, let&#8217;s create a resource factory class :</p>
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -238,14 +240,18 @@ It was necessary to group parameters resources into a single resource by project
 
 <p>The purpose of object factory is to read injectable parameters and populate a resource class</p>
 
-<p>3 - Back to Glassfish admininstration console, create a single resource ( see screenshot below) :
-Jndi Name => the resource name to be used by project for example
-Resource Type => check second radio button, and fill the resource full name ( with package)
-Factory class => Our RessourceFactory class full name ( with package)
-Add two (or more) properties to be injected in our resource class.
-<img class="center" src="/images/jndiee2.jpg" width="640" height="424" title="JNDI EE" alt="images"></p>
+<ol start="3">
+<li>Back to Glassfish admininstration console, create a single resource ( see screenshot below) :</li>
+<ol>
+    <li>Jndi Name => the resource name to be used by project for example
+    <li>Resource Type => check second radio button, and fill the resource full name ( with package)
+    <li>Factory class => Our RessourceFactory class full name ( with package)
+    <li>Add two (or more) properties to be injected in our resource class.</ol>
+<img class="center" src="/images/jndiee2.jpg" width="640" height="424" title="JNDI EE" alt="images">
 
-<p>4- At the end we inject our resource in EJB class :</p>
+4- At the end we inject our resource in EJB class :
+</ol>
+
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -291,7 +297,7 @@ Add two (or more) properties to be injected in our resource class.
   
 
 
-<time datetime="2013-06-24T02:55:00+02:00" pubdate data-updated="true">Jun 24<span>th</span>, 2013</time>
+<time datetime="2012-06-24T02:55:00+02:00" pubdate data-updated="true">Jun 24<span>th</span>, 2012</time>
       
 
 <span class="categories">
@@ -305,7 +311,7 @@ Add two (or more) properties to be injected in our resource class.
     
       <div class="sharing">
   
-  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://ouertani.github.com/blog/2013/06/24/ee-6-environmental-enterprise-entries-and-glassfish/" data-via="ouertani" data-counturl="http://ouertani.github.com/blog/2013/06/24/ee-6-environmental-enterprise-entries-and-glassfish/" >Tweet</a>
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://ouertani.github.com/blog/2012/06/24/ee-6-environmental-enterprise-entries-and-glassfish/" data-via="ouertani" data-counturl="http://ouertani.github.com/blog/2012/06/24/ee-6-environmental-enterprise-entries-and-glassfish/" >Tweet</a>
   
   
   
@@ -314,8 +320,8 @@ Add two (or more) properties to be injected in our resource class.
     
     <p class="meta">
       
-        <a class="basic-alignment left" href="/blog/2013/03/09/rest-with-scala-and-vert-dot-x/" title="Previous Post: Rest with Scala and Vert.x">&laquo; Rest with Scala and Vert.x</a>
       
+        <a class="basic-alignment right" href="/blog/2012/06/28/sending-an-email-using-the-javamail-session-and-glassfish/" title="Next Post: Sending an Email using the JavaMail Session and Glassfish">Sending an Email using the JavaMail Session and Glassfish &raquo;</a>
       
     </p>
   </footer>
@@ -337,10 +343,6 @@ Add two (or more) properties to be injected in our resource class.
 <section>
   <h1>Recent Posts</h1>
   <ul id="recent_posts">
-    
-      <li class="post">
-        <a href="/blog/2013/06/24/ee-6-environmental-enterprise-entries-and-glassfish/">EE 6 Environmental Enterprise Entries and Glassfish</a>
-      </li>
     
       <li class="post">
         <a href="/blog/2013/03/09/rest-with-scala-and-vert-dot-x/">Rest with Scala and Vert.x</a>
@@ -368,6 +370,10 @@ Add two (or more) properties to be injected in our resource class.
     
       <li class="post">
         <a href="/blog/2012/06/28/sending-an-email-using-the-javamail-session-and-glassfish/">Sending an Email using the JavaMail Session and Glassfish</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/06/24/ee-6-environmental-enterprise-entries-and-glassfish/">EE 6 Environmental Enterprise Entries and Glassfish</a>
       </li>
     
   </ul>
@@ -429,8 +435,8 @@ Add two (or more) properties to be injected in our resource class.
       
         
         // var disqus_developer = 1;
-        var disqus_identifier = 'http://ouertani.github.com/blog/2013/06/24/ee-6-environmental-enterprise-entries-and-glassfish/';
-        var disqus_url = 'http://ouertani.github.com/blog/2013/06/24/ee-6-environmental-enterprise-entries-and-glassfish/';
+        var disqus_identifier = 'http://ouertani.github.com/blog/2012/06/24/ee-6-environmental-enterprise-entries-and-glassfish/';
+        var disqus_url = 'http://ouertani.github.com/blog/2012/06/24/ee-6-environmental-enterprise-entries-and-glassfish/';
         var disqus_script = 'embed.js';
       
     (function () {

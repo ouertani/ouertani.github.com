@@ -4,7 +4,7 @@
   <title><![CDATA[Category: JEE | Ouertani Blog]]></title>
   <link href="http://ouertani.github.com/blog/categories/jee/atom.xml" rel="self"/>
   <link href="http://ouertani.github.com/"/>
-  <updated>2013-04-01T03:08:54+02:00</updated>
+  <updated>2013-04-01T03:13:20+02:00</updated>
   <id>http://ouertani.github.com/</id>
   <author>
     <name><![CDATA[Ouertani]]></name>
@@ -12,124 +12,6 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
-  
-  <entry>
-    <title type="html"><![CDATA[EE 6 Environmental Enterprise Entries and Glassfish]]></title>
-    <link href="http://ouertani.github.com/blog/2013/06/24/ee-6-environmental-enterprise-entries-and-glassfish/"/>
-    <updated>2013-06-24T02:55:00+02:00</updated>
-    <id>http://ouertani.github.com/blog/2013/06/24/ee-6-environmental-enterprise-entries-and-glassfish</id>
-    <content type="html"><![CDATA[<h2>PURPOSE</h2>
-
-
-<p>This tutorial is a supplement to the article of oracle published <a href="http://www.oracle.com/webfolder/technetwork/tutorials/obe/java/env_entry/env_entry.html.">here</a>. After reading <a href="http://www.oracle.com/webfolder/technetwork/tutorials/obe/java/env_entry/env_entry.html.">this later</a>, I decided to share some tips about this EE environment configuration.</p>
-
-<h2>INTRODUCTION</h2>
-
-
-<p>Two years ago, we decided to move to JEE 6 for our enterprise solutions and take a lot of fun with new EJB 3.1 features and annotations. Glassfish has made our lives easier, it was very easy to declare variables using it's administration console.
-Less complicated than using <b>ejb-jar.xml</b> are two methods using Glassfish server and resources :
-I- OLD FASHION WITH RESOURCE PER PARAM (SIMILAR TO ORACLE TUTORIAL)</p>
-
-<p>1- Declare an EJB with toBeInjected resource :
-```java
-import javax.annotation.Resource;
-import javax.ejb.Stateless;
-import javax.ejb.LocalBean;</p>
-
-<p>/<em>*
- *
- * @author slim
- </em>/
-@Stateless
-@LocalBean
-public class MyEjbBean {
-  @Resource(lookup="resName")
-  protected String toBeInjected;</p>
-
-<p>  ////</p>
-
-<p>}
-```</p>
-
-<p>2 - Open admin console ( localhost:4848 by default ) -> Resources -> Custom Resources -> New -> and fill the informations as below
-<img class="center" src="/images/jndiee1.jpg" width="640" height="424" title="JNDI EE" alt="images"></p>
-
-<p>At first glance, it looks simple and fast forward but problems start after just after a first project.</p>
-
-<p>Problems ! Why ?
-We achieved more than 20 variables and some resource names begin to confuse them. I was very hard for our operations team to catch the name of the correct setting and update its value.
-It was necessary to group parameters resources into a single resource by project.</p>
-
-<p>NEXT FASHION : GROUPING RESOURCES</p>
-
-<p>In this section I will use scala (similar class can be translated easy to java).</p>
-
-<p>1 - First of all, we need to create our single resource class as simple bean
-<code>java
-package me.slim.ouertani
-class Ressource {
-  var param1 : String = _
-  var parma2 : String = _
-}
-</code></p>
-
-<p>2 - Next, let's create a resource factory class :
-```java
-package me.slim.ouertani
-class RessourceFactory extends ObjectFactory {</p>
-
-<p>  override def getObjectInstance(obj: Object, name: javax.naming.Name, nameCtx: javax.naming.Context, environment: Hashtable[<em>, </em>]): Object = {</p>
-
-<pre><code>val ressource = new Ressource();
-val reference = obj.asInstanceOf[Reference];
-val attributes = reference.getAll();
-while (attributes.hasMoreElements()) {
-  val refAddr = attributes.nextElement().asInstanceOf[RefAddr];
-  init(ressource, refAddr.getType(), refAddr.getContent());
-}
-return ressource;
-</code></pre>
-
-<p>  }</p>
-
-<p>  private[this] def init(ressource: Ressource, tipe: String, content: Object) {</p>
-
-<pre><code>tipe match {  
-
-  case "param1" =&gt; ressource.param1 = content.toString()
-  case "param2" =&gt; ressource.param2 = content.toString()
-
-}
-</code></pre>
-
-<p>  }
-}
-```
-The purpose of object factory is to read injectable parameters and populate a resource class</p>
-
-<p>3 - Back to Glassfish admininstration console, create a single resource ( see screenshot below) :
-Jndi Name => the resource name to be used by project for example
-Resource Type => check second radio button, and fill the resource full name ( with package)
-Factory class => Our RessourceFactory class full name ( with package)
-Add two (or more) properties to be injected in our resource class.
-<img class="center" src="/images/jndiee2.jpg" width="640" height="424" title="JNDI EE" alt="images"></p>
-
-<p>4- At the end we inject our resource in EJB class :
-```java
-@Stateless
-@LocalBean
-class MyEjbBean {
-  @Resource(lookup="globalRes")
-  protected var res:Ressource= _</p>
-
-<p>  /// res.param1
-}
-```
-CONCLUSION</p>
-
-<p>Having a single resource per project facilitates business management and thanks to Glassfish administration console managing JNDI became easier.</p>
-]]></content>
-  </entry>
   
   <entry>
     <title type="html"><![CDATA[XML/RPC driver as JCA Scala connector]]></title>
@@ -325,6 +207,134 @@ protected void processRequest(HttpServletRequest request, HttpServletResponse re
 
 
 <p>Let's EE Server manager MailSession for us, keep configuration on server and thanks to Glassfish administration console managing JavaMail Session became easier.</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[EE 6 Environmental Enterprise Entries and Glassfish]]></title>
+    <link href="http://ouertani.github.com/blog/2012/06/24/ee-6-environmental-enterprise-entries-and-glassfish/"/>
+    <updated>2012-06-24T02:55:00+02:00</updated>
+    <id>http://ouertani.github.com/blog/2012/06/24/ee-6-environmental-enterprise-entries-and-glassfish</id>
+    <content type="html"><![CDATA[<h2>PURPOSE</h2>
+
+
+<p>This tutorial is a supplement to the article of oracle published <a href="http://www.oracle.com/webfolder/technetwork/tutorials/obe/java/env_entry/env_entry.html.">here</a>. After reading <a href="http://www.oracle.com/webfolder/technetwork/tutorials/obe/java/env_entry/env_entry.html.">this later</a>, I decided to share some tips about this EE environment configuration.</p>
+
+<h2>INTRODUCTION</h2>
+
+
+<p>Two years ago, we decided to move to JEE 6 for our enterprise solutions and take a lot of fun with new EJB 3.1 features and annotations. Glassfish has made our lives easier, it was very easy to declare variables using it's administration console.
+Less complicated than using <b>ejb-jar.xml</b> are two methods using Glassfish server and resources :
+I- OLD FASHION WITH RESOURCE PER PARAM (SIMILAR TO ORACLE TUTORIAL)</p>
+
+<p>1- Declare an EJB with toBeInjected resource :
+```java
+import javax.annotation.Resource;
+import javax.ejb.Stateless;
+import javax.ejb.LocalBean;</p>
+
+<p>/<em>*
+ *
+ * @author slim
+ </em>/
+@Stateless
+@LocalBean
+public class MyEjbBean {
+  @Resource(lookup="resName")
+  protected String toBeInjected;</p>
+
+<p>  ////</p>
+
+<p>}
+```</p>
+
+<p>2 - Open admin console ( localhost:4848 by default ) -> Resources -> Custom Resources -> New -> and fill the informations as below
+<img class="center" src="/images/jndiee1.jpg" width="640" height="424" title="JNDI EE" alt="images"></p>
+
+<p>At first glance, it looks simple and fast forward but problems start after just after a first project.</p>
+
+<p>Problems ! Why ?
+We achieved more than 20 variables and some resource names begin to confuse them. I was very hard for our operations team to catch the name of the correct setting and update its value.
+It was necessary to group parameters resources into a single resource by project.</p>
+
+<p>NEXT FASHION : GROUPING RESOURCES</p>
+
+<p>In this section I will use scala (similar class can be translated easy to java).</p>
+
+<ol>
+<li>First of all, we need to create our single resource class as simple bean</li>
+
+```java
+package me.slim.ouertani
+class Ressource {
+  var param1 : String = _
+  var parma2 : String = _ 
+}
+```
+
+<li>Next, let's create a resource factory class :</li>
+</ol>
+
+
+<p>```java
+package me.slim.ouertani
+class RessourceFactory extends ObjectFactory {</p>
+
+<p>  override def getObjectInstance(obj: Object, name: javax.naming.Name, nameCtx: javax.naming.Context, environment: Hashtable[<em>, </em>]): Object = {</p>
+
+<pre><code>val ressource = new Ressource();
+val reference = obj.asInstanceOf[Reference];
+val attributes = reference.getAll();
+while (attributes.hasMoreElements()) {
+  val refAddr = attributes.nextElement().asInstanceOf[RefAddr];
+  init(ressource, refAddr.getType(), refAddr.getContent());
+}
+return ressource;
+</code></pre>
+
+<p>  }</p>
+
+<p>  private[this] def init(ressource: Ressource, tipe: String, content: Object) {</p>
+
+<pre><code>tipe match {  
+
+  case "param1" =&gt; ressource.param1 = content.toString()
+  case "param2" =&gt; ressource.param2 = content.toString()
+
+}
+</code></pre>
+
+<p>  }
+}
+```
+The purpose of object factory is to read injectable parameters and populate a resource class</p>
+
+<ol start="3">
+<li>Back to Glassfish admininstration console, create a single resource ( see screenshot below) :</li>
+<ol>
+    <li>Jndi Name => the resource name to be used by project for example
+    <li>Resource Type => check second radio button, and fill the resource full name ( with package)
+    <li>Factory class => Our RessourceFactory class full name ( with package)
+    <li>Add two (or more) properties to be injected in our resource class.</ol>
+<img class="center" src="/images/jndiee2.jpg" width="640" height="424" title="JNDI EE" alt="images">
+
+4- At the end we inject our resource in EJB class :
+</ol>
+
+
+<p>```java
+@Stateless
+@LocalBean
+class MyEjbBean {
+  @Resource(lookup="globalRes")
+  protected var res:Ressource= _</p>
+
+<p>  /// res.param1
+}
+```
+CONCLUSION</p>
+
+<p>Having a single resource per project facilitates business management and thanks to Glassfish administration console managing JNDI became easier.</p>
 ]]></content>
   </entry>
   
