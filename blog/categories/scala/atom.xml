@@ -4,7 +4,7 @@
   <title><![CDATA[Category: SCALA | Ouertani Blog]]></title>
   <link href="http://ouertani.github.com/blog/categories/scala/atom.xml" rel="self"/>
   <link href="http://ouertani.github.com/"/>
-  <updated>2013-04-01T04:37:08+02:00</updated>
+  <updated>2013-04-01T04:38:19+02:00</updated>
   <id>http://ouertani.github.com/</id>
   <author>
     <name><![CDATA[Ouertani]]></name>
@@ -604,8 +604,12 @@ Fine!</p>
     <link href="http://ouertani.github.com/blog/2010/12/06/scala-try-with-resources/"/>
     <updated>2010-12-06T04:29:00+01:00</updated>
     <id>http://ouertani.github.com/blog/2010/12/06/scala-try-with-resources</id>
-    <content type="html"><![CDATA[<p>Have you ever had this duplication of code in java?
-```java
+    <content type="html"><![CDATA[<p>Have you ever had this duplication of code in java?</p>
+
+<!-- more -->
+
+
+<p>```java
 public void doQuery(String q) throws SQLException {</p>
 
 <pre><code>   PreparedStatement preparedStatement = null;
