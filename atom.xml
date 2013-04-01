@@ -4,7 +4,7 @@
   <title><![CDATA[Ouertani Blog]]></title>
   <link href="http://ouertani.github.com/atom.xml" rel="self"/>
   <link href="http://ouertani.github.com/"/>
-  <updated>2013-04-01T03:53:15+02:00</updated>
+  <updated>2013-04-01T04:06:19+02:00</updated>
   <id>http://ouertani.github.com/</id>
   <author>
     <name><![CDATA[Ouertani]]></name>
@@ -3357,6 +3357,335 @@ It was necessary to group parameters resources into a single resource by project
 
 
 <p>Here we used an old trick to manage resources : <a href="http://www.jroller.com/ouertani/entry/scala_try_with_resources">http://www.jroller.com/ouertani/entry/scala_try_with_resources</a></p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Basic WS with Scala]]></title>
+    <link href="http://ouertani.github.com/blog/2011/09/10/basic-ws-with-scala/"/>
+    <updated>2011-09-10T03:55:00+02:00</updated>
+    <id>http://ouertani.github.com/blog/2011/09/10/basic-ws-with-scala</id>
+    <content type="html"><![CDATA[<p>I recently had a chance to work on building SOA platforme using JEE 6 and Scala language. I will share here some snippets my be helpfull to start publishing web services using Scala, Sbt and JAX-WS.
+Consider the example to calculate the quotient and remainder using euclidean algorithm. Not very complexe if the inputs are positives numbers.</p>
+
+<!-- more -->
+
+
+<h2>I- Sbt</h2>
+
+
+<p>Let’s create an sbt projet and add required dependencies</p>
+
+<blockquote><p>$ mkdir sws<br/>$ cd sws<br/>$ touch build.sbt<br/>$ edit build.sbt as following :</p></blockquote>
+
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+</pre></td><td class='code'><pre><code class='scala'><span class='line'><span class="n">name</span> <span class="o">:=</span> <span class="s">&quot;Euclide&quot;</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">version</span> <span class="o">:=</span> <span class="s">&quot;1.0&quot;</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">organization</span> <span class="o">:=</span> <span class="s">&quot;me.ouertani&quot;</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">scalaVersion</span> <span class="o">:=</span> <span class="s">&quot;2.9.1&quot;</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">scalaSource</span> <span class="n">in</span> <span class="nc">Compile</span> <span class="o">&lt;&lt;=</span> <span class="n">baseDirectory</span><span class="o">(</span><span class="k">_</span> <span class="o">/</span> <span class="s">&quot;src&quot;</span><span class="o">)</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">scalaSource</span> <span class="n">in</span> <span class="nc">Test</span> <span class="o">&lt;&lt;=</span> <span class="n">baseDirectory</span><span class="o">(</span><span class="k">_</span> <span class="o">/</span> <span class="s">&quot;test&quot;</span><span class="o">)</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">libraryDependencies</span> <span class="o">+=</span> <span class="s">&quot;javax&quot;</span> <span class="o">%</span> <span class="s">&quot;javaee-api&quot;</span> <span class="o">%</span> <span class="s">&quot;6.0&quot;</span> <span class="o">%</span> <span class="s">&quot;provided&quot;</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">libraryDependencies</span> <span class="o">+=</span> <span class="s">&quot;log4j&quot;</span> <span class="o">%</span> <span class="s">&quot;log4j&quot;</span> <span class="o">%</span> <span class="s">&quot;1.2.16&quot;</span> <span class="o">%</span> <span class="s">&quot;provided&quot;</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">libraryDependencies</span> <span class="o">+=</span> <span class="s">&quot;junit&quot;</span> <span class="o">%</span> <span class="s">&quot;junit&quot;</span> <span class="o">%</span> <span class="s">&quot;4.8.2&quot;</span> <span class="o">%</span> <span class="s">&quot;test&quot;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<blockquote><p>$ mkdir src<br/>$ touch src/Euclide.scala</p></blockquote>
+
+
+<p>That’a all for project configuration.</p>
+
+<h2>II- Create the WS</h2>
+
+
+<p>We will use a single Euclide.scala file for all class this will be easier for visibility</p>
+
+<ol>
+<li>Create a Request Class and don’t forget :</li>
+a – default constructor
+b – field access annotation
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='scala'><span class='line'><span class="nd">@XmlAccessorType</span><span class="o">(</span><span class="nc">XmlAccessType</span><span class="o">.</span><span class="nc">FIELD</span><span class="o">)</span>
+</span><span class='line'><span class="k">case</span> <span class="k">class</span> <span class="nc">Request</span><span class="o">(</span><span class="n">a</span> <span class="k">:</span> <span class="kt">Int</span><span class="o">,</span> <span class="n">b</span> <span class="k">:</span> <span class="kt">Int</span> <span class="o">){</span> <span class="k">def</span> <span class="k">this</span><span class="o">(){</span><span class="k">this</span><span class="o">(</span><span class="mi">0</span><span class="o">,</span><span class="mi">0</span><span class="o">)}}</span>
+</span></code></pre></td></tr></table></div></figure>
+<li>Create a Response Class</li>
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='scala'><span class='line'><span class="nd">@XmlAccessorType</span><span class="o">(</span><span class="nc">XmlAccessType</span><span class="o">.</span><span class="nc">FIELD</span><span class="o">)</span>
+</span><span class='line'><span class="nd">@XmlType</span><span class="o">(</span><span class="n">name</span> <span class="k">=</span> <span class="s">&quot;output&quot;</span><span class="o">)</span>
+</span><span class='line'><span class="k">case</span> <span class="k">class</span> <span class="nc">Response</span> <span class="o">(</span><span class="n">c</span><span class="k">:</span> <span class="kt">Int</span><span class="o">,</span> <span class="n">d</span><span class="k">:</span> <span class="kt">Int</span><span class="o">){</span> <span class="k">def</span> <span class="k">this</span><span class="o">(){</span><span class="k">this</span><span class="o">(</span><span class="mi">0</span><span class="o">,</span><span class="mi">0</span><span class="o">)}}</span>
+</span></code></pre></td></tr></table></div></figure>
+<li>Why not to create an exception class to handle exceptions like b is equal to 0</li>
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='scala'><span class='line'><span class="nd">@XmlAccessorType</span><span class="o">(</span><span class="nc">XmlAccessType</span><span class="o">.</span><span class="nc">FIELD</span><span class="o">)</span>
+</span><span class='line'><span class="k">case</span> <span class="k">class</span> <span class="nc">ResponseException</span><span class="o">(</span><span class="n">why</span> <span class="k">:</span> <span class="kt">String</span><span class="o">){</span>  <span class="k">def</span> <span class="k">this</span><span class="o">(){</span><span class="k">this</span><span class="o">(</span><span class="s">&quot;&quot;</span><span class="o">)}}</span>
+</span><span class='line'>
+</span><span class='line'><span class="nd">@XmlAccessorType</span><span class="o">(</span><span class="nc">XmlAccessType</span><span class="o">.</span><span class="nc">FIELD</span><span class="o">)</span>
+</span><span class='line'><span class="k">case</span> <span class="k">class</span> <span class="nc">FaultResponse</span><span class="o">(</span><span class="nd">@BeanProperty</span> <span class="n">faultInfo</span> <span class="k">:</span> <span class="kt">ResponseException</span><span class="o">)</span> <span class="k">extends</span> <span class="nc">Exception</span> <span class="o">{</span> <span class="k">def</span> <span class="k">this</span><span class="o">(){</span><span class="k">this</span><span class="o">(</span><span class="nc">ResponseException</span><span class="o">(</span><span class="s">&quot;&quot;</span><span class="o">))}}</span>
+</span></code></pre></td></tr></table></div></figure>
+Don’t forget to add BeanProperty annotation to faultInfo input !
+
+<li>Let’s add an interceptor to log all ws method call</li>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+</pre></td><td class='code'><pre><code class='scala'><span class='line'><span class="k">object</span> <span class="nc">TracingInterceptor</span><span class="o">{</span>
+</span><span class='line'>  <span class="k">import</span> <span class="nn">org.apache.log4j.Logger</span>
+</span><span class='line'>  <span class="k">val</span> <span class="n">L</span> <span class="k">=</span> <span class="nc">Logger</span><span class="o">.</span><span class="n">getLogger</span><span class="o">(</span><span class="n">classOf</span><span class="o">[</span><span class="kt">TracingInterceptor</span><span class="o">])</span>
+</span><span class='line'><span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">import</span> <span class="nn">TracingInterceptor._</span>
+</span><span class='line'><span class="k">class</span> <span class="nc">TracingInterceptor</span> <span class="o">{</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="nd">@AroundInvoke</span>
+</span><span class='line'>  <span class="k">def</span>  <span class="n">log</span><span class="o">(</span> <span class="n">context</span><span class="k">:</span><span class="kt">InvocationContext</span><span class="o">)</span><span class="k">:</span><span class="kt">Object</span> <span class="o">={</span>
+</span><span class='line'>    <span class="k">try</span> <span class="o">{</span>
+</span><span class='line'>      <span class="k">if</span> <span class="o">(</span><span class="n">L</span><span class="o">.</span><span class="n">isDebugEnabled</span><span class="o">())</span> <span class="o">{</span>
+</span><span class='line'>        <span class="k">val</span> <span class="n">clazz</span> <span class="k">=</span> <span class="n">context</span><span class="o">.</span><span class="n">getMethod</span><span class="o">().</span><span class="n">getDeclaringClass</span><span class="o">().</span><span class="n">getName</span><span class="o">()</span>
+</span><span class='line'>        <span class="k">val</span> <span class="n">method</span> <span class="k">=</span> <span class="n">context</span><span class="o">.</span><span class="n">getMethod</span><span class="o">().</span><span class="n">getName</span><span class="o">()</span>
+</span><span class='line'>        <span class="n">L</span><span class="o">.</span><span class="n">debug</span><span class="o">(</span><span class="n">clazz</span> <span class="o">+</span> <span class="s">&quot; : Is invoking method: &quot;</span> <span class="o">+</span> <span class="n">method</span> <span class="o">+</span> <span class="s">&quot; With Parameters : &quot;</span> <span class="o">+</span> <span class="n">context</span><span class="o">.</span><span class="n">getParameters</span><span class="o">().</span><span class="n">mkString</span><span class="o">(</span><span class="s">&quot;[&quot;</span><span class="o">,</span> <span class="s">&quot;,&quot;</span><span class="o">,</span><span class="s">&quot;]&quot;</span><span class="o">))</span>
+</span><span class='line'>      <span class="o">}</span>
+</span><span class='line'>    <span class="o">}</span> <span class="k">catch</span> <span class="o">{</span>
+</span><span class='line'>      <span class="k">case</span>  <span class="n">ex</span> <span class="k">:</span><span class="kt">Exception</span> <span class="o">=&gt;</span>    <span class="n">L</span><span class="o">.</span><span class="n">warn</span><span class="o">(</span><span class="s">&quot;Unable to Intercept Method Call&quot;</span><span class="o">,</span> <span class="n">ex</span><span class="o">)</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>    <span class="n">context</span><span class="o">.</span><span class="n">proceed</span><span class="o">()</span>
+</span><span class='line'>  <span class="o">}</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+<li>The WS class and it’s divide method using intercpetor and stateless EJB 3.1</li>
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+</pre></td><td class='code'><pre><code class='scala'><span class='line'><span class="nd">@WebService</span><span class="o">(</span><span class="n">serviceName</span> <span class="k">=</span> <span class="s">&quot;Euclide&quot;</span><span class="o">,</span> <span class="n">targetNamespace</span> <span class="k">=</span> <span class="s">&quot;http://slim.ouertani.me/&quot;</span><span class="o">)</span>
+</span><span class='line'><span class="nd">@Stateless</span><span class="o">()</span>
+</span><span class='line'><span class="nd">@Interceptors</span><span class="o">(</span><span class="nc">Array</span><span class="o">(</span><span class="n">classOf</span><span class="o">[</span><span class="kt">TracingInterceptor</span><span class="o">]))</span>
+</span><span class='line'><span class="k">class</span> <span class="nc">Euclide</span> <span class="o">{</span>
+</span><span class='line'>  <span class="nd">@throws</span><span class="o">(</span><span class="n">classOf</span><span class="o">[</span><span class="kt">FaultResponse</span><span class="o">])</span>
+</span><span class='line'>  <span class="k">def</span> <span class="n">divide</span><span class="o">(</span> <span class="nd">@WebParam</span><span class="o">(</span><span class="n">name</span><span class="o">=</span><span class="s">&quot;input&quot;</span> <span class="o">)</span>  <span class="nd">@XmlElement</span><span class="o">(</span><span class="n">required</span> <span class="k">=</span> <span class="kc">true</span><span class="o">,</span> <span class="n">nillable</span> <span class="k">=</span> <span class="kc">false</span><span class="o">)</span>
+</span><span class='line'>    <span class="n">req</span> <span class="k">:</span><span class="kt">Request</span><span class="o">)</span><span class="k">:</span><span class="kt">Response</span> <span class="o">=</span>  <span class="n">req</span> <span class="k">match</span> <span class="o">{</span>
+</span><span class='line'>      <span class="k">case</span> <span class="nc">Request</span><span class="o">(</span><span class="k">_</span><span class="o">,</span> <span class="mi">0</span> <span class="o">)</span> <span class="k">=&gt;</span> <span class="k">throw</span> <span class="nc">FaultResponse</span><span class="o">(</span><span class="nc">ResponseException</span><span class="o">(</span><span class="s">&quot;Can&#39;t divide by ZERO!&quot;</span><span class="o">))</span>
+</span><span class='line'>      <span class="k">case</span> <span class="nc">Request</span><span class="o">(</span><span class="n">a</span><span class="o">,</span> <span class="n">b</span> <span class="o">)</span> <span class="k">=&gt;</span>  <span class="nc">Response</span><span class="o">(</span><span class="n">a</span> <span class="o">/</span> <span class="n">b</span> <span class="o">,</span><span class="n">a</span> <span class="o">%</span> <span class="n">b</span><span class="o">)</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+<li>Don’t forget package , imports at the head of file and it’s all :</li>
+</ol>
+
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+</pre></td><td class='code'><pre><code class='scala'><span class='line'><span class="k">package</span> <span class="nn">me.ouertani.scala.ws</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">import</span> <span class="nn">javax.interceptor.Interceptors</span>
+</span><span class='line'><span class="k">import</span> <span class="nn">javax.xml.bind.annotation.XmlElement</span>
+</span><span class='line'><span class="k">import</span> <span class="nn">javax.interceptor.</span><span class="o">{</span> <span class="nc">AroundInvoke</span> <span class="o">,</span> <span class="nc">InvocationContext</span> <span class="o">}</span>
+</span><span class='line'><span class="k">import</span> <span class="nn">javax.xml.bind.annotation.</span> <span class="o">{</span> <span class="nc">XmlAccessType</span> <span class="o">,</span> <span class="nc">XmlAccessorType</span><span class="o">,</span> <span class="nc">XmlElement</span><span class="o">,</span> <span class="nc">XmlType</span><span class="o">}</span>
+</span><span class='line'><span class="k">import</span> <span class="nn">javax.ejb.</span> <span class="o">{</span> <span class="nc">EJB</span> <span class="o">,</span><span class="nc">Stateless</span> <span class="o">}</span>
+</span><span class='line'><span class="k">import</span> <span class="nn">javax.jws.</span> <span class="o">{</span><span class="nc">WebService</span> <span class="o">,</span> <span class="nc">WebParam</span> <span class="o">}</span>
+</span><span class='line'><span class="k">import</span> <span class="nn">scala.reflect.BeanProperty</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>III- packaging and run WS</h2>
+
+
+<ol>
+    <li>Let’s start compiling our projet</li>
+$ xsbt compile
+    <li>package the jar</li>
+$ xsbt package
+    <li>deploy it to your JEE 6 container ( mine is Glassfish 3.1.1 )</li>
+</ol>
+
+
+<h2>IV – test it</h2>
+
+
+<p>1- After depoyed let’s test it using soapUI tool
+Request 1</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+</pre></td><td class='code'><pre><code class='xml'><span class='line'><span class="nt">&lt;soapenv:Envelope</span> <span class="na">xmlns:soapenv=</span><span class="s">&quot;http://schemas.xmlsoap.org/soap/envelope/&quot;</span> <span class="na">xmlns:slim=</span><span class="s">&quot;http://slim.ouertani.me/&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'>   <span class="nt">&lt;soapenv:Header/&gt;</span>
+</span><span class='line'>   <span class="nt">&lt;soapenv:Body&gt;</span>
+</span><span class='line'>      <span class="nt">&lt;slim:divide&gt;</span>
+</span><span class='line'>         <span class="nt">&lt;input&gt;</span>
+</span><span class='line'>            <span class="nt">&lt;a&gt;</span>6<span class="nt">&lt;/a&gt;</span>
+</span><span class='line'>            <span class="nt">&lt;b&gt;</span>4<span class="nt">&lt;/b&gt;</span>
+</span><span class='line'>         <span class="nt">&lt;/input&gt;</span>
+</span><span class='line'>      <span class="nt">&lt;/slim:divide&gt;</span>
+</span><span class='line'>   <span class="nt">&lt;/soapenv:Body&gt;</span>
+</span><span class='line'><span class="nt">&lt;/soapenv:Envelope&gt;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p></p>
+
+<p>Response 1 :</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+</pre></td><td class='code'><pre><code class='xml'><span class='line'><span class="nt">&lt;S:Envelope</span> <span class="na">xmlns:S=</span><span class="s">&quot;http://schemas.xmlsoap.org/soap/envelope/&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'>   <span class="nt">&lt;S:Body&gt;</span>
+</span><span class='line'>      <span class="nt">&lt;ns2:divideResponse</span> <span class="na">xmlns:ns2=</span><span class="s">&quot;http://slim.ouertani.me/&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'>         <span class="nt">&lt;return&gt;</span>
+</span><span class='line'>            <span class="nt">&lt;c&gt;</span>3<span class="nt">&lt;/c&gt;</span>
+</span><span class='line'>            <span class="nt">&lt;d&gt;</span>0<span class="nt">&lt;/d&gt;</span>
+</span><span class='line'>         <span class="nt">&lt;/return&gt;</span>
+</span><span class='line'>      <span class="nt">&lt;/ns2:divideResponse&gt;</span>
+</span><span class='line'>   <span class="nt">&lt;/S:Body&gt;</span>
+</span><span class='line'><span class="nt">&lt;/S:Envelope&gt;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Request 2 :</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+</pre></td><td class='code'><pre><code class='xml'><span class='line'><span class="nt">&lt;soapenv:Envelope</span> <span class="na">xmlns:soapenv=</span><span class="s">&quot;http://schemas.xmlsoap.org/soap/envelope/&quot;</span> <span class="na">xmlns:slim=</span><span class="s">&quot;http://slim.ouertani.me/&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'>   <span class="nt">&lt;soapenv:Header/&gt;</span>
+</span><span class='line'>   <span class="nt">&lt;soapenv:Body&gt;</span>
+</span><span class='line'>      <span class="nt">&lt;slim:divide&gt;</span>
+</span><span class='line'>         <span class="nt">&lt;input&gt;</span>
+</span><span class='line'>            <span class="nt">&lt;a&gt;</span>6<span class="nt">&lt;/a&gt;</span>
+</span><span class='line'>            <span class="nt">&lt;b&gt;</span>0<span class="nt">&lt;/b&gt;</span>
+</span><span class='line'>         <span class="nt">&lt;/input&gt;</span>
+</span><span class='line'>      <span class="nt">&lt;/slim:divide&gt;</span>
+</span><span class='line'>   <span class="nt">&lt;/soapenv:Body&gt;</span>
+</span><span class='line'><span class="nt">&lt;/soapenv:Envelope&gt;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Response 2 :</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+</pre></td><td class='code'><pre><code class='xml'><span class='line'><span class="nt">&lt;S:Envelope</span> <span class="na">xmlns:S=</span><span class="s">&quot;http://schemas.xmlsoap.org/soap/envelope/&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'>   <span class="nt">&lt;S:Body&gt;</span>
+</span><span class='line'>      <span class="nt">&lt;S:Fault</span> <span class="na">xmlns:ns4=</span><span class="s">&quot;http://www.w3.org/2003/05/soap-envelope&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'>         <span class="nt">&lt;faultcode&gt;</span>S:Server<span class="nt">&lt;/faultcode&gt;</span>
+</span><span class='line'>         <span class="nt">&lt;faultstring&gt;</span>me.ouertani.scala.ws.FaultResponse<span class="nt">&lt;/faultstring&gt;</span>
+</span><span class='line'>         <span class="nt">&lt;detail&gt;</span>
+</span><span class='line'>            <span class="nt">&lt;ns2:FaultResponse</span> <span class="na">xmlns:ns2=</span><span class="s">&quot;http://slim.ouertani.me/&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'>               <span class="nt">&lt;faultInfo&gt;</span>
+</span><span class='line'>                  <span class="nt">&lt;why&gt;</span>Can&#39;t divide by ZERO!<span class="nt">&lt;/why&gt;</span>
+</span><span class='line'>               <span class="nt">&lt;/faultInfo&gt;</span>
+</span><span class='line'>            <span class="nt">&lt;/ns2:FaultResponse&gt;</span>
+</span><span class='line'>         <span class="nt">&lt;/detail&gt;</span>
+</span><span class='line'>      <span class="nt">&lt;/S:Fault&gt;</span>
+</span><span class='line'>   <span class="nt">&lt;/S:Body&gt;</span>
+</span><span class='line'><span class="nt">&lt;/S:Envelope&gt;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Fine!</p>
 ]]></content>
   </entry>
   
