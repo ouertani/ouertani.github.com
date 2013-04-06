@@ -201,24 +201,6 @@
   <ul id="tweets">
     <li class="loading">Status updating...</li>
   </ul>
-  
-  <script>
-    (function(w, d, s) {
-      function go(){
-        var js, fjs = d.getElementsByTagName(s)[0], load = function(url, id) {
-        if (d.getElementById(id)) {return;}
-        js = d.createElement(s); js.src = url; js.id = id; js.async = true;
-        $(js).load(function(){
-            getTwitterFeed("ouertani", 4, false);
-        });
-        fjs.parentNode.insertBefore(js, fjs);
-      };
-        load('/javascripts/twitter.js', 'recentTweets');
-      }
-      if (w.addEventListener) { w.addEventListener("load", go, false); }
-      else if (w.attachEvent) { w.attachEvent("onload",go); }
-    }(window, document, 'script'));
-  </script>
 
   <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
 
