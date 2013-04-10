@@ -6,6 +6,8 @@ comments: true
 sharing: true
 footer: true
 ---
+
+{% img left images/m1.jpg %}
 About Me
 Perfection, Transparency and Respect of the Environment
 
