@@ -7,7 +7,7 @@ sharing: true
 footer: true
 ---
 
-{% img left images/m1.jpg %}
+{% img left /images/m1.jpg 350 350 %}
 About Me
 Perfection, Transparency and Respect of the Environment
 
