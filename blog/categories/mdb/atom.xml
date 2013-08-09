@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: MDB | Ouertani Blog]]></title>
+  <link href="http://ouertani.github.io/blog/categories/mdb/atom.xml" rel="self"/>
+  <link href="http://ouertani.github.io/"/>
+  <updated>2013-08-09T16:06:23+02:00</updated>
+  <id>http://ouertani.github.io/</id>
+  <author>
+    <name><![CDATA[Ouertani]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Basic MDB with Scala]]></title>
+    <link href="http://ouertani.github.io/blog/2011/09/11/basic-mdb-with-scala/"/>
+    <updated>2011-09-11T03:41:00+02:00</updated>
+    <id>http://ouertani.github.io/blog/2011/09/11/basic-mdb-with-scala</id>
+    <content type="html"><![CDATA[<p>While I am Akka fun, Typesafe follower, in this post I will continue presenting scala on JEE 6 environment and introduce basic message driven bean (MDB ) using scala language.</p>
+
+<p>As an example let&rsquo;s take a simple one MDB that will consome operation command like add and substract and my be asked to replay by the result</p>
+
+<!-- more -->
+
+
+<h2>I- Exchange API</h2>
+
+
+<p><code>scala
+sealed trait TOperation
+case class Add(x:Int) extends  TOperation
+case class Sub(x:Int) extends TOperation
+case class Sum extends TOperation
+case class Count(x:Int) extends TOperation
+</code></p>
+
+<h2>II- The listener</h2>
+
+
+<p>The object
+<code>scala
+object MDbListener {
+  var count = 0
+  val L = Logger.getLogger(classOf[MDbListener])
+}
+</code>
+The class
+``` scala
+@MessageDriven(
+  messageListenerInterface=classOf[MessageListener],
+  mappedName = &ldquo;jms/toMdb&rdquo;,
+  activationConfig = Array(</p>
+
+<pre><code>new ActivationConfigProperty(propertyName = "acknowledgeMode", propertyValue = "Auto-acknowledge"),
+new ActivationConfigProperty(propertyName = "destinationType", propertyValue = "javax.jms.Queue")))
+</code></pre>
+
+<p>class MDbListener extends MessageListener {</p>
+
+<p>  import MDbListener._</p>
+
+<p>  override def onMessage(message: Message) {</p>
+
+<pre><code>L.debug("Message Received")
+
+message match {
+  case o: ObjectMessage =&gt; {
+      try {
+        val obj = o.getObject()
+        obj match {
+          case action: TOperation =&gt; handle(action)
+          case _ =&gt; L.warn("Unkownen msg")
+        }
+      } catch {
+        case ex: Exception =&gt; L.error("&gt;&gt;&gt; Exception", ex)
+      }
+
+    }
+  case _ =&gt; L.warn("unknown msg")
+}
+</code></pre>
+
+<p>  }</p>
+
+<p>  def handle(op: TOperation ) = op match {/<em> TODO </em>/
+  }
+}
+```
+Nothing especial here but be careful to not forget adding messageListenerInterface=classOf[MessageListener] on MessageDriven annotation this is because ScalaObject super class and that&rsquo;s all for the listener.</p>
+
+<h2>III- The sender</h2>
+
+
+<p>The handle method will do mathematical operation and can be requested to send the sum to another JMS Queue.
+``` scala
+def handle(op: TOperation ) = op match {</p>
+
+<pre><code>case   Add(x) =&gt; count +=x
+case   Sub(x) =&gt; count -=x
+case   s:Sum =&gt;  sendJMSMessageToTt( Count (count))
+case   c:Count =&gt; L.warn ("Wrong message destination!")
+</code></pre>
+
+<p>  }
+```
+Very easy with pattern matching!</p>
+
+<p>The sendJmsMessageToIt method can be done like the following</p>
+
+<p>``` scala
+@Resource(mappedName = &ldquo;jms/Rep&rdquo;)
+ var  queue :Queue=<em>
+ @Resource(mappedName = &ldquo;jms/RepFactory&rdquo;)
+ var  factory:ConnectionFactory=</em></p>
+
+<p> private [ws ] def sendJMSMessageToTt( messageData:Count)  {
+   def  createJMSMessageForjmsTt( session:Session,  messageData:Count):Message={</p>
+
+<pre><code> val om = session.createObjectMessage()
+ om.setObject(messageData)
+ om
+</code></pre>
+
+<p>   }</p>
+
+<p>   def tryWith<a href="ac%20:A">A&lt;%{ def close()}</a>(f: A=> Unit)
+   {</p>
+
+<pre><code> try {f} finally { ac.close }
+</code></pre>
+
+<p>   }</p>
+
+<p>   tryWith(factory.createConnection()){</p>
+
+<pre><code> connection =&gt; tryWith(connection.createSession(false, Session.AUTO_ACKNOWLEDGE)) {
+    session =&gt;  tryWith( session createProducer queue ){
+            messageProducer =&gt; messageProducer.send(createJMSMessageForjmsTt(session, messageData))
+   }
+ }
+</code></pre>
+
+<p>   }
+ }
+```
+Here we used an old trick to manage resources : <a href="http://www.jroller.com/ouertani/entry/scala_try_with_resources"><a href="http://www.jroller.com/ouertani/entry/scala_try_with_resources">http://www.jroller.com/ouertani/entry/scala_try_with_resources</a></a></p>
+]]></content>
+  </entry>
+  
+</feed>

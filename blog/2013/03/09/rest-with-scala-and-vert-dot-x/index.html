@@ -1,0 +1,790 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Rest with Scala and Vert.x - Ouertani Blog</title>
+  <meta name="author" content="Ouertani">
+
+  
+  <meta name="description" content="Rest Web Service with Vert.x using Scala">
+  <meta name="keywords" content="Rest, Scala, Vert.x, String interpolation, Resticle, Web Service">
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://ouertani.github.io/blog/2013/03/09/rest-with-scala-and-vert-dot-x">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="Ouertani Blog" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/lib/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-39743923-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+</head>
+
+<body   >
+  <header role="banner">
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:ouertani.github.io" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<!-- use full url including 'index.html' for navigation bar if you are using ajax -->
+<ul id="nav">
+	<li id="ajax"><a href="/index.html">Home</a></li>
+	<li id="ajax"><a href="/blog/archives/index.html">Archives</a></li>
+    <li><a href="/atom.xml">RSS</a></li>
+    
+    <li>
+    <div id="dark">
+        <form method="get" action="/search.html" id="search">
+            <input name="query" type="text" placeholder="Search..." x-webkit-speech />
+        </form>
+    </div>
+    </li>
+        
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">Rest With Scala and Vert.x</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-03-09T00:24:00+01:00" pubdate data-updated="true">Mar 9<span>th</span>, 2013</time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p>A previous post introduced some features of using Scala with <a href="http://vertx.io/">Vert.x</a>. This post covers how to publish Rest web services in an elegant and simple fashion.</p>
+
+<p>As in the previous post, Examples in Java and Scala are presented, source code been hosted on GitHub as part of lang-scala <a href="https://github.com/ouertani/vert.x/tree/master/vertx-lang/vertx-lang-scala"><a href="https://github.com/ouertani/vert.x/tree/master/vertx-lang/vertx-lang-scala">https://github.com/ouertani/vert.x/tree/master/vertx-lang/vertx-lang-scala</a></a></p>
+
+<!-- more -->
+
+
+
+
+<h2>I- Resticle</h2>
+
+
+<p>Resticle is a unit of deployment dedicated to Rest. It provides a new method (“handles”) which can be used by Vert.x to start Rest services. “handles” returns a sequence of rest handlers :</p>
+
+<ul>
+<li>RestHandler : Action => Response</li>
+<li><ul>Action :
+<li>GET(pattern : String)</li>
+<li>POST (pattern : String)</li>
+<li>PUT (pattern : String)</li>
+<li>DELETE(pattern : String)</li>
+<li>HEAD (pattern : String)</li>
+<li>ALL(pattern : String)</li>
+</ul></li>
+<li>Response : HttpServerRequest => Any</li>
+<li>OK, Unauthorized,&#8230;.</li>
+</ul>
+
+
+<p>In this tutorial we will be working with the SampleResticle class, for both scala and java.</p>
+
+<h2>II - Hello World</h2>
+
+
+<p>Vert.x provides a powerful routing and <a href="http://vertx.io/core_manual_java.html#routing-http-requests-with-pattern-matching">route matching</a> mechanism, which simplifies the routing of HTTP requests to different handlers based on pattern matching on the request path.</p>
+
+<p>In Hello World snippet, let us publish a static GET service :</p>
+
+<p><li>GET : /hello → code : 200 , body : world</li></p>
+
+<h4>Scala</h4>
+
+
+
+
+<figure class='code'><figcaption><span>SampleResticle.scala   </span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='scala'><span class='line'><span class="k">class</span> <span class="nc">SampleResticle</span> <span class="k">extends</span> <span class="nc">Resticle</span>
+</span><span class='line'><span class="o">{</span>
+</span><span class='line'>  <span class="k">override</span> <span class="k">def</span> <span class="n">handles</span> <span class="k">=</span>
+</span><span class='line'>         <span class="o">{</span> <span class="nc">GET</span><span class="o">(</span><span class="s">&quot;/hello&quot;</span><span class="o">)</span>      <span class="o">:&gt;</span>  <span class="nc">OK</span><span class="o">(</span> <span class="k">_</span> <span class="k">=&gt;</span> <span class="s">&quot;world &quot;</span><span class="o">)</span> <span class="o">}</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h4>Java</h4>
+
+
+<p></p>
+
+<figure class='code'><figcaption><span>SampleResticle.java            </span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">SampleResticle</span> <span class="kd">extends</span> <span class="n">Verticle</span> <span class="o">{</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">start</span><span class="o">()</span> <span class="o">{</span>
+</span><span class='line'>        <span class="n">HttpServer</span> <span class="n">server</span> <span class="o">=</span> <span class="n">vertx</span><span class="o">.</span><span class="na">createHttpServer</span><span class="o">();</span>
+</span><span class='line'>        <span class="n">RouteMatcher</span> <span class="n">routeMatcher</span> <span class="o">=</span> <span class="k">new</span> <span class="n">RouteMatcher</span><span class="o">();</span>
+</span><span class='line'>        <span class="n">routeMatcher</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="s">&quot;/hello&quot;</span><span class="o">,</span> <span class="k">new</span> <span class="n">Handler</span><span class="o">&lt;</span><span class="n">HttpServerRequest</span><span class="o">&gt;()</span> <span class="o">{</span>
+</span><span class='line'>            <span class="kd">public</span> <span class="kt">void</span> <span class="nf">handle</span><span class="o">(</span><span class="n">HttpServerRequest</span> <span class="n">req</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>                <span class="n">req</span><span class="o">.</span><span class="na">response</span><span class="o">.</span><span class="na">statusCode</span> <span class="o">=</span><span class="mi">200</span><span class="o">;</span>
+</span><span class='line'>                <span class="n">req</span><span class="o">.</span><span class="na">response</span><span class="o">.</span><span class="na">end</span><span class="o">(</span><span class="s">&quot;world&quot;</span><span class="o">);</span>
+</span><span class='line'>            <span class="o">}</span>
+</span><span class='line'>        <span class="o">});</span>
+</span><span class='line'>        <span class="n">server</span><span class="o">.</span><span class="na">requestHandler</span><span class="o">(</span><span class="n">routeMatcher</span><span class="o">).</span><span class="na">listen</span><span class="o">(</span><span class="mi">8080</span><span class="o">,</span> <span class="s">&quot;localhost&quot;</span><span class="o">);</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>III- Chaining Handlers</h2>
+
+
+<p>Using Resticle we can chain handlers quit easily. The following snippets create static GET and DELETE services :</p>
+
+<p><li>GET : /hello → code : 200 , body : world</li>
+<li>DELETE : /posts → code : 401 , body : Not allowed user</li></p>
+
+<h4>Scala</h4>
+
+
+
+
+<figure class='code'><figcaption><span>SampleResticle.scala               </span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='scala'><span class='line'><span class="k">class</span> <span class="nc">SampleResticle</span> <span class="k">extends</span> <span class="nc">Resticle</span>
+</span><span class='line'><span class="o">{</span>
+</span><span class='line'>  <span class="k">override</span> <span class="k">def</span> <span class="n">handles</span> <span class="k">=</span>
+</span><span class='line'>         <span class="o">{</span> <span class="nc">GET</span><span class="o">(</span><span class="s">&quot;/hello&quot;</span><span class="o">)</span>      <span class="o">:&gt;</span>  <span class="nc">OK</span><span class="o">(</span> <span class="k">_</span> <span class="k">=&gt;</span> <span class="s">&quot;world &quot;</span><span class="o">)</span> <span class="o">}</span> <span class="o">++</span>
+</span><span class='line'>         <span class="o">{</span> <span class="nc">DELETE</span><span class="o">(</span><span class="s">&quot;/posts&quot;</span><span class="o">)</span>   <span class="o">:&gt;</span>  <span class="nc">Unauthorized</span> <span class="o">{</span><span class="k">_</span> <span class="k">=&gt;</span> <span class="s">&quot;Not allowed user&quot;</span> <span class="o">}}</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h4>java</h4>
+
+
+
+
+<figure class='code'><figcaption><span>SampleResticle.java                </span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">SampleResticle</span> <span class="kd">extends</span> <span class="n">Verticle</span> <span class="o">{</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">start</span><span class="o">()</span> <span class="o">{</span>
+</span><span class='line'>        <span class="n">HttpServer</span> <span class="n">server</span> <span class="o">=</span> <span class="n">vertx</span><span class="o">.</span><span class="na">createHttpServer</span><span class="o">();</span>
+</span><span class='line'>        <span class="n">RouteMatcher</span> <span class="n">routeMatcher</span> <span class="o">=</span> <span class="k">new</span> <span class="n">RouteMatcher</span><span class="o">();</span>
+</span><span class='line'>        <span class="n">routeMatcher</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="s">&quot;/hello&quot;</span><span class="o">,</span> <span class="k">new</span> <span class="n">Handler</span><span class="o">&lt;</span><span class="n">HttpServerRequest</span><span class="o">&gt;()</span> <span class="o">{</span>
+</span><span class='line'>            <span class="kd">public</span> <span class="kt">void</span> <span class="nf">handle</span><span class="o">(</span><span class="n">HttpServerRequest</span> <span class="n">req</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>                <span class="n">req</span><span class="o">.</span><span class="na">response</span><span class="o">.</span><span class="na">statusCode</span> <span class="o">=</span><span class="mi">200</span><span class="o">;</span>
+</span><span class='line'>                <span class="n">req</span><span class="o">.</span><span class="na">response</span><span class="o">.</span><span class="na">end</span><span class="o">(</span><span class="s">&quot;world&quot;</span><span class="o">);</span>
+</span><span class='line'>            <span class="o">}</span>
+</span><span class='line'>        <span class="o">});</span>
+</span><span class='line'>         <span class="n">routeMatcher</span><span class="o">.</span><span class="na">delete</span><span class="o">(</span><span class="s">&quot;/posts&quot;</span><span class="o">,</span> <span class="k">new</span> <span class="n">Handler</span><span class="o">&lt;</span><span class="n">HttpServerRequest</span><span class="o">&gt;()</span> <span class="o">{</span>
+</span><span class='line'>            <span class="kd">public</span> <span class="kt">void</span> <span class="nf">handle</span><span class="o">(</span><span class="n">HttpServerRequest</span> <span class="n">req</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>                <span class="n">req</span><span class="o">.</span><span class="na">response</span><span class="o">.</span><span class="na">statusCode</span> <span class="o">=</span><span class="mi">401</span><span class="o">;</span>
+</span><span class='line'>                <span class="n">req</span><span class="o">.</span><span class="na">response</span><span class="o">.</span><span class="na">end</span><span class="o">(</span><span class="s">&quot;Not allowed user&quot;</span><span class="o">);</span>
+</span><span class='line'>            <span class="o">}</span>
+</span><span class='line'>        <span class="o">});</span>
+</span><span class='line'>        <span class="n">server</span><span class="o">.</span><span class="na">requestHandler</span><span class="o">(</span><span class="n">routeMatcher</span><span class="o">).</span><span class="na">listen</span><span class="o">(</span><span class="mi">8080</span><span class="o">,</span> <span class="s">&quot;localhost&quot;</span><span class="o">);</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>IV - Value path</h2>
+
+
+<p>Vert.x <a href="http://vertx.io/core_manual_java.html#routing-http-requests-with-pattern-matching">pattern matching</a> lets you extract values from the path and use them as parameters in the request.</p>
+
+<p><li>GET : /hello → code : 200 , body : world</li>
+<li>DELETE : /posts → code : 401 , body : Not allowed user</li>
+<li>POST : /:blogname → code : 200 , body : post {blogname} received !</li></p>
+
+<h4>Scala : ( Using <a href="http://docs.scala-lang.org/overviews/core/string-interpolation.html">String interpolation</a>)</h4>
+
+
+
+
+<figure class='code'><figcaption><span>SampleResticle.scala               </span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class='scala'><span class='line'><span class="k">class</span> <span class="nc">SampleResticle</span> <span class="k">extends</span> <span class="nc">Resticle</span>
+</span><span class='line'><span class="o">{</span>
+</span><span class='line'>  <span class="k">override</span> <span class="k">def</span> <span class="n">handles</span> <span class="k">=</span>
+</span><span class='line'>         <span class="o">{</span> <span class="nc">GET</span><span class="o">(</span><span class="s">&quot;/hello&quot;</span><span class="o">)</span>      <span class="o">:&gt;</span>  <span class="nc">OK</span><span class="o">(</span> <span class="k">_</span> <span class="k">=&gt;</span> <span class="s">&quot;world &quot;</span><span class="o">)</span> <span class="o">}</span> <span class="o">++</span>
+</span><span class='line'>         <span class="o">{</span> <span class="nc">DELETE</span><span class="o">(</span><span class="s">&quot;/posts&quot;</span><span class="o">)</span>   <span class="o">:&gt;</span>  <span class="nc">Unauthorized</span> <span class="o">{</span><span class="k">_</span> <span class="k">=&gt;</span> <span class="s">&quot;Not allowed user&quot;</span> <span class="o">}}</span> <span class="o">++</span>
+</span><span class='line'>         <span class="o">{</span> <span class="nc">POST</span><span class="o">(</span><span class="s">&quot;/:blogname&quot;</span><span class="o">)</span> <span class="o">:&gt;</span>  <span class="nc">OK</span> <span class="o">{</span><span class="n">req</span>  <span class="k">=&gt;</span> <span class="k">val</span> <span class="n">param</span> <span class="k">=</span> <span class="n">req</span><span class="o">.</span><span class="n">params</span><span class="o">().</span><span class="n">get</span><span class="o">(</span><span class="s">&quot;blogname&quot;</span><span class="o">)</span> <span class="o">;</span> <span class="n">s</span><span class="s">&quot;post $param received !&quot;</span> <span class="o">}</span> <span class="o">}</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h4>Java</h4>
+
+
+
+
+<figure class='code'><figcaption><span>SampleResticle.java                </span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">SampleResticle</span> <span class="kd">extends</span> <span class="n">Verticle</span> <span class="o">{</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">start</span><span class="o">()</span> <span class="o">{</span>
+</span><span class='line'>        <span class="n">HttpServer</span> <span class="n">server</span> <span class="o">=</span> <span class="n">vertx</span><span class="o">.</span><span class="na">createHttpServer</span><span class="o">();</span>
+</span><span class='line'>        <span class="n">RouteMatcher</span> <span class="n">routeMatcher</span> <span class="o">=</span> <span class="k">new</span> <span class="n">RouteMatcher</span><span class="o">();</span>
+</span><span class='line'>        <span class="n">routeMatcher</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="s">&quot;/hello&quot;</span><span class="o">,</span> <span class="k">new</span> <span class="n">Handler</span><span class="o">&lt;</span><span class="n">HttpServerRequest</span><span class="o">&gt;()</span> <span class="o">{</span>
+</span><span class='line'>            <span class="kd">public</span> <span class="kt">void</span> <span class="nf">handle</span><span class="o">(</span><span class="n">HttpServerRequest</span> <span class="n">req</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>                <span class="n">req</span><span class="o">.</span><span class="na">response</span><span class="o">.</span><span class="na">statusCode</span> <span class="o">=</span><span class="mi">200</span><span class="o">;</span>
+</span><span class='line'>                <span class="n">req</span><span class="o">.</span><span class="na">response</span><span class="o">.</span><span class="na">end</span><span class="o">(</span><span class="s">&quot;world&quot;</span><span class="o">);</span>
+</span><span class='line'>            <span class="o">}</span>
+</span><span class='line'>        <span class="o">});</span>
+</span><span class='line'>         <span class="n">routeMatcher</span><span class="o">.</span><span class="na">delete</span><span class="o">(</span><span class="s">&quot;/posts&quot;</span><span class="o">,</span> <span class="k">new</span> <span class="n">Handler</span><span class="o">&lt;</span><span class="n">HttpServerRequest</span><span class="o">&gt;()</span> <span class="o">{</span>
+</span><span class='line'>            <span class="kd">public</span> <span class="kt">void</span> <span class="nf">handle</span><span class="o">(</span><span class="n">HttpServerRequest</span> <span class="n">req</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>                <span class="n">req</span><span class="o">.</span><span class="na">response</span><span class="o">.</span><span class="na">statusCode</span> <span class="o">=</span><span class="mi">401</span><span class="o">;</span>
+</span><span class='line'>                <span class="n">req</span><span class="o">.</span><span class="na">response</span><span class="o">.</span><span class="na">end</span><span class="o">(</span><span class="s">&quot;Not allowed user&quot;</span><span class="o">);</span>
+</span><span class='line'>            <span class="o">}</span>
+</span><span class='line'>        <span class="o">});</span>
+</span><span class='line'>
+</span><span class='line'>         <span class="n">routeMatcher</span><span class="o">.</span><span class="na">post</span><span class="o">(</span><span class="s">&quot;/:blogname&quot;</span><span class="o">,</span> <span class="k">new</span> <span class="n">Handler</span><span class="o">&lt;</span><span class="n">HttpServerRequest</span><span class="o">&gt;()</span> <span class="o">{</span>
+</span><span class='line'>            <span class="kd">public</span> <span class="kt">void</span> <span class="nf">handle</span><span class="o">(</span><span class="n">HttpServerRequest</span> <span class="n">req</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>                <span class="n">req</span><span class="o">.</span><span class="na">response</span><span class="o">.</span><span class="na">statusCode</span> <span class="o">=</span><span class="mi">200</span><span class="o">;</span>
+</span><span class='line'>                <span class="n">String</span> <span class="n">blogName</span> <span class="o">=</span> <span class="n">req</span><span class="o">.</span><span class="na">params</span><span class="o">().</span><span class="na">get</span><span class="o">(</span><span class="s">&quot;blogname&quot;</span><span class="o">);</span>
+</span><span class='line'>                <span class="n">req</span><span class="o">.</span><span class="na">response</span><span class="o">.</span><span class="na">end</span><span class="o">(</span><span class="s">&quot;post &quot;</span><span class="o">+</span><span class="n">blogName</span><span class="o">+</span> <span class="s">&quot; received !&quot;</span><span class="o">);</span>
+</span><span class='line'>            <span class="o">}</span>
+</span><span class='line'>        <span class="o">});</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="n">server</span><span class="o">.</span><span class="na">requestHandler</span><span class="o">(</span><span class="n">routeMatcher</span><span class="o">).</span><span class="na">listen</span><span class="o">(</span><span class="mi">8080</span><span class="o">,</span> <span class="s">&quot;localhost&quot;</span><span class="o">);</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>V- Json</h2>
+
+
+<p>Let’s assume we have a Blog class with two String fields title and content :</p>
+
+<p>case class Blog (title :String , content : String)
+The java equivalent has been relocated to the end of the document due to its verbosity ;).</p>
+
+<p>Publishing an object using Resticle is simple and transparent due to implicit convertor : T => Buffer.</p>
+
+<h4>Scala ( Type Class)</h4>
+
+
+<figure class='code'><figcaption><span>Blog.scala </span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='scala'><span class='line'><span class="k">object</span> <span class="nc">Blog</span> <span class="o">{</span>
+</span><span class='line'>  <span class="k">implicit</span> <span class="k">def</span> <span class="n">toBuffer</span><span class="o">(</span><span class="n">blog</span> <span class="k">:</span> <span class="kt">Blog</span><span class="o">)</span><span class="k">:</span><span class="kt">Buffer</span> <span class="o">=</span> <span class="nc">JsonObject</span><span class="o">.</span><span class="n">withString</span><span class="o">(</span><span class="s">&quot;title&quot;</span> <span class="o">-&gt;</span> <span class="n">blog</span><span class="o">.</span><span class="n">title</span><span class="o">).</span><span class="n">withString</span><span class="o">(</span><span class="s">&quot;content&quot;</span> <span class="o">-&gt;</span> <span class="n">blog</span><span class="o">.</span><span class="n">content</span><span class="o">)</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h4>Java ( with explicit convertor )</h4>
+
+
+
+
+<figure class='code'><figcaption><span>Convertor.java             </span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Convertor</span> <span class="o">{</span>
+</span><span class='line'>    <span class="kd">public</span> <span class="kd">static</span>  <span class="n">JsonObject</span> <span class="nf">toJson</span><span class="o">(</span><span class="n">Blog</span> <span class="n">blog</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>       <span class="k">return</span> <span class="k">new</span> <span class="nf">JsonObject</span><span class="o">().</span><span class="na">putString</span><span class="o">(</span><span class="s">&quot;title&quot;</span><span class="o">,</span> <span class="n">blog</span><span class="o">.</span><span class="na">getTitle</span><span class="o">()).</span><span class="na">putString</span><span class="o">(</span><span class="s">&quot;content&quot;</span><span class="o">,</span> <span class="n">blog</span><span class="o">.</span><span class="na">getContent</span><span class="o">());</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p><li>GET : /hello → code : 200 , body : world</li>
+<li>DELETE : /posts → code : 401 , body : Not allowed user</li>
+<li>POST : /:blogname → code : 200 , body : post {blogname} received !</li>
+<li>GET : /:id → code : 200 , body : {&ldquo;title&rdquo;:&ldquo;rest&rdquo;,&ldquo;content&rdquo;:&ldquo;scala &amp; vertx&rdquo;}</li></p>
+
+<h4>Scala</h4>
+
+
+
+
+<figure class='code'><figcaption><span>SampleResticle.scala               </span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+</pre></td><td class='code'><pre><code class='scala'><span class='line'><span class="k">class</span> <span class="nc">SampleResticle</span> <span class="k">extends</span> <span class="nc">Resticle</span>
+</span><span class='line'><span class="o">{</span>
+</span><span class='line'>  <span class="k">override</span> <span class="k">def</span> <span class="n">handles</span> <span class="k">=</span>
+</span><span class='line'>         <span class="o">{</span> <span class="nc">GET</span><span class="o">(</span><span class="s">&quot;/hello&quot;</span><span class="o">)</span>      <span class="o">:&gt;</span>  <span class="nc">OK</span><span class="o">(</span> <span class="k">_</span> <span class="k">=&gt;</span> <span class="s">&quot;world &quot;</span><span class="o">)</span> <span class="o">}</span> <span class="o">++</span>
+</span><span class='line'>         <span class="o">{</span> <span class="nc">DELETE</span><span class="o">(</span><span class="s">&quot;/posts&quot;</span><span class="o">)</span>   <span class="o">:&gt;</span>  <span class="nc">Unauthorized</span> <span class="o">{</span><span class="k">_</span> <span class="k">=&gt;</span> <span class="s">&quot;Not allowed user&quot;</span> <span class="o">}}</span> <span class="o">++</span>
+</span><span class='line'>         <span class="o">{</span> <span class="nc">POST</span><span class="o">(</span><span class="s">&quot;/:blogname&quot;</span><span class="o">)</span> <span class="o">:&gt;</span>  <span class="nc">OK</span> <span class="o">{</span><span class="n">req</span>  <span class="k">=&gt;</span> <span class="k">val</span> <span class="n">param</span> <span class="k">=</span> <span class="n">req</span><span class="o">.</span><span class="n">params</span><span class="o">().</span><span class="n">get</span><span class="o">(</span><span class="s">&quot;blogname&quot;</span><span class="o">)</span> <span class="o">;</span> <span class="n">s</span><span class="s">&quot;post $param received !&quot;</span> <span class="o">}</span> <span class="o">}</span> <span class="o">++</span>
+</span><span class='line'>         <span class="o">{</span> <span class="nc">GET</span><span class="o">(</span><span class="s">&quot;/:id&quot;</span><span class="o">)</span>        <span class="o">:&gt;</span>  <span class="nc">OK</span> <span class="o">(</span> <span class="k">_</span> <span class="k">=&gt;</span> <span class="nc">Blog</span><span class="o">(</span><span class="s">&quot;rest&quot;</span><span class="o">,</span><span class="s">&quot;scala &amp; vertx&quot;</span><span class="o">))}</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h4>Java</h4>
+
+
+
+
+<figure class='code'><figcaption><span>SampleResticle.java                </span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+<span class='line-number'>38</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">SampleResticle</span> <span class="kd">extends</span> <span class="n">Verticle</span> <span class="o">{</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">start</span><span class="o">()</span> <span class="o">{</span>
+</span><span class='line'>        <span class="n">HttpServer</span> <span class="n">server</span> <span class="o">=</span> <span class="n">vertx</span><span class="o">.</span><span class="na">createHttpServer</span><span class="o">();</span>
+</span><span class='line'>        <span class="n">RouteMatcher</span> <span class="n">routeMatcher</span> <span class="o">=</span> <span class="k">new</span> <span class="n">RouteMatcher</span><span class="o">();</span>
+</span><span class='line'>        <span class="n">routeMatcher</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="s">&quot;/hello&quot;</span><span class="o">,</span> <span class="k">new</span> <span class="n">Handler</span><span class="o">&lt;</span><span class="n">HttpServerRequest</span><span class="o">&gt;()</span> <span class="o">{</span>
+</span><span class='line'>            <span class="kd">public</span> <span class="kt">void</span> <span class="nf">handle</span><span class="o">(</span><span class="n">HttpServerRequest</span> <span class="n">req</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>                <span class="n">req</span><span class="o">.</span><span class="na">response</span><span class="o">.</span><span class="na">statusCode</span> <span class="o">=</span><span class="mi">200</span><span class="o">;</span>
+</span><span class='line'>                <span class="n">req</span><span class="o">.</span><span class="na">response</span><span class="o">.</span><span class="na">end</span><span class="o">(</span><span class="s">&quot;world&quot;</span><span class="o">);</span>
+</span><span class='line'>            <span class="o">}</span>
+</span><span class='line'>        <span class="o">});</span>
+</span><span class='line'>         <span class="n">routeMatcher</span><span class="o">.</span><span class="na">delete</span><span class="o">(</span><span class="s">&quot;/posts&quot;</span><span class="o">,</span> <span class="k">new</span> <span class="n">Handler</span><span class="o">&lt;</span><span class="n">HttpServerRequest</span><span class="o">&gt;()</span> <span class="o">{</span>
+</span><span class='line'>            <span class="kd">public</span> <span class="kt">void</span> <span class="nf">handle</span><span class="o">(</span><span class="n">HttpServerRequest</span> <span class="n">req</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>                <span class="n">req</span><span class="o">.</span><span class="na">response</span><span class="o">.</span><span class="na">statusCode</span> <span class="o">=</span><span class="mi">401</span><span class="o">;</span>
+</span><span class='line'>                <span class="n">req</span><span class="o">.</span><span class="na">response</span><span class="o">.</span><span class="na">end</span><span class="o">(</span><span class="s">&quot;Not allowed user&quot;</span><span class="o">);</span>
+</span><span class='line'>            <span class="o">}</span>
+</span><span class='line'>        <span class="o">});</span>
+</span><span class='line'>
+</span><span class='line'>         <span class="n">routeMatcher</span><span class="o">.</span><span class="na">post</span><span class="o">(</span><span class="s">&quot;/:blogname&quot;</span><span class="o">,</span> <span class="k">new</span> <span class="n">Handler</span><span class="o">&lt;</span><span class="n">HttpServerRequest</span><span class="o">&gt;()</span> <span class="o">{</span>
+</span><span class='line'>            <span class="kd">public</span> <span class="kt">void</span> <span class="nf">handle</span><span class="o">(</span><span class="n">HttpServerRequest</span> <span class="n">req</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>                <span class="n">req</span><span class="o">.</span><span class="na">response</span><span class="o">.</span><span class="na">statusCode</span> <span class="o">=</span><span class="mi">200</span><span class="o">;</span>
+</span><span class='line'>                <span class="n">String</span> <span class="n">blogName</span> <span class="o">=</span> <span class="n">req</span><span class="o">.</span><span class="na">params</span><span class="o">().</span><span class="na">get</span><span class="o">(</span><span class="s">&quot;blogname&quot;</span><span class="o">);</span>
+</span><span class='line'>                <span class="n">req</span><span class="o">.</span><span class="na">response</span><span class="o">.</span><span class="na">end</span><span class="o">(</span><span class="s">&quot;post &quot;</span><span class="o">+</span><span class="n">blogName</span><span class="o">+</span> <span class="s">&quot; received !&quot;</span><span class="o">);</span>
+</span><span class='line'>            <span class="o">}</span>
+</span><span class='line'>        <span class="o">});</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="n">routeMatcher</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="s">&quot;/:id&quot;</span><span class="o">,</span> <span class="k">new</span> <span class="n">Handler</span><span class="o">&lt;</span><span class="n">HttpServerRequest</span><span class="o">&gt;()</span> <span class="o">{</span>
+</span><span class='line'>            <span class="kd">public</span> <span class="kt">void</span> <span class="nf">handle</span><span class="o">(</span><span class="n">HttpServerRequest</span> <span class="n">req</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>                <span class="n">req</span><span class="o">.</span><span class="na">response</span><span class="o">.</span><span class="na">statusCode</span> <span class="o">=</span><span class="mi">200</span><span class="o">;</span>
+</span><span class='line'>                <span class="n">Blog</span> <span class="n">blog</span> <span class="o">=</span>  <span class="k">new</span> <span class="n">Blog</span><span class="o">(</span><span class="s">&quot;rest&quot;</span><span class="o">,</span><span class="s">&quot;scala &amp; vertx&quot;</span><span class="o">);</span>
+</span><span class='line'>                <span class="n">JsonObject</span> <span class="n">obj</span> <span class="o">=</span> <span class="n">Convertor</span><span class="o">.</span><span class="na">toJson</span><span class="o">(</span><span class="n">blog</span><span class="o">);</span>
+</span><span class='line'>                <span class="n">req</span><span class="o">.</span><span class="na">response</span><span class="o">.</span><span class="na">end</span><span class="o">(</span><span class="n">obj</span><span class="o">.</span><span class="na">encode</span><span class="o">());</span>
+</span><span class='line'>            <span class="o">}</span>
+</span><span class='line'>        <span class="o">});</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="n">server</span><span class="o">.</span><span class="na">requestHandler</span><span class="o">(</span><span class="n">routeMatcher</span><span class="o">).</span><span class="na">listen</span><span class="o">(</span><span class="mi">8080</span><span class="o">,</span> <span class="s">&quot;localhost&quot;</span><span class="o">);</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Java Blog</p>
+
+<figure class='code'><figcaption><span>Blog.java              </span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Blog</span> <span class="o">{</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">private</span> <span class="kd">final</span>  <span class="n">String</span> <span class="n">title</span><span class="o">;</span>
+</span><span class='line'>    <span class="kd">private</span> <span class="kd">final</span> <span class="n">String</span> <span class="n">content</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">public</span> <span class="nf">Blog</span><span class="o">(</span><span class="n">String</span> <span class="n">title</span><span class="o">,</span> <span class="n">String</span> <span class="n">content</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>        <span class="k">this</span><span class="o">.</span><span class="na">title</span> <span class="o">=</span> <span class="n">title</span><span class="o">;</span>
+</span><span class='line'>        <span class="k">this</span><span class="o">.</span><span class="na">content</span> <span class="o">=</span> <span class="n">content</span><span class="o">;</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">public</span> <span class="n">String</span> <span class="nf">getTitle</span><span class="o">()</span> <span class="o">{</span>
+</span><span class='line'>        <span class="k">return</span> <span class="n">title</span><span class="o">;</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">public</span> <span class="n">String</span> <span class="nf">getContent</span><span class="o">()</span> <span class="o">{</span>
+</span><span class='line'>        <span class="k">return</span> <span class="n">content</span><span class="o">;</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>  <span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>Conclusion</h2>
+
+
+<p>Despite the fact that Resticle is in first development step, Rest support is by far simpler and elegant in scala than in java. As described in first tutorial Vert.x java version is burdened with a frightening number of handlers. Will Vert.x 2.0 address this point using <a href="https://github.com/vert-x/vert.x/wiki/Vert.x-2.0-plan">Promises/Deferred APIs </a>?</p>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">Ouertani</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-03-09T00:24:00+01:00" pubdate data-updated="true">Mar 9<span>th</span>, 2013</time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/rest/'>Rest</a>, <a class='category' href='/blog/categories/scala/'>Scala</a>, <a class='category' href='/blog/categories/vert-dot-x/'>Vert.x</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://ouertani.github.io/blog/2013/03/09/rest-with-scala-and-vert-dot-x/" data-via="ouertani" data-counturl="http://ouertani.github.io/blog/2013/03/09/rest-with-scala-and-vert-dot-x/" >Tweet</a>
+  
+  
+  <div class="g-plusone" data-size="medium"></div>
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2013/02/12/fun-with-scala-and-vert-dot-x/" title="Previous Post: Fun with Scala and Vert.x">&laquo; Fun with Scala and Vert.x</a>
+      
+      
+    </p>
+  </footer>
+</article>
+
+  <section>
+    <h1>Comments</h1>
+    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+  </section>
+
+</div>
+
+<aside class="sidebar">
+  
+    <a href="https://docs.google.com/open?id=0B3c0mmqYdPkobDdhV3ZWbnl2ek0"><img class="center" src="/images/oracle_certprof_clr_rgb.jpg" width="350" height="350" title="score 100%" alt="images"></a>
+<a href="https://docs.google.com/file/d/0B3c0mmqYdPkoR1NLMnJwWFB4dmc/preview"><img class="center" src="/images/spring-certification.gif" width="350" height="350" title="score 94%" alt="images"></a>
+
+<section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2013/03/09/rest-with-scala-and-vert-dot-x/">Rest With Scala and Vert.x</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/02/12/fun-with-scala-and-vert-dot-x/">Fun With Scala and Vert.x</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/10/18/getting-started-with-play-2-dot-1/">Play 2.1 Scala 2.10 and String Interpolation</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/10/09/play-2-dot-1/">Play 2.1 , Scala 2.10 and Slick 0.11.1</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/09/26/xml-slash-rpc-driver-as-jca-scala-connector/">XML/RPC Driver as JCA Scala Connector</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/06/29/xml-rpc-using-scala/">XML-RPC Using Scala</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/06/28/jaxws-header-part-2-server-side/">Jaxws Header : Part 2 : Server Side</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/06/28/sending-an-email-using-the-javamail-session-and-glassfish/">Sending an Email Using the JavaMail Session and Glassfish</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/06/27/jax-ws-header-part-1-the-client-side/">JAX-WS Header : Part 1 the Client Side</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/06/24/ee-6-environmental-enterprise-entries-and-glassfish/">EE 6 Environmental Enterprise Entries and Glassfish</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2011/09/11/basic-mdb-with-scala/">Basic MDB With Scala</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2011/09/10/basic-ws-with-scala/">Basic WS With Scala</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2011/06/30/wsdl-integration-problem-two-declarations-cause-a-collision/">WSDL Integration Problem : Two Declarations Cause a Collision</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2010/12/06/scala-try-with-resources/">Scala Try-with-resources</a>
+      </li>
+    
+  </ul>
+</section>
+<section>
+  <h1>Tag Cloud</h1>
+    <span id="tag-cloud"><a href='/blog/categories/glassfish' style='font-size: 107.5%'>Glassfish(1)</a> <a href='/blog/categories/jax-ws' style='font-size: 122.5%'>JAX-WS(3)</a> <a href='/blog/categories/jaxb' style='font-size: 107.5%'>JAXB(1)</a> <a href='/blog/categories/jca' style='font-size: 107.5%'>JCA(1)</a> <a href='/blog/categories/jee' style='font-size: 160.0%'>JEE(8)</a> <a href='/blog/categories/jndi' style='font-size: 107.5%'>JNDI(1)</a> <a href='/blog/categories/mail' style='font-size: 107.5%'>MAIL(1)</a> <a href='/blog/categories/mdb' style='font-size: 107.5%'>MDB(1)</a> <a href='/blog/categories/play' style='font-size: 115.0%'>Play(2)</a> <a href='/blog/categories/rest' style='font-size: 107.5%'>Rest(1)</a> <a href='/blog/categories/rpc' style='font-size: 107.5%'>RPC(1)</a> <a href='/blog/categories/sbt' style='font-size: 107.5%'>Sbt(1)</a> <a href='/blog/categories/scala' style='font-size: 152.5%'>Scala(7)</a> <a href='/blog/categories/scala' style='font-size: 130.0%'>SCALA(4)</a> <a href='/blog/categories/ucip' style='font-size: 115.0%'>Ucip(2)</a> <a href='/blog/categories/vert-x' style='font-size: 115.0%'>Vert.x(2)</a> <a href='/blog/categories/xml' style='font-size: 115.0%'>XML(2)</a> <a href='/blog/categories/xml-rpc' style='font-size: 107.5%'>XML/RPC(1)</a> </span>
+</section>
+
+<section>
+  
+  
+    <a href="http://twitter.com/ouertani" class="twitter-follow-button" data-show-count="true">Follow @ouertani</a>
+  
+</section>
+
+
+
+
+
+<section class="googleplus">
+  <h1>
+    <a href="https://plus.google.com/ouertani?rel=author">
+      <img src="http://www.google.com/images/icons/ui/gprofile_button-32.png" width="32" height="32">
+      Google+
+    </a>
+  </h1>
+</section>
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><div style="display:inline">
+    Copyright &copy; 2013
+
+    Ouertani
+. Powered by <a href="http://octopress.org">Octopress</a> | 
+    Theme <a href="http://github.com/panks/fabric">fabric</a> by <a href="http://panks.me">Pankaj Kumar</a>
+</div>
+
+</footer>
+  
+
+<script type="text/javascript">
+      var disqus_shortname = 'ouertani';
+      
+        
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://ouertani.github.io/blog/2013/03/09/rest-with-scala-and-vert-dot-x/';
+        var disqus_url = 'http://ouertani.github.io/blog/2013/03/09/rest-with-scala-and-vert-dot-x/';
+        var disqus_script = 'embed.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+
+
+
+  <script type="text/javascript">
+    (function() {
+      var script = document.createElement('script'); script.type = 'text/javascript'; script.async = true;
+      script.src = 'https://apis.google.com/js/plusone.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(script, s);
+    })();
+  </script>
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = '//platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+</body>
+</html>

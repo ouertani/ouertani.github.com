@@ -1,0 +1,233 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: Sbt | Ouertani Blog]]></title>
+  <link href="http://ouertani.github.io/blog/categories/sbt/atom.xml" rel="self"/>
+  <link href="http://ouertani.github.io/"/>
+  <updated>2013-08-09T16:06:23+02:00</updated>
+  <id>http://ouertani.github.io/</id>
+  <author>
+    <name><![CDATA[Ouertani]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Basic WS with Scala]]></title>
+    <link href="http://ouertani.github.io/blog/2011/09/10/basic-ws-with-scala/"/>
+    <updated>2011-09-10T03:55:00+02:00</updated>
+    <id>http://ouertani.github.io/blog/2011/09/10/basic-ws-with-scala</id>
+    <content type="html"><![CDATA[<p>I recently had a chance to work on building SOA platforme using JEE 6 and Scala language. I will share here some snippets my be helpfull to start publishing web services using Scala, Sbt and JAX-WS.
+Consider the example to calculate the quotient and remainder using euclidean algorithm. Not very complexe if the inputs are positives numbers.</p>
+
+<!-- more -->
+
+
+<h2>I- Sbt</h2>
+
+
+<p>Let’s create an sbt projet and add required dependencies
+<blockquote><p>$ mkdir sws<br/>$ cd sws<br/>$ touch build.sbt<br/>$ edit build.sbt as following :</p></blockquote>
+```scala
+name := &ldquo;Euclide&rdquo;</p>
+
+<p>version := &ldquo;1.0&rdquo;</p>
+
+<p>organization := &ldquo;me.ouertani&rdquo;</p>
+
+<p>scalaVersion := &ldquo;2.9.1&rdquo;</p>
+
+<p>scalaSource in Compile &lt;&lt;= baseDirectory(_ / &ldquo;src&rdquo;)</p>
+
+<p>scalaSource in Test &lt;&lt;= baseDirectory(_ / &ldquo;test&rdquo;)</p>
+
+<p>libraryDependencies += &ldquo;javax&rdquo; % &ldquo;javaee-api&rdquo; % &ldquo;6.0&rdquo; % &ldquo;provided&rdquo;</p>
+
+<p>libraryDependencies += &ldquo;log4j&rdquo; % &ldquo;log4j&rdquo; % &ldquo;1.2.16&rdquo; % &ldquo;provided&rdquo;</p>
+
+<p>libraryDependencies += &ldquo;junit&rdquo; % &ldquo;junit&rdquo; % &ldquo;4.8.2&rdquo; % &ldquo;test&rdquo;
+```
+<blockquote><p>$ mkdir src<br/>$ touch src/Euclide.scala</p></blockquote></p>
+
+<p>That’a all for project configuration.</p>
+
+<h2>II- Create the WS</h2>
+
+
+<p>We will use a single Euclide.scala file for all class this will be easier for visibility</p>
+
+<ol>
+<li>Create a Request Class and don’t forget :</li>
+    <ol>
+    <li>default constructor</li>
+    <li>field access annotation</li></ol>
+```scala
+@XmlAccessorType(XmlAccessType.FIELD)
+case class Request(a : Int, b : Int ){ def this(){this(0,0)}}
+```
+<li>Create a Response Class</li>
+```scala
+@XmlAccessorType(XmlAccessType.FIELD)
+@XmlType(name = "output")
+case class Response (c: Int, d: Int){ def this(){this(0,0)}}
+```
+<li>Why not to create an exception class to handle exceptions like b is equal to 0</li>
+```scala
+@XmlAccessorType(XmlAccessType.FIELD)
+case class ResponseException(why : String){  def this(){this("")}}
+ 
+@XmlAccessorType(XmlAccessType.FIELD)
+case class FaultResponse(@BeanProperty faultInfo : ResponseException) extends Exception { def this(){this(ResponseException(""))}}
+```
+Don’t forget to add BeanProperty annotation to faultInfo input !
+
+<li>Let’s add an interceptor to log all ws method call</li>
+
+```scala
+object TracingInterceptor{
+  import org.apache.log4j.Logger
+  val L = Logger.getLogger(classOf[TracingInterceptor])
+}
+ 
+import TracingInterceptor._
+class TracingInterceptor { 
+ 
+  @AroundInvoke
+  def  log( context:InvocationContext):Object ={
+    try {
+      if (L.isDebugEnabled()) {
+        val clazz = context.getMethod().getDeclaringClass().getName()
+        val method = context.getMethod().getName()        
+        L.debug(clazz + " : Is invoking method: " + method + " With Parameters : " + context.getParameters().mkString("[", ",","]"))
+      }
+    } catch { 
+      case  ex :Exception =>    L.warn("Unable to Intercept Method Call", ex)
+    } 
+    context.proceed()
+  }
+}
+```
+<li>The WS class and it’s divide method using intercpetor and stateless EJB 3.1</li>
+```scala
+@WebService(serviceName = "Euclide", targetNamespace = "http://slim.ouertani.me/")
+@Stateless()
+@Interceptors(Array(classOf[TracingInterceptor]))
+class Euclide {
+  @throws(classOf[FaultResponse])
+  def divide( @WebParam(name="input" )  @XmlElement(required = true, nillable = false)
+    req :Request):Response =  req match {
+      case Request(_, 0 ) => throw FaultResponse(ResponseException("Can't divide by ZERO!"))
+      case Request(a, b ) =>  Response(a / b ,a % b) 
+    }
+}
+```
+<li>Don’t forget package , imports at the head of file and it’s all :</li>
+</ol>
+
+
+<p>```scala
+package me.ouertani.scala.ws</p>
+
+<p>import javax.interceptor.Interceptors
+import javax.xml.bind.annotation.XmlElement
+import javax.interceptor.{ AroundInvoke , InvocationContext }
+import javax.xml.bind.annotation. { XmlAccessType , XmlAccessorType, XmlElement, XmlType}
+import javax.ejb. { EJB ,Stateless }
+import javax.jws. {WebService , WebParam }
+import scala.reflect.BeanProperty
+```</p>
+
+<h2>III- packaging and run WS</h2>
+
+
+<ol>
+    <li>Let’s start compiling our projet</li>
+$ xsbt compile
+    <li>package the jar</li>
+$ xsbt package
+    <li>deploy it to your JEE 6 container ( mine is Glassfish 3.1.1 )</li>
+</ol>
+
+
+<h2>IV – test it</h2>
+
+
+<p>1- After depoyed let’s test it using soapUI tool
+Request 1
+```xml
+&lt;soapenv:Envelope xmlns:soapenv=&ldquo;<a href="http://schemas.xmlsoap.org/soap/envelope/">http://schemas.xmlsoap.org/soap/envelope/</a>&rdquo; xmlns:slim=&ldquo;<a href="http://slim.ouertani.me/">http://slim.ouertani.me/</a>&rdquo;>
+   &lt;soapenv:Header/>
+   &lt;soapenv:Body></p>
+
+<pre><code>  &lt;slim:divide&gt;
+     &lt;input&gt;
+        &lt;a&gt;6&lt;/a&gt;
+        &lt;b&gt;4&lt;/b&gt;
+     &lt;/input&gt;
+  &lt;/slim:divide&gt;
+</code></pre>
+
+<p>   &lt;/soapenv:Body>
+&lt;/soapenv:Envelope>
+```</p>
+
+<p>Response 1 :
+```xml
+&lt;S:Envelope xmlns:S=&ldquo;<a href="http://schemas.xmlsoap.org/soap/envelope/">http://schemas.xmlsoap.org/soap/envelope/</a>&rdquo;>
+   &lt;S:Body></p>
+
+<pre><code>  &lt;ns2:divideResponse xmlns:ns2="http://slim.ouertani.me/"&gt;
+     &lt;return&gt;
+        &lt;c&gt;3&lt;/c&gt;
+        &lt;d&gt;0&lt;/d&gt;
+     &lt;/return&gt;
+  &lt;/ns2:divideResponse&gt;
+</code></pre>
+
+<p>   &lt;/S:Body>
+&lt;/S:Envelope>
+<code>
+Request 2 :
+</code>xml
+&lt;soapenv:Envelope xmlns:soapenv=&ldquo;<a href="http://schemas.xmlsoap.org/soap/envelope/">http://schemas.xmlsoap.org/soap/envelope/</a>&rdquo; xmlns:slim=&ldquo;<a href="http://slim.ouertani.me/">http://slim.ouertani.me/</a>&rdquo;>
+   &lt;soapenv:Header/>
+   &lt;soapenv:Body></p>
+
+<pre><code>  &lt;slim:divide&gt;
+     &lt;input&gt;
+        &lt;a&gt;6&lt;/a&gt;
+        &lt;b&gt;0&lt;/b&gt;
+     &lt;/input&gt;
+  &lt;/slim:divide&gt;
+</code></pre>
+
+<p>   &lt;/soapenv:Body>
+&lt;/soapenv:Envelope>
+<code>
+Response 2 :
+</code>xml
+&lt;S:Envelope xmlns:S=&ldquo;<a href="http://schemas.xmlsoap.org/soap/envelope/">http://schemas.xmlsoap.org/soap/envelope/</a>&rdquo;>
+   &lt;S:Body></p>
+
+<pre><code>  &lt;S:Fault xmlns:ns4="http://www.w3.org/2003/05/soap-envelope"&gt;
+     &lt;faultcode&gt;S:Server&lt;/faultcode&gt;
+     &lt;faultstring&gt;me.ouertani.scala.ws.FaultResponse&lt;/faultstring&gt;
+     &lt;detail&gt;
+        &lt;ns2:FaultResponse xmlns:ns2="http://slim.ouertani.me/"&gt;
+           &lt;faultInfo&gt;
+              &lt;why&gt;Can't divide by ZERO!&lt;/why&gt;
+           &lt;/faultInfo&gt;
+        &lt;/ns2:FaultResponse&gt;
+     &lt;/detail&gt;
+  &lt;/S:Fault&gt;
+</code></pre>
+
+<p>   &lt;/S:Body>
+&lt;/S:Envelope>
+```
+Fine!</p>
+]]></content>
+  </entry>
+  
+</feed>
