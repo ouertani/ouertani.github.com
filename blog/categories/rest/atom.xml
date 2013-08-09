@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Rest | Ouertani Blog]]></title>
   <link href="http://ouertani.github.com/blog/categories/rest/atom.xml" rel="self"/>
   <link href="http://ouertani.github.com/"/>
-  <updated>2013-04-10T11:25:36+02:00</updated>
+  <updated>2013-08-09T12:57:23+02:00</updated>
   <id>http://ouertani.github.com/</id>
   <author>
     <name><![CDATA[Ouertani]]></name>
@@ -20,7 +20,7 @@
     <id>http://ouertani.github.com/blog/2013/03/09/rest-with-scala-and-vert-dot-x</id>
     <content type="html"><![CDATA[<p>A previous post introduced some features of using Scala with <a href="http://vertx.io/">Vert.x</a>. This post covers how to publish Rest web services in an elegant and simple fashion.</p>
 
-<p>As in the previous post, Examples in Java and Scala are presented, source code been hosted on GitHub as part of lang-scala <a href="https://github.com/ouertani/vert.x/tree/master/vertx-lang/vertx-lang-scala">https://github.com/ouertani/vert.x/tree/master/vertx-lang/vertx-lang-scala</a></p>
+<p>As in the previous post, Examples in Java and Scala are presented, source code been hosted on GitHub as part of lang-scala <a href="https://github.com/ouertani/vert.x/tree/master/vertx-lang/vertx-lang-scala"><a href="https://github.com/ouertani/vert.x/tree/master/vertx-lang/vertx-lang-scala">https://github.com/ouertani/vert.x/tree/master/vertx-lang/vertx-lang-scala</a></a></p>
 
 <!-- more -->
 
@@ -243,7 +243,7 @@ public class Convertor {</p>
 <li>GET : /hello → code : 200 , body : world</li>
 <li>DELETE : /posts → code : 401 , body : Not allowed user</li>
 <li>POST : /:blogname → code : 200 , body : post {blogname} received !</li>
-<li>GET : /:id → code : 200 , body : {"title":"rest","content":"scala &amp; vertx"}</li></p>
+<li>GET : /:id → code : 200 , body : {&ldquo;title&rdquo;:&ldquo;rest&rdquo;,&ldquo;content&rdquo;:&ldquo;scala &amp; vertx&rdquo;}</li></p>
 
 <h4>Scala</h4>
 

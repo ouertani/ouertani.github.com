@@ -4,7 +4,7 @@
   <title><![CDATA[Category: MDB | Ouertani Blog]]></title>
   <link href="http://ouertani.github.com/blog/categories/mdb/atom.xml" rel="self"/>
   <link href="http://ouertani.github.com/"/>
-  <updated>2013-04-10T11:25:36+02:00</updated>
+  <updated>2013-08-09T12:57:23+02:00</updated>
   <id>http://ouertani.github.com/</id>
   <author>
     <name><![CDATA[Ouertani]]></name>
@@ -20,7 +20,7 @@
     <id>http://ouertani.github.com/blog/2011/09/11/basic-mdb-with-scala</id>
     <content type="html"><![CDATA[<p>While I am Akka fun, Typesafe follower, in this post I will continue presenting scala on JEE 6 environment and introduce basic message driven bean (MDB ) using scala language.</p>
 
-<p>As an example let's take a simple one MDB that will consome operation command like add and substract and my be asked to replay by the result</p>
+<p>As an example let&rsquo;s take a simple one MDB that will consome operation command like add and substract and my be asked to replay by the result</p>
 
 <!-- more -->
 
@@ -50,7 +50,7 @@ The class
 ``` scala
 @MessageDriven(
   messageListenerInterface=classOf[MessageListener],
-  mappedName = "jms/toMdb",
+  mappedName = &ldquo;jms/toMdb&rdquo;,
   activationConfig = Array(</p>
 
 <pre><code>new ActivationConfigProperty(propertyName = "acknowledgeMode", propertyValue = "Auto-acknowledge"),
@@ -88,7 +88,7 @@ message match {
   }
 }
 ```
-Nothing especial here but be careful to not forget adding messageListenerInterface=classOf[MessageListener] on MessageDriven annotation this is because ScalaObject super class and that's all for the listener.</p>
+Nothing especial here but be careful to not forget adding messageListenerInterface=classOf[MessageListener] on MessageDriven annotation this is because ScalaObject super class and that&rsquo;s all for the listener.</p>
 
 <h2>III- The sender</h2>
 
@@ -110,9 +110,9 @@ Very easy with pattern matching!</p>
 <p>The sendJmsMessageToIt method can be done like the following</p>
 
 <p>``` scala
-@Resource(mappedName = "jms/Rep")
+@Resource(mappedName = &ldquo;jms/Rep&rdquo;)
  var  queue :Queue=<em>
- @Resource(mappedName = "jms/RepFactory")
+ @Resource(mappedName = &ldquo;jms/RepFactory&rdquo;)
  var  factory:ConnectionFactory=</em></p>
 
 <p> private [ws ] def sendJMSMessageToTt( messageData:Count)  {
@@ -145,7 +145,7 @@ Very easy with pattern matching!</p>
 <p>   }
  }
 ```
-Here we used an old trick to manage resources : <a href="http://www.jroller.com/ouertani/entry/scala_try_with_resources">http://www.jroller.com/ouertani/entry/scala_try_with_resources</a></p>
+Here we used an old trick to manage resources : <a href="http://www.jroller.com/ouertani/entry/scala_try_with_resources"><a href="http://www.jroller.com/ouertani/entry/scala_try_with_resources">http://www.jroller.com/ouertani/entry/scala_try_with_resources</a></a></p>
 ]]></content>
   </entry>
   

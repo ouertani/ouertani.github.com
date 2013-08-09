@@ -4,7 +4,7 @@
   <title><![CDATA[Category: JEE | Ouertani Blog]]></title>
   <link href="http://ouertani.github.com/blog/categories/jee/atom.xml" rel="self"/>
   <link href="http://ouertani.github.com/"/>
-  <updated>2013-04-10T11:25:36+02:00</updated>
+  <updated>2013-08-09T12:57:23+02:00</updated>
   <id>http://ouertani.github.com/</id>
   <author>
     <name><![CDATA[Ouertani]]></name>
@@ -28,11 +28,11 @@
 <h2>JCA and integration</h2>
 
 
-<p><blockquote><p>"For enterprise application integration, bi-directional connectivity between enterprise applications and EIS is essential. The Java EE Connector architecture defines standard contracts that allow bi-directional connectivity between enterprise applications and EISs. It also formalizes the relationships, interactions, and the packaging of the integration layer, thus enabling enterprise application integration."</p></p><p><p></p><footer><strong>JCA 1.6 p 35</strong></footer></blockquote></p>
+<p><blockquote><p>&ldquo;For enterprise application integration, bi-directional connectivity between enterprise applications and EIS is essential. The Java EE Connector architecture defines standard contracts that allow bi-directional connectivity between enterprise applications and EISs. It also formalizes the relationships, interactions, and the packaging of the integration layer, thus enabling enterprise application integration.&rdquo;</p></p><p><p></p><footer><strong>JCA 1.6 p 35</strong></footer></blockquote></p>
 
 <p>The connector architecture defines a set of scalable, secure, and transactional mechanisms that enable the integration of EISs with application servers and enterprise application.</p>
 
-<p><img class="center" src="/images/jca.jpg" width="350" height="350" title="JCA" alt="images"></p>
+<p><img class="center" src="/images/jca.jpg" width="350" height="350" title="&lsquo;JCA&rsquo; &lsquo;images&rsquo;" ></p>
 
 <p>Using a UCIP JCA connector rather than using an <a href="http://java.dzone.com/articles/xml-rpc-using-scala">XML/RPC raw driver</a> lets you:</p>
 
@@ -46,7 +46,7 @@
 <h2>How?</h2>
 
 
-<p>The use of a <a href="http://www.jcp.org/en/jsr/detail?id=322">JCA</a> resource adapter inside a JEE solution is the same as interacting with a database or queue: protocol communication and wire negotiation... are hidden to the final user.</p>
+<p>The use of a <a href="http://www.jcp.org/en/jsr/detail?id=322">JCA</a> resource adapter inside a JEE solution is the same as interacting with a database or queue: protocol communication and wire negotiation&hellip; are hidden to the final user.</p>
 
 <p>Two interfaces are presented to a customer:</p>
 
@@ -67,7 +67,7 @@ def fire(elem : Elem) : Option[Elem]
 </code>
 As an outbound communication where the resource adapter allows an ESB or EE application server to connect to an IN/AIR node and perform work. All communication is initiated by the application. The Air connector factory should be injected as any resource and used like the following.
 ``` scala
-@Resource(name="AIR")
+@Resource(name=&ldquo;AIR&rdquo;)
 var airConnectorFactory : AirConnectorFactory = _</p>
 
 <p>val output = airConnectorFactory().fire(input)
@@ -99,7 +99,7 @@ var airConnectorFactory : AirConnectorFactory = _</p>
 <h2>Parse undeclared custom header</h2>
 
 
-<p>Let's consider We need to read WSS UserToken non published in our WSDL :
+<p>Let&rsquo;s consider We need to read WSS UserToken non published in our WSDL :
 ```xml
 &lt;soapenv:Header></p>
 
@@ -117,15 +117,15 @@ To parse this header we need to extend a SoapHandler, ovveride handle message cl
 </code>scala
 object AuthenticationHandlerConstants {</p>
 
-<p>  val REQUEST_USERID: String = "authn_userid";
-  val REQUEST_PASSWORD: String = "authn_password";
-  val AUTHN_PREFIX: String = "wsse";
-  val AUTHN_LNAME: String = "Security";
-  val AUTHN_URI: String = "http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd";
-  val AUTHN_STAUTS: String = "authnStatus";</p>
+<p>  val REQUEST_USERID: String = &ldquo;authn_userid&rdquo;;
+  val REQUEST_PASSWORD: String = &ldquo;authn_password&rdquo;;
+  val AUTHN_PREFIX: String = &ldquo;wsse&rdquo;;
+  val AUTHN_LNAME: String = &ldquo;Security&rdquo;;
+  val AUTHN_URI: String = &ldquo;<a href="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd">http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd</a>&rdquo;;
+  val AUTHN_STAUTS: String = &ldquo;authnStatus&rdquo;;</p>
 
-<p>  val LOGIN: String = "login"
-  val PWD: String = "passwd"
+<p>  val LOGIN: String = &ldquo;login&rdquo;
+  val PWD: String = &ldquo;passwd&rdquo;
 }
 <code>
 </code>scala
@@ -276,8 +276,8 @@ Unlike client side we need to add an xml file handler.xml to enable the previous
 
 
 <p>``` scala
-@WebService(serviceName = "WsService", targetNamespace = "http://slim.ouertani.me)
-@HandlerChain(file = "handler.xml")
+@WebService(serviceName = &ldquo;WsService&rdquo;, targetNamespace = &ldquo;<a href="http://slim.ouertani.me">http://slim.ouertani.me</a>)
+@HandlerChain(file = "handler.xml&rdquo;)
 @Stateless()
 @Interceptors(Array(classOf[TracingInterceptor]))
 class WsService extends LogHelper{</p>
@@ -380,7 +380,7 @@ After reading this later, I decided to share some tips about this EE environment
 <h2>Introduction</h2>
 
 
-<p>Two years ago, we decided to move to JEE 6 for our enterprise solutions and take a lot of fun with new EJB 3.1 features and annotations. Glassfish has made our lives easier, it was very easy to declare variables using it's administration console.
+<p>Two years ago, we decided to move to JEE 6 for our enterprise solutions and take a lot of fun with new EJB 3.1 features and annotations. Glassfish has made our lives easier, it was very easy to declare variables using it&rsquo;s administration console.
 Less complicated than using global resource environment for properties It is also the continuation to this <a href="http://www.jroller.com/articles/jee-6-environmental-enterprise">tricks</a> this tutorial delegate to Glassfish EE server managing mail session.</p>
 
 <!-- more -->
@@ -436,7 +436,7 @@ Mail host
 
 <p>This screenshot summarizes all these parameters :</p>
 
-<p><img class="center" src="/images/mailee.jpg" width="640" height="424" title="Mail EE" alt="images"></p>
+<p><img class="center" src="/images/mailee.jpg" width="640" height="424" title="&lsquo;Mail EE&rsquo; &lsquo;images&rsquo;" ></p>
 
 <h2>II - Using email Service</h2>
 
@@ -483,7 +483,7 @@ Look short !</p>
 
 
 <p>```java
-@WebServlet(name = "EmailServlet", urlPatterns = {"/EmailServlet"})
+@WebServlet(name = &ldquo;EmailServlet&rdquo;, urlPatterns = {&ldquo;/EmailServlet&rdquo;})
 public class EmailServlet extends HttpServlet {</p>
 
 <pre><code>@Inject
@@ -493,16 +493,16 @@ protected void processRequest(HttpServletRequest request, HttpServletResponse re
         throws ServletException, IOException {
 </code></pre>
 
-<p> .........
+<p> &hellip;&hellip;&hellip;
    }
- ......
+ &hellip;&hellip;
 }
 ```</p>
 
 <h2>Conclusion :</h2>
 
 
-<p>Let's EE Server manager MailSession for us, keep configuration on server and thanks to Glassfish administration console managing JavaMail Session became easier.</p>
+<p>Let&rsquo;s EE Server manager MailSession for us, keep configuration on server and thanks to Glassfish administration console managing JavaMail Session became easier.</p>
 ]]></content>
   </entry>
   
@@ -735,7 +735,7 @@ new HandlerResolver() {</p>
 <h2>Conclusion</h2>
 
 
-<p>We have heavily used handler on client side. On the server side things can change a bit, to be continued ...</p>
+<p>We have heavily used handler on client side. On the server side things can change a bit, to be continued &hellip;</p>
 ]]></content>
   </entry>
   
@@ -752,7 +752,7 @@ new HandlerResolver() {</p>
 <h2>INTRODUCTION</h2>
 
 
-<p>Two years ago, we decided to move to JEE 6 for our enterprise solutions and take a lot of fun with new EJB 3.1 features and annotations. Glassfish has made our lives easier, it was very easy to declare variables using it's administration console.</p>
+<p>Two years ago, we decided to move to JEE 6 for our enterprise solutions and take a lot of fun with new EJB 3.1 features and annotations. Glassfish has made our lives easier, it was very easy to declare variables using it&rsquo;s administration console.</p>
 
 <!-- more -->
 
@@ -788,7 +788,7 @@ public class MyEjbBean {
 </ol>
 
 
-<p><img class="center" src="/images/jndiee1.jpg" width="640" height="424" title="JNDI EE" alt="images"></p>
+<p><img class="center" src="/images/jndiee1.jpg" width="640" height="424" title="&lsquo;JNDI EE&rsquo; &lsquo;images&rsquo;" ></p>
 
 <p>At first glance, it looks simple and fast forward but problems start after just after a first project.</p>
 
@@ -860,7 +860,7 @@ The purpose of object factory is to read injectable parameters and populate a re
     <li>Add two (or more) properties to be injected in our resource class.</ol>
 
 
-<p><img class="center" src="/images/jndiee2.jpg" width="640" height="424" title="JNDI EE" alt="images"></p>
+<p><img class="center" src="/images/jndiee2.jpg" width="640" height="424" title="&lsquo;JNDI EE&rsquo; &lsquo;images&rsquo;" ></p>
 
 <p><li>At the end we inject our resource in EJB class :</li></p>
 
@@ -868,7 +868,7 @@ The purpose of object factory is to read injectable parameters and populate a re
 @Stateless
 @LocalBean
 class MyEjbBean {
-  @Resource(lookup="globalRes")
+  @Resource(lookup=&ldquo;globalRes&rdquo;)
   protected var res:Ressource= _</p>
 
 <p>  /// res.param1

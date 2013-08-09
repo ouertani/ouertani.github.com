@@ -4,7 +4,7 @@
   <title><![CDATA[Category: XML | Ouertani Blog]]></title>
   <link href="http://ouertani.github.com/blog/categories/xml/atom.xml" rel="self"/>
   <link href="http://ouertani.github.com/"/>
-  <updated>2013-04-10T11:25:36+02:00</updated>
+  <updated>2013-08-09T12:57:23+02:00</updated>
   <id>http://ouertani.github.com/</id>
   <author>
     <name><![CDATA[Ouertani]]></name>
@@ -28,11 +28,11 @@
 <h2>JCA and integration</h2>
 
 
-<p><blockquote><p>"For enterprise application integration, bi-directional connectivity between enterprise applications and EIS is essential. The Java EE Connector architecture defines standard contracts that allow bi-directional connectivity between enterprise applications and EISs. It also formalizes the relationships, interactions, and the packaging of the integration layer, thus enabling enterprise application integration."</p></p><p><p></p><footer><strong>JCA 1.6 p 35</strong></footer></blockquote></p>
+<p><blockquote><p>&ldquo;For enterprise application integration, bi-directional connectivity between enterprise applications and EIS is essential. The Java EE Connector architecture defines standard contracts that allow bi-directional connectivity between enterprise applications and EISs. It also formalizes the relationships, interactions, and the packaging of the integration layer, thus enabling enterprise application integration.&rdquo;</p></p><p><p></p><footer><strong>JCA 1.6 p 35</strong></footer></blockquote></p>
 
 <p>The connector architecture defines a set of scalable, secure, and transactional mechanisms that enable the integration of EISs with application servers and enterprise application.</p>
 
-<p><img class="center" src="/images/jca.jpg" width="350" height="350" title="JCA" alt="images"></p>
+<p><img class="center" src="/images/jca.jpg" width="350" height="350" title="&lsquo;JCA&rsquo; &lsquo;images&rsquo;" ></p>
 
 <p>Using a UCIP JCA connector rather than using an <a href="http://java.dzone.com/articles/xml-rpc-using-scala">XML/RPC raw driver</a> lets you:</p>
 
@@ -46,7 +46,7 @@
 <h2>How?</h2>
 
 
-<p>The use of a <a href="http://www.jcp.org/en/jsr/detail?id=322">JCA</a> resource adapter inside a JEE solution is the same as interacting with a database or queue: protocol communication and wire negotiation... are hidden to the final user.</p>
+<p>The use of a <a href="http://www.jcp.org/en/jsr/detail?id=322">JCA</a> resource adapter inside a JEE solution is the same as interacting with a database or queue: protocol communication and wire negotiation&hellip; are hidden to the final user.</p>
 
 <p>Two interfaces are presented to a customer:</p>
 
@@ -67,7 +67,7 @@ def fire(elem : Elem) : Option[Elem]
 </code>
 As an outbound communication where the resource adapter allows an ESB or EE application server to connect to an IN/AIR node and perform work. All communication is initiated by the application. The Air connector factory should be injected as any resource and used like the following.
 ``` scala
-@Resource(name="AIR")
+@Resource(name=&ldquo;AIR&rdquo;)
 var airConnectorFactory : AirConnectorFactory = _</p>
 
 <p>val output = airConnectorFactory().fire(input)
@@ -81,7 +81,7 @@ var airConnectorFactory : AirConnectorFactory = _</p>
     <link href="http://ouertani.github.com/blog/2011/06/30/wsdl-integration-problem-two-declarations-cause-a-collision/"/>
     <updated>2011-06-30T04:10:00+02:00</updated>
     <id>http://ouertani.github.com/blog/2011/06/30/wsdl-integration-problem-two-declarations-cause-a-collision</id>
-    <content type="html"><![CDATA[<p>Integration always hides some surprises especially when it comes to old systems where quick solutions aren't the first aid.
+    <content type="html"><![CDATA[<p>Integration always hides some surprises especially when it comes to old systems where quick solutions aren&rsquo;t the first aid.
 In this post, we present a strange and rare situation when requesting WS using an old existing WSDL.</p>
 
 <!-- more -->
@@ -150,7 +150,7 @@ OldExistingWsService.xsd
 <!-- Published by JAX-WS RI at http://jax-ws.dev.java.net. RI's version is Metro/2.1-b25 (trunk-6664; 2010-12-31T11:31:15+0000) JAXWS-RI/2.2.3-promoted-b06 JAXWS/2.2. -->
 
 
-<p>&lt;xs:schema xmlns:tns="http://ws.jtunisie.com/" xmlns:xs="http://www.w3.org/2001/XMLSchema" version="1.0" targetnamespace="http://ws.jtunisie.com/"></p>
+<p>&lt;xs:schema xmlns:tns=&ldquo;<a href="http://ws.jtunisie.com/">http://ws.jtunisie.com/</a>&rdquo; xmlns:xs=&ldquo;<a href="http://www.w3.org/2001/XMLSchema">http://www.w3.org/2001/XMLSchema</a>&rdquo; version=&ldquo;1.0&rdquo; targetnamespace=&ldquo;<a href="http://ws.jtunisie.com/">http://ws.jtunisie.com/</a>&rdquo;></p>
 
 <pre><code>&lt;xs:element name="oldOperation" type="tns:oldOperation"&gt;
 
@@ -193,10 +193,10 @@ trying to generate java client code from this wsdl will causes : <b>(wsdl2java.s
 </ol>
 
 
-<p>As these tricks doesn't work for the current case, hands on dirty jaxb binding customization :
+<p>As these tricks doesn&rsquo;t work for the current case, hands on dirty jaxb binding customization :
 ```
-&lt;jxb:bindings version="2.0" xmlns:jxb="http://java.sun.com/xml/ns/jaxb" xmlns:xs="http://www.w3.org/2001/XMLSchema">
-  &lt;jxb:bindings schemalocation="file:OldExistingWsService.xsd" node="/xs:schema"></p>
+&lt;jxb:bindings version=&ldquo;2.0&rdquo; xmlns:jxb=&ldquo;<a href="http://java.sun.com/xml/ns/jaxb">http://java.sun.com/xml/ns/jaxb</a>&rdquo; xmlns:xs=&ldquo;<a href="http://www.w3.org/2001/XMLSchema">http://www.w3.org/2001/XMLSchema</a>&rdquo;>
+  &lt;jxb:bindings schemalocation=&ldquo;file:OldExistingWsService.xsd&rdquo; node=&ldquo;/xs:schema&rdquo;></p>
 
 <pre><code>&lt;jxb:bindings node=".//xs:element[@name='_a']"&gt;
  &lt;jxb:property name="oldA"&gt;&lt;/jxb:property&gt;
@@ -211,8 +211,8 @@ And tell :
 
 <p>Note : to deal with old wsdl I used this schema bindings :
 ```xml
-&lt;jaxws:bindings xmlns:jxb="http://java.sun.com/xml/ns/jaxb" xmlns="http://java.sun.com/xml/ns/jaxws" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:jaxws="http://java.sun.com/xm
-l/ns/jaxws" wsdllocation="test.wsdl" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:tns1="VOLARISWS"></p>
+&lt;jaxws:bindings xmlns:jxb=&ldquo;<a href="http://java.sun.com/xml/ns/jaxb">http://java.sun.com/xml/ns/jaxb</a>&rdquo; xmlns=&ldquo;<a href="http://java.sun.com/xml/ns/jaxws">http://java.sun.com/xml/ns/jaxws</a>&rdquo; xmlns:xs=&ldquo;<a href="http://www.w3.org/2001/XMLSchema">http://www.w3.org/2001/XMLSchema</a>&rdquo; xmlns:jaxws=&ldquo;<a href="http://java.sun.com/xm">http://java.sun.com/xm</a>
+l/ns/jaxws&rdquo; wsdllocation=&ldquo;test.wsdl&rdquo; xmlns:wsdl=&ldquo;<a href="http://schemas.xmlsoap.org/wsdl/">http://schemas.xmlsoap.org/wsdl/</a>&rdquo; xmlns:tns1=&ldquo;VOLARISWS&rdquo;></p>
 
 <pre><code>&lt;jaxws:schemabindings&gt;
     &lt;jaxws:bindings node="wsdl:definitions"&gt;

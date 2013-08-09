@@ -4,7 +4,7 @@
   <title><![CDATA[Category: JAX-WS | Ouertani Blog]]></title>
   <link href="http://ouertani.github.com/blog/categories/jax-ws/atom.xml" rel="self"/>
   <link href="http://ouertani.github.com/"/>
-  <updated>2013-04-10T11:25:36+02:00</updated>
+  <updated>2013-08-09T12:57:23+02:00</updated>
   <id>http://ouertani.github.com/</id>
   <author>
     <name><![CDATA[Ouertani]]></name>
@@ -36,7 +36,7 @@
 <h2>Parse undeclared custom header</h2>
 
 
-<p>Let's consider We need to read WSS UserToken non published in our WSDL :
+<p>Let&rsquo;s consider We need to read WSS UserToken non published in our WSDL :
 ```xml
 &lt;soapenv:Header></p>
 
@@ -54,15 +54,15 @@ To parse this header we need to extend a SoapHandler, ovveride handle message cl
 </code>scala
 object AuthenticationHandlerConstants {</p>
 
-<p>  val REQUEST_USERID: String = "authn_userid";
-  val REQUEST_PASSWORD: String = "authn_password";
-  val AUTHN_PREFIX: String = "wsse";
-  val AUTHN_LNAME: String = "Security";
-  val AUTHN_URI: String = "http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd";
-  val AUTHN_STAUTS: String = "authnStatus";</p>
+<p>  val REQUEST_USERID: String = &ldquo;authn_userid&rdquo;;
+  val REQUEST_PASSWORD: String = &ldquo;authn_password&rdquo;;
+  val AUTHN_PREFIX: String = &ldquo;wsse&rdquo;;
+  val AUTHN_LNAME: String = &ldquo;Security&rdquo;;
+  val AUTHN_URI: String = &ldquo;<a href="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd">http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd</a>&rdquo;;
+  val AUTHN_STAUTS: String = &ldquo;authnStatus&rdquo;;</p>
 
-<p>  val LOGIN: String = "login"
-  val PWD: String = "passwd"
+<p>  val LOGIN: String = &ldquo;login&rdquo;
+  val PWD: String = &ldquo;passwd&rdquo;
 }
 <code>
 </code>scala
@@ -213,8 +213,8 @@ Unlike client side we need to add an xml file handler.xml to enable the previous
 
 
 <p>``` scala
-@WebService(serviceName = "WsService", targetNamespace = "http://slim.ouertani.me)
-@HandlerChain(file = "handler.xml")
+@WebService(serviceName = &ldquo;WsService&rdquo;, targetNamespace = &ldquo;<a href="http://slim.ouertani.me">http://slim.ouertani.me</a>)
+@HandlerChain(file = "handler.xml&rdquo;)
 @Stateless()
 @Interceptors(Array(classOf[TracingInterceptor]))
 class WsService extends LogHelper{</p>
@@ -532,7 +532,7 @@ new HandlerResolver() {</p>
 <h2>Conclusion</h2>
 
 
-<p>We have heavily used handler on client side. On the server side things can change a bit, to be continued ...</p>
+<p>We have heavily used handler on client side. On the server side things can change a bit, to be continued &hellip;</p>
 ]]></content>
   </entry>
   
@@ -553,23 +553,23 @@ Consider the example to calculate the quotient and remainder using euclidean alg
 <p>Let’s create an sbt projet and add required dependencies
 <blockquote><p>$ mkdir sws<br/>$ cd sws<br/>$ touch build.sbt<br/>$ edit build.sbt as following :</p></blockquote>
 ```scala
-name := "Euclide"</p>
+name := &ldquo;Euclide&rdquo;</p>
 
-<p>version := "1.0"</p>
+<p>version := &ldquo;1.0&rdquo;</p>
 
-<p>organization := "me.ouertani"</p>
+<p>organization := &ldquo;me.ouertani&rdquo;</p>
 
-<p>scalaVersion := "2.9.1"</p>
+<p>scalaVersion := &ldquo;2.9.1&rdquo;</p>
 
-<p>scalaSource in Compile &lt;&lt;= baseDirectory(_ / "src")</p>
+<p>scalaSource in Compile &lt;&lt;= baseDirectory(_ / &ldquo;src&rdquo;)</p>
 
-<p>scalaSource in Test &lt;&lt;= baseDirectory(_ / "test")</p>
+<p>scalaSource in Test &lt;&lt;= baseDirectory(_ / &ldquo;test&rdquo;)</p>
 
-<p>libraryDependencies += "javax" % "javaee-api" % "6.0" % "provided"</p>
+<p>libraryDependencies += &ldquo;javax&rdquo; % &ldquo;javaee-api&rdquo; % &ldquo;6.0&rdquo; % &ldquo;provided&rdquo;</p>
 
-<p>libraryDependencies += "log4j" % "log4j" % "1.2.16" % "provided"</p>
+<p>libraryDependencies += &ldquo;log4j&rdquo; % &ldquo;log4j&rdquo; % &ldquo;1.2.16&rdquo; % &ldquo;provided&rdquo;</p>
 
-<p>libraryDependencies += "junit" % "junit" % "4.8.2" % "test"
+<p>libraryDependencies += &ldquo;junit&rdquo; % &ldquo;junit&rdquo; % &ldquo;4.8.2&rdquo; % &ldquo;test&rdquo;
 ```
 <blockquote><p>$ mkdir src<br/>$ touch src/Euclide.scala</p></blockquote></p>
 
@@ -679,7 +679,7 @@ $ xsbt package
 <p>1- After depoyed let’s test it using soapUI tool
 Request 1
 ```xml
-&lt;soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:slim="http://slim.ouertani.me/">
+&lt;soapenv:Envelope xmlns:soapenv=&ldquo;<a href="http://schemas.xmlsoap.org/soap/envelope/">http://schemas.xmlsoap.org/soap/envelope/</a>&rdquo; xmlns:slim=&ldquo;<a href="http://slim.ouertani.me/">http://slim.ouertani.me/</a>&rdquo;>
    &lt;soapenv:Header/>
    &lt;soapenv:Body></p>
 
@@ -697,7 +697,7 @@ Request 1
 
 <p>Response 1 :
 ```xml
-&lt;S:Envelope xmlns:S="http://schemas.xmlsoap.org/soap/envelope/">
+&lt;S:Envelope xmlns:S=&ldquo;<a href="http://schemas.xmlsoap.org/soap/envelope/">http://schemas.xmlsoap.org/soap/envelope/</a>&rdquo;>
    &lt;S:Body></p>
 
 <pre><code>  &lt;ns2:divideResponse xmlns:ns2="http://slim.ouertani.me/"&gt;
@@ -713,7 +713,7 @@ Request 1
 <code>
 Request 2 :
 </code>xml
-&lt;soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:slim="http://slim.ouertani.me/">
+&lt;soapenv:Envelope xmlns:soapenv=&ldquo;<a href="http://schemas.xmlsoap.org/soap/envelope/">http://schemas.xmlsoap.org/soap/envelope/</a>&rdquo; xmlns:slim=&ldquo;<a href="http://slim.ouertani.me/">http://slim.ouertani.me/</a>&rdquo;>
    &lt;soapenv:Header/>
    &lt;soapenv:Body></p>
 
@@ -730,7 +730,7 @@ Request 2 :
 <code>
 Response 2 :
 </code>xml
-&lt;S:Envelope xmlns:S="http://schemas.xmlsoap.org/soap/envelope/">
+&lt;S:Envelope xmlns:S=&ldquo;<a href="http://schemas.xmlsoap.org/soap/envelope/">http://schemas.xmlsoap.org/soap/envelope/</a>&rdquo;>
    &lt;S:Body></p>
 
 <pre><code>  &lt;S:Fault xmlns:ns4="http://www.w3.org/2003/05/soap-envelope"&gt;

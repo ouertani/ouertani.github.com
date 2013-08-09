@@ -115,7 +115,7 @@
 
 <p>Setup <a href="http://slick.typesafe.com/">Slick</a> in Play 2</p>
 
-<p>If you don&#8217;t already have a Play 2 project, then create a new one after installing Play 2:</p>
+<p>If you don&rsquo;t already have a Play 2 project, then create a new one after installing Play 2:</p>
 
 <blockquote><p>play new mySlickApp</p></blockquote>
 
@@ -142,14 +142,14 @@
 
 <p>Note that we created the project files after updating the dependencies, so the projects would be configured with the required libraries. If the dependencies change in the future, just re-run the commands to create the projects.</p>
 
-<p>You can now start the application from within your project&#8217;s root directory:</p>
+<p>You can now start the application from within your project&rsquo;s root directory:</p>
 
 <blockquote><p>play ~run</p></blockquote>
 
 
-<p>Verify that the server is running by opening the following URL in your browser: http://localhost:9000</p>
+<p>Verify that the server is running by opening the following URL in your browser: <a href="http://localhost:9000">http://localhost:9000</a></p>
 
-<p>For local testing we will use an in-memory &#8220;h2&#8221; database. To setup Play to use that database, edit the conf/application.conf file and uncomment or add the following lines:</p>
+<p>For local testing we will use an in-memory &ldquo;h2&rdquo; database. To setup Play to use that database, edit the conf/application.conf file and uncomment or add the following lines:</p>
 
 <blockquote><p>db.default.driver=org.h2.Driver<br/>db.default.url=&#8221;jdbc:h2:mem:play&#8221;</p></blockquote>
 
@@ -201,7 +201,7 @@
 
 <p>On application startup the  configuration parameter will be used to determine which driver to use to setup the database connection.</p>
 
-<p>If you reload the http://localhost:9000 webpage in your browser, everything should still be working and you should see the following message in the Play STDOUT log:</p>
+<p>If you reload the <a href="http://localhost:9000">http://localhost:9000</a> webpage in your browser, everything should still be working and you should see the following message in the Play STDOUT log:</p>
 
 <blockquote><p>[info] play - database [default] connected at jdbc:h2:mem:play</p></blockquote>
 
@@ -247,7 +247,7 @@
 
 <p>This is a very simple entity that will store a list of Bar objects. Each Bar has a name and an id property for the primary key. The case class in Scala is immutable and basically supercharges a class, adding a number of syntactic conveniences. It also allows it to be used for pattern matching, which can be quite handy when matching form values returned from the client. The Bars object is an instance of Table  Bar that Slick will map into the database.</p>
 
-<p>Begineer about slick, I will not use evolution to create database but let slick create it for me, let&#8217;s modify Global.scala as bellow :</p>
+<p>Begineer about slick, I will not use evolution to create database but let slick create it for me, let&rsquo;s modify Global.scala as bellow :</p>
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -298,7 +298,7 @@
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>reload the http://localhost:9000 webpage to create bar table on your local in-memory database.
+<p>reload the <a href="http://localhost:9000">http://localhost:9000</a> webpage to create bar table on your local in-memory database.
 Test the Model</p>
 
 <p>The testing support in Play 2 is very powerful and fits well with the Test Driven Development style. Play 2 with Scala uses specs2 as the default for testing but we prefer ScalaTest. Lets create a simple test for the Bar model object. Start by adding the ScalaTest dependency to the project and modifying the testOptions setting.  Since scala 2.10.0-M6 scala-actor is an independent jar and must be add as dependencies.
@@ -391,7 +391,7 @@ Update the project/Build.scala file to contain:</p>
 <blockquote><p>[mySlickApp] $ test<br/>[info] BarSpec:<br/>[info] A Bar<br/>[info] - should be creatable<br/>[info] Passed: : Total 1, Failed 0, Errors 0, Passed 1, Skipped 0<br/>[success] Total time: 2 s, completed Oct 9, 2012 12:28:28 PM</p></blockquote>
 
 
-<p>If you&#8217;d like to have the tests run whenever the source changes then run:</p>
+<p>If you&rsquo;d like to have the tests run whenever the source changes then run:</p>
 
 <blockquote><p>play ~test</p></blockquote>
 
@@ -536,7 +536,7 @@ Creating Bars From a Web Form</p>
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>The barForm provides a mapping from a request parameter named name to the name property on the Bar case class (via it&#8217;s constructor). The index method has been updated to pass an instance of the barForm into the index template. We will update that template next. The addBar method binds the request parameters into an object named bar then in a session the bar is inserted into the database.  Then the user is redirected back to the index page. If the request parameters could not be mapped to a Bar using the barForm then a BadRequest error is returned.</p>
+<p>The barForm provides a mapping from a request parameter named name to the name property on the Bar case class (via it&rsquo;s constructor). The index method has been updated to pass an instance of the barForm into the index template. We will update that template next. The addBar method binds the request parameters into an object named bar then in a session the bar is inserted into the database.  Then the user is redirected back to the index page. If the request parameters could not be mapped to a Bar using the barForm then a BadRequest error is returned.</p>
 
 <p>Now we need to update the app/views/index.scala.html template to contain:</p>
 
@@ -561,16 +561,16 @@ Creating Bars From a Web Form</p>
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>The template now takes a Form[Bar] parameter which is passed from the index method on the Application controller. Then in the body of the template a new HTML form is rendered using Play 2&#8217;s form helper. The form contains an HTML field for the name and a submit button. Notice that the action of the form points from the route to the Application controller&#8217;s addBar method.</p>
+<p>The template now takes a Form[Bar] parameter which is passed from the index method on the Application controller. Then in the body of the template a new HTML form is rendered using Play 2&rsquo;s form helper. The form contains an HTML field for the name and a submit button. Notice that the action of the form points from the route to the Application controller&rsquo;s addBar method.</p>
 
-<p>If you look in the console window at this point you will see the error &#8220;value addBar is not a member of controllers.ReverseApplication&#8221;. This is because the route file is compiled and the view is checked for a valid route. But we haven&#8217;t created a route yet, so edit the conf/routes file and add a new line with the following:</p>
+<p>If you look in the console window at this point you will see the error &ldquo;value addBar is not a member of controllers.ReverseApplication&rdquo;. This is because the route file is compiled and the view is checked for a valid route. But we haven&rsquo;t created a route yet, so edit the conf/routes file and add a new line with the following:</p>
 
 <blockquote><p>POST    /bars                       controllers.Application.addBar</p></blockquote>
 
 
 <p>This creates a HTTP route that maps POST requests for the /bars URL to the addBar method.</p>
 
-<p>Now refresh http://localhost:9000 in your browser and you should see the very basic form for adding new Bar objects. If successful, after adding a new Bar the browser should just redirect back to the index page.</p>
+<p>Now refresh <a href="http://localhost:9000">http://localhost:9000</a> in your browser and you should see the very basic form for adding new Bar objects. If successful, after adding a new Bar the browser should just redirect back to the index page.</p>
 
 <p>Now lets add a RESTful service to the application that will return all of the Bar objects as JSON-serialized data. Start by adding a new method to the app/controllers/Application.scala file:</p>
 
@@ -600,23 +600,23 @@ Creating Bars From a Web Form</p>
 
 <p>This maps GET requests for /bars to the getBars method.</p>
 
-<p>Try this out in your browser by loading: http://localhost:9000/bars</p>
+<p>Try this out in your browser by loading: <a href="http://localhost:9000/bars">http://localhost:9000/bars</a></p>
 
-<p>You should see a list of the Bar objects you&#8217;ve created serialized as JSON.</p>
+<p>You should see a list of the Bar objects you&rsquo;ve created serialized as JSON.</p>
 
 <p>The syntax of the query demonstrates the power of Slick type-safe query language and the power of Scala to create DSLs.  The json val is then returned in an Ok (HTTP 200 status code response) with the content type set to application/json (the value of JSON).</p>
 
 <h2>References :</h2>
 
 
-<p><li>Slick : http://slick.typesafe.com </li>
-<li>Playframework :  http://www.playframework.org </li></p>
+<p><li>Slick : <a href="http://slick.typesafe.com">http://slick.typesafe.com</a> </li>
+<li>Playframework :  <a href="http://www.playframework.org">http://www.playframework.org</a> </li></p>
 
 <pre><code>                        https://github.com/playframework/Play20&lt;/li&gt;
 </code></pre>
 
-<p><li>Scala : http://www.scala-lang.org/downloads</li>
-<li>Squeryl + Playframework + Scala  : http://www.artima.com/articles/play2_scala_squeryl.html</li></p>
+<p><li>Scala : <a href="http://www.scala-lang.org/downloads">http://www.scala-lang.org/downloads</a></li>
+<li>Squeryl + Playframework + Scala  : <a href="http://www.artima.com/articles/play2_scala_squeryl.html">http://www.artima.com/articles/play2_scala_squeryl.html</a></li></p>
 </div>
 
 
@@ -653,8 +653,10 @@ Creating Bars From a Web Form</p>
     
       <div class="sharing">
   
-  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://ouertani.github.com/blog/2012/10/09/play-2-dot-1/" data-via="ouertani" data-counturl="http://ouertani.github.com/blog/2012/10/09/play-2-dot-1/" >Tweet</a>
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://ouertani.github.com/blog/2012/10/09/play-2-dot-1/" data-via="ouertani" data-counturl="http://ouertani.github.com/blog/2012/10/09/play-2-dot-1/" >Tweet</a>
   
+  
+  <div class="g-plusone" data-size="medium"></div>
   
   
 </div>
@@ -689,11 +691,11 @@ Creating Bars From a Web Form</p>
   <ul id="recent_posts">
     
       <li class="post">
-        <a href="/blog/2013/03/09/rest-with-scala-and-vert-dot-x/">Rest with Scala and Vert.x</a>
+        <a href="/blog/2013/03/09/rest-with-scala-and-vert-dot-x/">Rest With Scala and Vert.x</a>
       </li>
     
       <li class="post">
-        <a href="/blog/2013/02/12/fun-with-scala-and-vert-dot-x/">Fun with Scala and Vert.x</a>
+        <a href="/blog/2013/02/12/fun-with-scala-and-vert-dot-x/">Fun With Scala and Vert.x</a>
       </li>
     
       <li class="post">
@@ -705,11 +707,11 @@ Creating Bars From a Web Form</p>
       </li>
     
       <li class="post">
-        <a href="/blog/2012/09/26/xml-slash-rpc-driver-as-jca-scala-connector/">XML/RPC driver as JCA Scala connector</a>
+        <a href="/blog/2012/09/26/xml-slash-rpc-driver-as-jca-scala-connector/">XML/RPC Driver as JCA Scala Connector</a>
       </li>
     
       <li class="post">
-        <a href="/blog/2012/06/29/xml-rpc-using-scala/">XML-RPC using scala</a>
+        <a href="/blog/2012/06/29/xml-rpc-using-scala/">XML-RPC Using Scala</a>
       </li>
     
       <li class="post">
@@ -717,7 +719,7 @@ Creating Bars From a Web Form</p>
       </li>
     
       <li class="post">
-        <a href="/blog/2012/06/28/sending-an-email-using-the-javamail-session-and-glassfish/">Sending an Email using the JavaMail Session and Glassfish</a>
+        <a href="/blog/2012/06/28/sending-an-email-using-the-javamail-session-and-glassfish/">Sending an Email Using the JavaMail Session and Glassfish</a>
       </li>
     
       <li class="post">
@@ -729,19 +731,19 @@ Creating Bars From a Web Form</p>
       </li>
     
       <li class="post">
-        <a href="/blog/2011/09/11/basic-mdb-with-scala/">Basic MDB with Scala</a>
+        <a href="/blog/2011/09/11/basic-mdb-with-scala/">Basic MDB With Scala</a>
       </li>
     
       <li class="post">
-        <a href="/blog/2011/09/10/basic-ws-with-scala/">Basic WS with Scala</a>
+        <a href="/blog/2011/09/10/basic-ws-with-scala/">Basic WS With Scala</a>
       </li>
     
       <li class="post">
-        <a href="/blog/2011/06/30/wsdl-integration-problem-two-declarations-cause-a-collision/">WSDL integration problem : Two declarations cause a collision</a>
+        <a href="/blog/2011/06/30/wsdl-integration-problem-two-declarations-cause-a-collision/">WSDL Integration Problem : Two Declarations Cause a Collision</a>
       </li>
     
       <li class="post">
-        <a href="/blog/2010/12/06/scala-try-with-resources/">Scala try-with-resources</a>
+        <a href="/blog/2010/12/06/scala-try-with-resources/">Scala Try-with-resources</a>
       </li>
     
   </ul>
@@ -761,6 +763,15 @@ Creating Bars From a Web Form</p>
 
 
 
+
+<section class="googleplus">
+  <h1>
+    <a href="https://plus.google.com/ouertani?rel=author">
+      <img src="http://www.google.com/images/icons/ui/gprofile_button-32.png" width="32" height="32">
+      Google+
+    </a>
+  </h1>
+</section>
 
 
 
@@ -798,6 +809,14 @@ Creating Bars From a Web Form</p>
 
 
 
+  <script type="text/javascript">
+    (function() {
+      var script = document.createElement('script'); script.type = 'text/javascript'; script.async = true;
+      script.src = 'https://apis.google.com/js/plusone.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(script, s);
+    })();
+  </script>
+
 
 
   <script type="text/javascript">
@@ -805,7 +824,7 @@ Creating Bars From a Web Form</p>
       var twitterWidgets = document.createElement('script');
       twitterWidgets.type = 'text/javascript';
       twitterWidgets.async = true;
-      twitterWidgets.src = 'http://platform.twitter.com/widgets.js';
+      twitterWidgets.src = '//platform.twitter.com/widgets.js';
       document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
     })();
   </script>

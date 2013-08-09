@@ -4,7 +4,7 @@
   <title><![CDATA[Category: JAXB | Ouertani Blog]]></title>
   <link href="http://ouertani.github.com/blog/categories/jaxb/atom.xml" rel="self"/>
   <link href="http://ouertani.github.com/"/>
-  <updated>2013-04-10T11:25:36+02:00</updated>
+  <updated>2013-08-09T12:57:23+02:00</updated>
   <id>http://ouertani.github.com/</id>
   <author>
     <name><![CDATA[Ouertani]]></name>
@@ -18,7 +18,7 @@
     <link href="http://ouertani.github.com/blog/2011/06/30/wsdl-integration-problem-two-declarations-cause-a-collision/"/>
     <updated>2011-06-30T04:10:00+02:00</updated>
     <id>http://ouertani.github.com/blog/2011/06/30/wsdl-integration-problem-two-declarations-cause-a-collision</id>
-    <content type="html"><![CDATA[<p>Integration always hides some surprises especially when it comes to old systems where quick solutions aren't the first aid.
+    <content type="html"><![CDATA[<p>Integration always hides some surprises especially when it comes to old systems where quick solutions aren&rsquo;t the first aid.
 In this post, we present a strange and rare situation when requesting WS using an old existing WSDL.</p>
 
 <!-- more -->
@@ -87,7 +87,7 @@ OldExistingWsService.xsd
 <!-- Published by JAX-WS RI at http://jax-ws.dev.java.net. RI's version is Metro/2.1-b25 (trunk-6664; 2010-12-31T11:31:15+0000) JAXWS-RI/2.2.3-promoted-b06 JAXWS/2.2. -->
 
 
-<p>&lt;xs:schema xmlns:tns="http://ws.jtunisie.com/" xmlns:xs="http://www.w3.org/2001/XMLSchema" version="1.0" targetnamespace="http://ws.jtunisie.com/"></p>
+<p>&lt;xs:schema xmlns:tns=&ldquo;<a href="http://ws.jtunisie.com/">http://ws.jtunisie.com/</a>&rdquo; xmlns:xs=&ldquo;<a href="http://www.w3.org/2001/XMLSchema">http://www.w3.org/2001/XMLSchema</a>&rdquo; version=&ldquo;1.0&rdquo; targetnamespace=&ldquo;<a href="http://ws.jtunisie.com/">http://ws.jtunisie.com/</a>&rdquo;></p>
 
 <pre><code>&lt;xs:element name="oldOperation" type="tns:oldOperation"&gt;
 
@@ -130,10 +130,10 @@ trying to generate java client code from this wsdl will causes : <b>(wsdl2java.s
 </ol>
 
 
-<p>As these tricks doesn't work for the current case, hands on dirty jaxb binding customization :
+<p>As these tricks doesn&rsquo;t work for the current case, hands on dirty jaxb binding customization :
 ```
-&lt;jxb:bindings version="2.0" xmlns:jxb="http://java.sun.com/xml/ns/jaxb" xmlns:xs="http://www.w3.org/2001/XMLSchema">
-  &lt;jxb:bindings schemalocation="file:OldExistingWsService.xsd" node="/xs:schema"></p>
+&lt;jxb:bindings version=&ldquo;2.0&rdquo; xmlns:jxb=&ldquo;<a href="http://java.sun.com/xml/ns/jaxb">http://java.sun.com/xml/ns/jaxb</a>&rdquo; xmlns:xs=&ldquo;<a href="http://www.w3.org/2001/XMLSchema">http://www.w3.org/2001/XMLSchema</a>&rdquo;>
+  &lt;jxb:bindings schemalocation=&ldquo;file:OldExistingWsService.xsd&rdquo; node=&ldquo;/xs:schema&rdquo;></p>
 
 <pre><code>&lt;jxb:bindings node=".//xs:element[@name='_a']"&gt;
  &lt;jxb:property name="oldA"&gt;&lt;/jxb:property&gt;
@@ -148,8 +148,8 @@ And tell :
 
 <p>Note : to deal with old wsdl I used this schema bindings :
 ```xml
-&lt;jaxws:bindings xmlns:jxb="http://java.sun.com/xml/ns/jaxb" xmlns="http://java.sun.com/xml/ns/jaxws" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:jaxws="http://java.sun.com/xm
-l/ns/jaxws" wsdllocation="test.wsdl" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:tns1="VOLARISWS"></p>
+&lt;jaxws:bindings xmlns:jxb=&ldquo;<a href="http://java.sun.com/xml/ns/jaxb">http://java.sun.com/xml/ns/jaxb</a>&rdquo; xmlns=&ldquo;<a href="http://java.sun.com/xml/ns/jaxws">http://java.sun.com/xml/ns/jaxws</a>&rdquo; xmlns:xs=&ldquo;<a href="http://www.w3.org/2001/XMLSchema">http://www.w3.org/2001/XMLSchema</a>&rdquo; xmlns:jaxws=&ldquo;<a href="http://java.sun.com/xm">http://java.sun.com/xm</a>
+l/ns/jaxws&rdquo; wsdllocation=&ldquo;test.wsdl&rdquo; xmlns:wsdl=&ldquo;<a href="http://schemas.xmlsoap.org/wsdl/">http://schemas.xmlsoap.org/wsdl/</a>&rdquo; xmlns:tns1=&ldquo;VOLARISWS&rdquo;></p>
 
 <pre><code>&lt;jaxws:schemabindings&gt;
     &lt;jaxws:bindings node="wsdl:definitions"&gt;

@@ -2,84 +2,84 @@
 <urlset xmlns='http://www.sitemaps.org/schemas/sitemap/0.9'>
     <url>
         <loc>http://ouertani.github.com/blog/2010/12/06/scala-try-with-resources/</loc>
-        <lastmod>2013-04-01T04:38:15+02:00</lastmod>
+        <lastmod>2013-07-21T00:39:32+02:00</lastmod>
     </url>
     <url>
         <loc>
             http://ouertani.github.com/blog/2011/06/30/wsdl-integration-problem-two-declarations-cause-a-collision/
         </loc>
-        <lastmod>2013-04-01T04:27:07+02:00</lastmod>
+        <lastmod>2013-07-21T00:39:32+02:00</lastmod>
     </url>
     <url>
         <loc>http://ouertani.github.com/blog/2011/09/10/basic-ws-with-scala/</loc>
-        <lastmod>2013-04-01T04:07:19+02:00</lastmod>
+        <lastmod>2013-07-21T00:39:32+02:00</lastmod>
     </url>
     <url>
         <loc>http://ouertani.github.com/blog/2011/09/11/basic-mdb-with-scala/</loc>
-        <lastmod>2013-04-01T03:50:57+02:00</lastmod>
+        <lastmod>2013-07-21T00:39:32+02:00</lastmod>
     </url>
     <url>
         <loc>
             http://ouertani.github.com/blog/2012/06/24/ee-6-environmental-enterprise-entries-and-glassfish/
         </loc>
-        <lastmod>2013-04-01T03:51:11+02:00</lastmod>
+        <lastmod>2013-07-21T00:39:32+02:00</lastmod>
     </url>
     <url>
         <loc>
             http://ouertani.github.com/blog/2012/06/27/jax-ws-header-part-1-the-client-side/
         </loc>
-        <lastmod>2013-04-01T03:51:27+02:00</lastmod>
+        <lastmod>2013-07-21T00:39:32+02:00</lastmod>
     </url>
     <url>
         <loc>
             http://ouertani.github.com/blog/2012/06/28/sending-an-email-using-the-javamail-session-and-glassfish/
         </loc>
-        <lastmod>2013-04-01T03:51:43+02:00</lastmod>
+        <lastmod>2013-07-21T00:39:32+02:00</lastmod>
     </url>
     <url>
         <loc>http://ouertani.github.com/blog/2012/06/28/jaxws-header-part-2-server-side/</loc>
-        <lastmod>2013-04-01T03:51:34+02:00</lastmod>
+        <lastmod>2013-07-21T00:39:32+02:00</lastmod>
     </url>
     <url>
         <loc>http://ouertani.github.com/blog/2012/06/29/xml-rpc-using-scala/</loc>
-        <lastmod>2013-04-01T03:51:50+02:00</lastmod>
+        <lastmod>2013-07-21T00:39:32+02:00</lastmod>
     </url>
     <url>
         <loc>
             http://ouertani.github.com/blog/2012/09/26/xml-slash-rpc-driver-as-jca-scala-connector/
         </loc>
-        <lastmod>2013-04-01T03:50:49+02:00</lastmod>
+        <lastmod>2013-07-21T00:39:32+02:00</lastmod>
     </url>
     <url>
         <loc>http://ouertani.github.com/blog/2012/10/09/play-2-dot-1/</loc>
-        <lastmod>2013-04-01T03:50:38+02:00</lastmod>
+        <lastmod>2013-07-21T00:39:32+02:00</lastmod>
     </url>
     <url>
         <loc>http://ouertani.github.com/blog/2012/10/18/getting-started-with-play-2-dot-1/</loc>
-        <lastmod>2013-04-01T03:53:11+02:00</lastmod>
+        <lastmod>2013-07-21T00:39:32+02:00</lastmod>
     </url>
     <url>
         <loc>http://ouertani.github.com/blog/2013/02/12/fun-with-scala-and-vert-dot-x/</loc>
-        <lastmod>2013-04-01T03:50:20+02:00</lastmod>
+        <lastmod>2013-07-21T00:39:32+02:00</lastmod>
     </url>
     <url>
         <loc>http://ouertani.github.com/blog/2013/03/09/rest-with-scala-and-vert-dot-x/</loc>
-        <lastmod>2013-03-31T18:23:20+02:00</lastmod>
+        <lastmod>2013-07-21T00:39:32+02:00</lastmod>
     </url>
     <url>
         <loc>http://ouertani.github.com/about/</loc>
-        <lastmod>2013-04-10T11:25:32+02:00</lastmod>
+        <lastmod>2013-07-21T00:39:32+02:00</lastmod>
     </url>
     <url>
         <loc>http://ouertani.github.com/blog/archives/</loc>
-        <lastmod>2013-04-01T04:38:15+02:00</lastmod>
+        <lastmod>2013-07-21T00:39:32+02:00</lastmod>
     </url>
     <url>
         <loc>http://ouertani.github.com/</loc>
-        <lastmod>2013-04-01T04:38:15+02:00</lastmod>
+        <lastmod>2013-07-21T00:39:32+02:00</lastmod>
     </url>
     <url>
         <loc>http://ouertani.github.com/robots.txt</loc>
-        <lastmod>2013-03-30T22:44:26+01:00</lastmod>
+        <lastmod>2013-07-21T00:39:32+02:00</lastmod>
     </url>
 </urlset>

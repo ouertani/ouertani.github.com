@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Ucip | Ouertani Blog]]></title>
   <link href="http://ouertani.github.com/blog/categories/ucip/atom.xml" rel="self"/>
   <link href="http://ouertani.github.com/"/>
-  <updated>2013-04-10T11:25:36+02:00</updated>
+  <updated>2013-08-09T12:57:23+02:00</updated>
   <id>http://ouertani.github.com/</id>
   <author>
     <name><![CDATA[Ouertani]]></name>
@@ -28,11 +28,11 @@
 <h2>JCA and integration</h2>
 
 
-<p><blockquote><p>"For enterprise application integration, bi-directional connectivity between enterprise applications and EIS is essential. The Java EE Connector architecture defines standard contracts that allow bi-directional connectivity between enterprise applications and EISs. It also formalizes the relationships, interactions, and the packaging of the integration layer, thus enabling enterprise application integration."</p></p><p><p></p><footer><strong>JCA 1.6 p 35</strong></footer></blockquote></p>
+<p><blockquote><p>&ldquo;For enterprise application integration, bi-directional connectivity between enterprise applications and EIS is essential. The Java EE Connector architecture defines standard contracts that allow bi-directional connectivity between enterprise applications and EISs. It also formalizes the relationships, interactions, and the packaging of the integration layer, thus enabling enterprise application integration.&rdquo;</p></p><p><p></p><footer><strong>JCA 1.6 p 35</strong></footer></blockquote></p>
 
 <p>The connector architecture defines a set of scalable, secure, and transactional mechanisms that enable the integration of EISs with application servers and enterprise application.</p>
 
-<p><img class="center" src="/images/jca.jpg" width="350" height="350" title="JCA" alt="images"></p>
+<p><img class="center" src="/images/jca.jpg" width="350" height="350" title="&lsquo;JCA&rsquo; &lsquo;images&rsquo;" ></p>
 
 <p>Using a UCIP JCA connector rather than using an <a href="http://java.dzone.com/articles/xml-rpc-using-scala">XML/RPC raw driver</a> lets you:</p>
 
@@ -46,7 +46,7 @@
 <h2>How?</h2>
 
 
-<p>The use of a <a href="http://www.jcp.org/en/jsr/detail?id=322">JCA</a> resource adapter inside a JEE solution is the same as interacting with a database or queue: protocol communication and wire negotiation... are hidden to the final user.</p>
+<p>The use of a <a href="http://www.jcp.org/en/jsr/detail?id=322">JCA</a> resource adapter inside a JEE solution is the same as interacting with a database or queue: protocol communication and wire negotiation&hellip; are hidden to the final user.</p>
 
 <p>Two interfaces are presented to a customer:</p>
 
@@ -67,7 +67,7 @@ def fire(elem : Elem) : Option[Elem]
 </code>
 As an outbound communication where the resource adapter allows an ESB or EE application server to connect to an IN/AIR node and perform work. All communication is initiated by the application. The Air connector factory should be injected as any resource and used like the following.
 ``` scala
-@Resource(name="AIR")
+@Resource(name=&ldquo;AIR&rdquo;)
 var airConnectorFactory : AirConnectorFactory = _</p>
 
 <p>val output = airConnectorFactory().fire(input)
@@ -121,7 +121,7 @@ var airConnectorFactory : AirConnectorFactory = _</p>
 
 <p>The message UpdateBalanceAndDate is used to adjust balances and expiry dates on the main account and the dedicated accounts. The sample I chooses here is only to update main balance :</p>
 
-<p>Let's start with some helpful class :</p>
+<p>Let&rsquo;s start with some helpful class :</p>
 
 <p>1- InParameters class : contains In specific configuration like ip and port
 <code>scala

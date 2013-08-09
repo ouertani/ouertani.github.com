@@ -4,7 +4,7 @@
   <title><![CDATA[Category: JNDI | Ouertani Blog]]></title>
   <link href="http://ouertani.github.com/blog/categories/jndi/atom.xml" rel="self"/>
   <link href="http://ouertani.github.com/"/>
-  <updated>2013-04-10T11:25:36+02:00</updated>
+  <updated>2013-08-09T12:57:23+02:00</updated>
   <id>http://ouertani.github.com/</id>
   <author>
     <name><![CDATA[Ouertani]]></name>
@@ -26,7 +26,7 @@
 <h2>INTRODUCTION</h2>
 
 
-<p>Two years ago, we decided to move to JEE 6 for our enterprise solutions and take a lot of fun with new EJB 3.1 features and annotations. Glassfish has made our lives easier, it was very easy to declare variables using it's administration console.</p>
+<p>Two years ago, we decided to move to JEE 6 for our enterprise solutions and take a lot of fun with new EJB 3.1 features and annotations. Glassfish has made our lives easier, it was very easy to declare variables using it&rsquo;s administration console.</p>
 
 <!-- more -->
 
@@ -62,7 +62,7 @@ public class MyEjbBean {
 </ol>
 
 
-<p><img class="center" src="/images/jndiee1.jpg" width="640" height="424" title="JNDI EE" alt="images"></p>
+<p><img class="center" src="/images/jndiee1.jpg" width="640" height="424" title="&lsquo;JNDI EE&rsquo; &lsquo;images&rsquo;" ></p>
 
 <p>At first glance, it looks simple and fast forward but problems start after just after a first project.</p>
 
@@ -134,7 +134,7 @@ The purpose of object factory is to read injectable parameters and populate a re
     <li>Add two (or more) properties to be injected in our resource class.</ol>
 
 
-<p><img class="center" src="/images/jndiee2.jpg" width="640" height="424" title="JNDI EE" alt="images"></p>
+<p><img class="center" src="/images/jndiee2.jpg" width="640" height="424" title="&lsquo;JNDI EE&rsquo; &lsquo;images&rsquo;" ></p>
 
 <p><li>At the end we inject our resource in EJB class :</li></p>
 
@@ -142,7 +142,7 @@ The purpose of object factory is to read injectable parameters and populate a re
 @Stateless
 @LocalBean
 class MyEjbBean {
-  @Resource(lookup="globalRes")
+  @Resource(lookup=&ldquo;globalRes&rdquo;)
   protected var res:Ressource= _</p>
 
 <p>  /// res.param1

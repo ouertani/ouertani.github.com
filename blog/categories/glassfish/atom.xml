@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Glassfish | Ouertani Blog]]></title>
   <link href="http://ouertani.github.com/blog/categories/glassfish/atom.xml" rel="self"/>
   <link href="http://ouertani.github.com/"/>
-  <updated>2013-04-10T11:25:36+02:00</updated>
+  <updated>2013-08-09T12:57:23+02:00</updated>
   <id>http://ouertani.github.com/</id>
   <author>
     <name><![CDATA[Ouertani]]></name>
@@ -27,7 +27,7 @@ After reading this later, I decided to share some tips about this EE environment
 <h2>Introduction</h2>
 
 
-<p>Two years ago, we decided to move to JEE 6 for our enterprise solutions and take a lot of fun with new EJB 3.1 features and annotations. Glassfish has made our lives easier, it was very easy to declare variables using it's administration console.
+<p>Two years ago, we decided to move to JEE 6 for our enterprise solutions and take a lot of fun with new EJB 3.1 features and annotations. Glassfish has made our lives easier, it was very easy to declare variables using it&rsquo;s administration console.
 Less complicated than using global resource environment for properties It is also the continuation to this <a href="http://www.jroller.com/articles/jee-6-environmental-enterprise">tricks</a> this tutorial delegate to Glassfish EE server managing mail session.</p>
 
 <!-- more -->
@@ -83,7 +83,7 @@ Mail host
 
 <p>This screenshot summarizes all these parameters :</p>
 
-<p><img class="center" src="/images/mailee.jpg" width="640" height="424" title="Mail EE" alt="images"></p>
+<p><img class="center" src="/images/mailee.jpg" width="640" height="424" title="&lsquo;Mail EE&rsquo; &lsquo;images&rsquo;" ></p>
 
 <h2>II - Using email Service</h2>
 
@@ -130,7 +130,7 @@ Look short !</p>
 
 
 <p>```java
-@WebServlet(name = "EmailServlet", urlPatterns = {"/EmailServlet"})
+@WebServlet(name = &ldquo;EmailServlet&rdquo;, urlPatterns = {&ldquo;/EmailServlet&rdquo;})
 public class EmailServlet extends HttpServlet {</p>
 
 <pre><code>@Inject
@@ -140,16 +140,16 @@ protected void processRequest(HttpServletRequest request, HttpServletResponse re
         throws ServletException, IOException {
 </code></pre>
 
-<p> .........
+<p> &hellip;&hellip;&hellip;
    }
- ......
+ &hellip;&hellip;
 }
 ```</p>
 
 <h2>Conclusion :</h2>
 
 
-<p>Let's EE Server manager MailSession for us, keep configuration on server and thanks to Glassfish administration console managing JavaMail Session became easier.</p>
+<p>Let&rsquo;s EE Server manager MailSession for us, keep configuration on server and thanks to Glassfish administration console managing JavaMail Session became easier.</p>
 ]]></content>
   </entry>
   

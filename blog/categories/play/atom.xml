@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Play | Ouertani Blog]]></title>
   <link href="http://ouertani.github.com/blog/categories/play/atom.xml" rel="self"/>
   <link href="http://ouertani.github.com/"/>
-  <updated>2013-04-10T11:25:36+02:00</updated>
+  <updated>2013-08-09T12:57:23+02:00</updated>
   <id>http://ouertani.github.com/</id>
   <author>
     <name><![CDATA[Ouertani]]></name>
@@ -31,7 +31,7 @@
 <p>``` scala
 val n = 20</p>
 
-<p>"Bob is "+n+" years old"
+<p>&ldquo;Bob is &rdquo;+n+&ldquo; years old&rdquo;
 <code>
 can be replaced by :
 </code> scala
@@ -64,7 +64,7 @@ def index = Action {
 <h2>BETTER ! </h2>
 
 
-<p>Let's do better and remove parenthesizes and 's' characters</p>
+<p>Let&rsquo;s do better and remove parenthesizes and &rsquo;s' characters</p>
 
 <p>First create an <a href="http://docs.scala-lang.org/sips/pending/implicit-classes.html">implicit class</a> (scala 2.10 features) to wrap a call to Ok object and define an ok object :
 ``` scala
@@ -94,11 +94,11 @@ Short and concise !</p>
 <h2>REFERENCES :</h2>
 
 
-<p><li>Play RaodMap: <a href="https://docs.google.com/document/d/1OEt6gZ3a-daSkNXqXGAM4jBs5LtuDkLZIzsWN9aeM1g/preview?sle=true.">https://docs.google.com/document/d/1OEt6gZ3a-daSkNXqXGAM4jBs5LtuDkLZIzsWN9aeM1g/preview?sle=true.</a></li>
-<li>String interpolation : <a href="https://docs.google.com/document/d/1NdxNxZYodPA-c4MLr33KzwzKFkzm9iW9POexT9PkJsU/edit">https://docs.google.com/document/d/1NdxNxZYodPA-c4MLr33KzwzKFkzm9iW9POexT9PkJsU/edit</a></li>
-<li>Implicit Class : <a href="http://docs.scala-lang.org/sips/pending/implicit-classes.html">http://docs.scala-lang.org/sips/pending/implicit-classes.html</a>
-<li>Macro : <a href="http://scalamacros.org/">http://scalamacros.org/</a></li>
-<li>String interpolation with concise samples : <a href="http://www.blog.project13.pl/index.php/coding/1540/scala-2-10-0-hello-string-interpolation/">http://www.blog.project13.pl/index.php/coding/1540/scala-2-10-0-hello-string-interpolation/</a></li></p>
+<p><li>Play RaodMap: <a href="https://docs.google.com/document/d/1OEt6gZ3a-daSkNXqXGAM4jBs5LtuDkLZIzsWN9aeM1g/preview?sle=true."><a href="https://docs.google.com/document/d/1OEt6gZ3a-daSkNXqXGAM4jBs5LtuDkLZIzsWN9aeM1g/preview?sle=true.">https://docs.google.com/document/d/1OEt6gZ3a-daSkNXqXGAM4jBs5LtuDkLZIzsWN9aeM1g/preview?sle=true.</a></a></li>
+<li>String interpolation : <a href="https://docs.google.com/document/d/1NdxNxZYodPA-c4MLr33KzwzKFkzm9iW9POexT9PkJsU/edit"><a href="https://docs.google.com/document/d/1NdxNxZYodPA-c4MLr33KzwzKFkzm9iW9POexT9PkJsU/edit">https://docs.google.com/document/d/1NdxNxZYodPA-c4MLr33KzwzKFkzm9iW9POexT9PkJsU/edit</a></a></li>
+<li>Implicit Class : <a href="http://docs.scala-lang.org/sips/pending/implicit-classes.html"><a href="http://docs.scala-lang.org/sips/pending/implicit-classes.html">http://docs.scala-lang.org/sips/pending/implicit-classes.html</a></a>
+<li>Macro : <a href="http://scalamacros.org/"><a href="http://scalamacros.org/">http://scalamacros.org/</a></a></li>
+<li>String interpolation with concise samples : <a href="http://www.blog.project13.pl/index.php/coding/1540/scala-2-10-0-hello-string-interpolation/"><a href="http://www.blog.project13.pl/index.php/coding/1540/scala-2-10-0-hello-string-interpolation/">http://www.blog.project13.pl/index.php/coding/1540/scala-2-10-0-hello-string-interpolation/</a></a></li></p>
 ]]></content>
   </entry>
   
@@ -118,7 +118,7 @@ Short and concise !</p>
 
 <p>Setup <a href="http://slick.typesafe.com/">Slick</a> in Play 2</p>
 
-<p>If you don't already have a Play 2 project, then create a new one after installing Play 2:
+<p>If you don&rsquo;t already have a Play 2 project, then create a new one after installing Play 2:
 <blockquote><p>play new mySlickApp</p></blockquote>
 Choose Scala as the language for the project.</p>
 
@@ -135,13 +135,13 @@ Then if you are using an Eclipse or IntelliJ Play can automatically create the p
 
 <p>Note that we created the project files after updating the dependencies, so the projects would be configured with the required libraries. If the dependencies change in the future, just re-run the commands to create the projects.</p>
 
-<p>You can now start the application from within your project's root directory:
+<p>You can now start the application from within your project&rsquo;s root directory:
 <blockquote><p>play ~run</p></blockquote></p>
 
-<p>Verify that the server is running by opening the following URL in your browser: http://localhost:9000</p>
+<p>Verify that the server is running by opening the following URL in your browser: <a href="http://localhost:9000">http://localhost:9000</a></p>
 
-<p>For local testing we will use an in-memory "h2" database. To setup Play to use that database, edit the conf/application.conf file and uncomment or add the following lines:
-<blockquote><p>db.default.driver=org.h2.Driver<br/>db.default.url="jdbc:h2:mem:play"</p></blockquote></p>
+<p>For local testing we will use an in-memory &ldquo;h2&rdquo; database. To setup Play to use that database, edit the conf/application.conf file and uncomment or add the following lines:
+<blockquote><p>db.default.driver=org.h2.Driver<br/>db.default.url=&ldquo;jdbc:h2:mem:play&rdquo;</p></blockquote></p>
 
 <p>The final setup step is to provide Squeryl a database connection, but we still want to use the standard Play configuration system to get the database connection information. This is easily done by adding a Global class that can hook into the startup phase of the Play application lifecycle. Create a new file named app/Global.scala containing:
 ``` scala
@@ -168,8 +168,8 @@ import play.api.Play.current</p>
 ```
 On application startup the  configuration parameter will be used to determine which driver to use to setup the database connection.</p>
 
-<p>If you reload the http://localhost:9000 webpage in your browser, everything should still be working and you should see the following message in the Play STDOUT log:
-<blockquote><p>[info] play - database [default] connected at jdbc:h2:mem:play</p></blockquote></p>
+<p>If you reload the <a href="http://localhost:9000">http://localhost:9000</a> webpage in your browser, everything should still be working and you should see the following message in the Play STDOUT log:
+<blockquote><p>[info] play &ndash; database [default] connected at jdbc:h2:mem:play</p></blockquote></p>
 
 <p>Create an Entity</p>
 
@@ -187,13 +187,13 @@ package models</p>
 <p>  // This is the primary key column
   def name = column<a href="" title="name">String</a></p>
 
-<p>  // Every table needs a * projection with the same type as the table's type parameter
+<p>  // Every table needs a * projection with the same type as the table&rsquo;s type parameter
   def * = id.? ~ name &lt;>(Bar, Bar.unapply _)
 }
 ```
 This is a very simple entity that will store a list of Bar objects. Each Bar has a name and an id property for the primary key. The case class in Scala is immutable and basically supercharges a class, adding a number of syntactic conveniences. It also allows it to be used for pattern matching, which can be quite handy when matching form values returned from the client. The Bars object is an instance of Table  Bar that Slick will map into the database.</p>
 
-<p>Begineer about slick, I will not use evolution to create database but let slick create it for me, let's modify Global.scala as bellow :
+<p>Begineer about slick, I will not use evolution to create database but let slick create it for me, let&rsquo;s modify Global.scala as bellow :
 ``` scala
 import play.api.db.DB
 import play.api.GlobalSettings
@@ -221,7 +221,7 @@ database .withSession {
 <p>  }
 }
 ```
-reload the http://localhost:9000 webpage to create bar table on your local in-memory database.
+reload the <a href="http://localhost:9000">http://localhost:9000</a> webpage to create bar table on your local in-memory database.
 Test the Model</p>
 
 <p>The testing support in Play 2 is very powerful and fits well with the Test Driven Development style. Play 2 with Scala uses specs2 as the default for testing but we prefer ScalaTest. Lets create a simple test for the Bar model object. Start by adding the ScalaTest dependency to the project and modifying the testOptions setting.  Since scala 2.10.0-M6 scala-actor is an independent jar and must be add as dependencies.
@@ -258,7 +258,7 @@ import play.api.test.Helpers.</em></p>
 
 <p>class BarSpec extends FlatSpec with ShouldMatchers {</p>
 
-<p>  "A Bar" should "be creatable" in {</p>
+<p>  &ldquo;A Bar&rdquo; should &ldquo;be creatable&rdquo; in {</p>
 
 <pre><code>Database.forURL("jdbc:h2:mem:test1", driver = "org.h2.Driver") withSession {
 
@@ -277,9 +277,9 @@ This test uses a  an in-memory database to run the test.  The body of the test s
 <p>play test</p>
 
 <p>If the tests worked, then you should see the following message in the Play STDOUT log:
-<blockquote><p>[mySlickApp] $ test<br/>[info] BarSpec:<br/>[info] A Bar<br/>[info] - should be creatable<br/>[info] Passed: : Total 1, Failed 0, Errors 0, Passed 1, Skipped 0<br/>[success] Total time: 2 s, completed Oct 9, 2012 12:28:28 PM</p></blockquote></p>
+<blockquote><p>[mySlickApp] $ test<br/>[info] BarSpec:<br/>[info] A Bar<br/>[info] &ndash; should be creatable<br/>[info] Passed: : Total 1, Failed 0, Errors 0, Passed 1, Skipped 0<br/>[success] Total time: 2 s, completed Oct 9, 2012 12:28:28 PM</p></blockquote></p>
 
-<p>If you'd like to have the tests run whenever the source changes then run:
+<p>If you&rsquo;d like to have the tests run whenever the source changes then run:
 <blockquote><p>play ~test</p></blockquote>
 You can keep both the ~run and ~test commands running in the background. This allows you to quickly test the application from both programmatic unit / functional tests and from manual browser tests.
 Creating Bars From a Web Form</p>
@@ -359,13 +359,13 @@ import play.api.Play.current</p>
 
 <p>}
 ```
-The barForm provides a mapping from a request parameter named name to the name property on the Bar case class (via it's constructor). The index method has been updated to pass an instance of the barForm into the index template. We will update that template next. The addBar method binds the request parameters into an object named bar then in a session the bar is inserted into the database.  Then the user is redirected back to the index page. If the request parameters could not be mapped to a Bar using the barForm then a BadRequest error is returned.</p>
+The barForm provides a mapping from a request parameter named name to the name property on the Bar case class (via it&rsquo;s constructor). The index method has been updated to pass an instance of the barForm into the index template. We will update that template next. The addBar method binds the request parameters into an object named bar then in a session the bar is inserted into the database.  Then the user is redirected back to the index page. If the request parameters could not be mapped to a Bar using the barForm then a BadRequest error is returned.</p>
 
 <p>Now we need to update the app/views/index.scala.html template to contain:
 ``` scala
 @(form: play.api.data.Form[Bar])</p>
 
-<p>@main("Welcome to Play 2.0") {</p>
+<p>@main(&ldquo;Welcome to Play 2.0&rdquo;) {</p>
 
 <pre><code>@helper.form(action = routes.Application.addBar) {
     @helper.inputText(form("name"))
@@ -375,13 +375,13 @@ The barForm provides a mapping from a request parameter named name to the name p
 
 <p>}
 ```
-The template now takes a Form[Bar] parameter which is passed from the index method on the Application controller. Then in the body of the template a new HTML form is rendered using Play 2's form helper. The form contains an HTML field for the name and a submit button. Notice that the action of the form points from the route to the Application controller's addBar method.</p>
+The template now takes a Form[Bar] parameter which is passed from the index method on the Application controller. Then in the body of the template a new HTML form is rendered using Play 2&rsquo;s form helper. The form contains an HTML field for the name and a submit button. Notice that the action of the form points from the route to the Application controller&rsquo;s addBar method.</p>
 
-<p>If you look in the console window at this point you will see the error "value addBar is not a member of controllers.ReverseApplication". This is because the route file is compiled and the view is checked for a valid route. But we haven't created a route yet, so edit the conf/routes file and add a new line with the following:
+<p>If you look in the console window at this point you will see the error &ldquo;value addBar is not a member of controllers.ReverseApplication&rdquo;. This is because the route file is compiled and the view is checked for a valid route. But we haven&rsquo;t created a route yet, so edit the conf/routes file and add a new line with the following:
 <blockquote><p>POST    /bars                       controllers.Application.addBar</p></blockquote>
 This creates a HTTP route that maps POST requests for the /bars URL to the addBar method.</p>
 
-<p>Now refresh http://localhost:9000 in your browser and you should see the very basic form for adding new Bar objects. If successful, after adding a new Bar the browser should just redirect back to the index page.</p>
+<p>Now refresh <a href="http://localhost:9000">http://localhost:9000</a> in your browser and you should see the very basic form for adding new Bar objects. If successful, after adding a new Bar the browser should just redirect back to the index page.</p>
 
 <p>Now lets add a RESTful service to the application that will return all of the Bar objects as JSON-serialized data. Start by adding a new method to the app/controllers/Application.scala file:
 ``` scala
@@ -402,23 +402,23 @@ The getBars method fetches the Bar objects from the database using Slick dsl and
 <blockquote><p>GET     /bars                       controllers.Application.getBars</p></blockquote>
 This maps GET requests for /bars to the getBars method.</p>
 
-<p>Try this out in your browser by loading: http://localhost:9000/bars</p>
+<p>Try this out in your browser by loading: <a href="http://localhost:9000/bars">http://localhost:9000/bars</a></p>
 
-<p>You should see a list of the Bar objects you've created serialized as JSON.</p>
+<p>You should see a list of the Bar objects you&rsquo;ve created serialized as JSON.</p>
 
 <p>The syntax of the query demonstrates the power of Slick type-safe query language and the power of Scala to create DSLs.  The json val is then returned in an Ok (HTTP 200 status code response) with the content type set to application/json (the value of JSON).</p>
 
 <h2>References :</h2>
 
 
-<p><li>Slick : http://slick.typesafe.com </li>
-<li>Playframework :  http://www.playframework.org </li></p>
+<p><li>Slick : <a href="http://slick.typesafe.com">http://slick.typesafe.com</a> </li>
+<li>Playframework :  <a href="http://www.playframework.org">http://www.playframework.org</a> </li></p>
 
 <pre><code>                        https://github.com/playframework/Play20&lt;/li&gt;
 </code></pre>
 
-<p><li>Scala : http://www.scala-lang.org/downloads</li>
-<li>Squeryl + Playframework + Scala  : http://www.artima.com/articles/play2_scala_squeryl.html</li></p>
+<p><li>Scala : <a href="http://www.scala-lang.org/downloads">http://www.scala-lang.org/downloads</a></li>
+<li>Squeryl + Playframework + Scala  : <a href="http://www.artima.com/articles/play2_scala_squeryl.html">http://www.artima.com/articles/play2_scala_squeryl.html</a></li></p>
 ]]></content>
   </entry>
   

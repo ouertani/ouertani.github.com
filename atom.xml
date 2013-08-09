@@ -4,7 +4,7 @@
   <title><![CDATA[Ouertani Blog]]></title>
   <link href="http://ouertani.github.com/atom.xml" rel="self"/>
   <link href="http://ouertani.github.com/"/>
-  <updated>2013-04-10T11:25:36+02:00</updated>
+  <updated>2013-08-09T12:57:23+02:00</updated>
   <id>http://ouertani.github.com/</id>
   <author>
     <name><![CDATA[Ouertani]]></name>
@@ -20,7 +20,7 @@
     <id>http://ouertani.github.com/blog/2013/03/09/rest-with-scala-and-vert-dot-x</id>
     <content type="html"><![CDATA[<p>A previous post introduced some features of using Scala with <a href="http://vertx.io/">Vert.x</a>. This post covers how to publish Rest web services in an elegant and simple fashion.</p>
 
-<p>As in the previous post, Examples in Java and Scala are presented, source code been hosted on GitHub as part of lang-scala <a href="https://github.com/ouertani/vert.x/tree/master/vertx-lang/vertx-lang-scala">https://github.com/ouertani/vert.x/tree/master/vertx-lang/vertx-lang-scala</a></p>
+<p>As in the previous post, Examples in Java and Scala are presented, source code been hosted on GitHub as part of lang-scala <a href="https://github.com/ouertani/vert.x/tree/master/vertx-lang/vertx-lang-scala"><a href="https://github.com/ouertani/vert.x/tree/master/vertx-lang/vertx-lang-scala">https://github.com/ouertani/vert.x/tree/master/vertx-lang/vertx-lang-scala</a></a></p>
 
 <!-- more -->
 
@@ -328,7 +328,7 @@ The java equivalent has been relocated to the end of the document due to its ver
 <p><li>GET : /hello → code : 200 , body : world</li>
 <li>DELETE : /posts → code : 401 , body : Not allowed user</li>
 <li>POST : /:blogname → code : 200 , body : post {blogname} received !</li>
-<li>GET : /:id → code : 200 , body : {&#8220;title&#8221;:&#8221;rest&#8221;,&#8221;content&#8221;:&#8221;scala &amp; vertx&#8221;}</li></p>
+<li>GET : /:id → code : 200 , body : {&ldquo;title&rdquo;:&ldquo;rest&rdquo;,&ldquo;content&rdquo;:&ldquo;scala &amp; vertx&rdquo;}</li></p>
 
 <h4>Scala</h4>
 
@@ -495,26 +495,26 @@ The java equivalent has been relocated to the end of the document due to its ver
 
 <p>Being polyglot, Vert.x can be used in many flavors, among which : JavaScript,CoffeeScript, Ruby, Python,Groovy and Java. In order to enforce asynchronism and scalabity, Vert.x is built upon <a href="https://netty.io/">Netty</a>, leverage the <a href="http://en.wikipedia.org/wiki/Reactor_pattern">reactor pattern</a>, using a frightening number of handlers.</p>
 
-<p>This article aims at showing the powerful combination of Scala and Vert.x - the Java counterpart being provided as comparison.</p>
+<p>This article aims at showing the powerful combination of Scala and Vert.x &ndash; the Java counterpart being provided as comparison.</p>
 
 <!-- more -->
 
 
-<p>Note : the source code are hosted on GitHub as part of lang-scala <a href="https://github.com/ouertani/vert.x/tree/master/vertx-lang/vertx-lang-scala">https://github.com/ouertani/vert.x/tree/master/vertx-lang/vertx-lang-scala</a></p>
+<p>Note : the source code are hosted on GitHub as part of lang-scala <a href="https://github.com/ouertani/vert.x/tree/master/vertx-lang/vertx-lang-scala"><a href="https://github.com/ouertani/vert.x/tree/master/vertx-lang/vertx-lang-scala">https://github.com/ouertani/vert.x/tree/master/vertx-lang/vertx-lang-scala</a></a></p>
 
 <p>Vert.x supports many components :</p>
 
 <p><li><a href="http://en.wikipedia.org/wiki/WebSocket">WebSocket</a></li>
 <li>HttpServer</li>
 <li>Distributed Event Bus</li>
-<li>TCP Server, SockJS ,&#8230; not presented here</li></p>
+<li>TCP Server, SockJS ,&hellip; not presented here</li></p>
 
 <h2>I - WebSocket</h2>
 
 
 <p>Web Socket are HTML 5 feature providing full-duplex communications. For old browsers that do not support WebSocket, Vert.x provides <a href="https://github.com/sockjs/sockjs-client">SockJS</a> as out-of-the-box component.</p>
 
-<p>In order to run the following example check out : <a href="https://github.com/ouertani/vert.x/blob/master/vertx-examples/src/main/javascript/websockets/ws.html">https://github.com/ouertani/vert.x/blob/master/vertx-examples/src/main/javascript/websockets/ws.html</a> and save it into the compiled lib directory</p>
+<p>In order to run the following example check out : <a href="https://github.com/ouertani/vert.x/blob/master/vertx-examples/src/main/javascript/websockets/ws.html"><a href="https://github.com/ouertani/vert.x/blob/master/vertx-examples/src/main/javascript/websockets/ws.html">https://github.com/ouertani/vert.x/blob/master/vertx-examples/src/main/javascript/websockets/ws.html</a></a> and save it into the compiled lib directory</p>
 
 <h4>Java</h4>
 
@@ -692,7 +692,7 @@ The java equivalent has been relocated to the end of the document due to its ver
 <h2>III-HttpClient</h2>
 
 
-<p>Vert.x also provides an HttpClient API, so as to interact with the server part. The following samples create and send a GET request, then log the server&#8217;s response.</p>
+<p>Vert.x also provides an HttpClient API, so as to interact with the server part. The following samples create and send a GET request, then log the server&rsquo;s response.</p>
 
 <h4>Java</h4>
 
@@ -830,7 +830,7 @@ The java equivalent has been relocated to the end of the document due to its ver
 
 <p>Stay tuned, a subsequent post will show you more about Vert.x with Scala.</p>
 
-<p>source : http://blog.zenika.com/index.php?post/2013/02/11/fun-with-scala-and-vert-x</p>
+<p>source : <a href="http://blog.zenika.com/index.php?post/2013/02/11/fun-with-scala-and-vert-x">http://blog.zenika.com/index.php?post/2013/02/11/fun-with-scala-and-vert-x</a></p>
 ]]></content>
   </entry>
   
@@ -905,7 +905,7 @@ The java equivalent has been relocated to the end of the document due to its ver
 <h2>BETTER ! </h2>
 
 
-<p>Let&#8217;s do better and remove parenthesizes and &#8216;s&#8217; characters</p>
+<p>Let&rsquo;s do better and remove parenthesizes and &rsquo;s&#8217; characters</p>
 
 <p>First create an <a href="http://docs.scala-lang.org/sips/pending/implicit-classes.html">implicit class</a> (scala 2.10 features) to wrap a call to Ok object and define an ok object :</p>
 
@@ -944,11 +944,11 @@ The java equivalent has been relocated to the end of the document due to its ver
 <h2>REFERENCES :</h2>
 
 
-<p><li>Play RaodMap: <a href="https://docs.google.com/document/d/1OEt6gZ3a-daSkNXqXGAM4jBs5LtuDkLZIzsWN9aeM1g/preview?sle=true.">https://docs.google.com/document/d/1OEt6gZ3a-daSkNXqXGAM4jBs5LtuDkLZIzsWN9aeM1g/preview?sle=true.</a></li>
-<li>String interpolation : <a href="https://docs.google.com/document/d/1NdxNxZYodPA-c4MLr33KzwzKFkzm9iW9POexT9PkJsU/edit">https://docs.google.com/document/d/1NdxNxZYodPA-c4MLr33KzwzKFkzm9iW9POexT9PkJsU/edit</a></li>
-<li>Implicit Class : <a href="http://docs.scala-lang.org/sips/pending/implicit-classes.html">http://docs.scala-lang.org/sips/pending/implicit-classes.html</a>
-<li>Macro : <a href="http://scalamacros.org/">http://scalamacros.org/</a></li>
-<li>String interpolation with concise samples : <a href="http://www.blog.project13.pl/index.php/coding/1540/scala-2-10-0-hello-string-interpolation/">http://www.blog.project13.pl/index.php/coding/1540/scala-2-10-0-hello-string-interpolation/</a></li></p>
+<p><li>Play RaodMap: <a href="https://docs.google.com/document/d/1OEt6gZ3a-daSkNXqXGAM4jBs5LtuDkLZIzsWN9aeM1g/preview?sle=true."><a href="https://docs.google.com/document/d/1OEt6gZ3a-daSkNXqXGAM4jBs5LtuDkLZIzsWN9aeM1g/preview?sle=true.">https://docs.google.com/document/d/1OEt6gZ3a-daSkNXqXGAM4jBs5LtuDkLZIzsWN9aeM1g/preview?sle=true.</a></a></li>
+<li>String interpolation : <a href="https://docs.google.com/document/d/1NdxNxZYodPA-c4MLr33KzwzKFkzm9iW9POexT9PkJsU/edit"><a href="https://docs.google.com/document/d/1NdxNxZYodPA-c4MLr33KzwzKFkzm9iW9POexT9PkJsU/edit">https://docs.google.com/document/d/1NdxNxZYodPA-c4MLr33KzwzKFkzm9iW9POexT9PkJsU/edit</a></a></li>
+<li>Implicit Class : <a href="http://docs.scala-lang.org/sips/pending/implicit-classes.html"><a href="http://docs.scala-lang.org/sips/pending/implicit-classes.html">http://docs.scala-lang.org/sips/pending/implicit-classes.html</a></a>
+<li>Macro : <a href="http://scalamacros.org/"><a href="http://scalamacros.org/">http://scalamacros.org/</a></a></li>
+<li>String interpolation with concise samples : <a href="http://www.blog.project13.pl/index.php/coding/1540/scala-2-10-0-hello-string-interpolation/"><a href="http://www.blog.project13.pl/index.php/coding/1540/scala-2-10-0-hello-string-interpolation/">http://www.blog.project13.pl/index.php/coding/1540/scala-2-10-0-hello-string-interpolation/</a></a></li></p>
 ]]></content>
   </entry>
   
@@ -968,7 +968,7 @@ The java equivalent has been relocated to the end of the document due to its ver
 
 <p>Setup <a href="http://slick.typesafe.com/">Slick</a> in Play 2</p>
 
-<p>If you don&#8217;t already have a Play 2 project, then create a new one after installing Play 2:</p>
+<p>If you don&rsquo;t already have a Play 2 project, then create a new one after installing Play 2:</p>
 
 <blockquote><p>play new mySlickApp</p></blockquote>
 
@@ -995,14 +995,14 @@ The java equivalent has been relocated to the end of the document due to its ver
 
 <p>Note that we created the project files after updating the dependencies, so the projects would be configured with the required libraries. If the dependencies change in the future, just re-run the commands to create the projects.</p>
 
-<p>You can now start the application from within your project&#8217;s root directory:</p>
+<p>You can now start the application from within your project&rsquo;s root directory:</p>
 
 <blockquote><p>play ~run</p></blockquote>
 
 
-<p>Verify that the server is running by opening the following URL in your browser: http://localhost:9000</p>
+<p>Verify that the server is running by opening the following URL in your browser: <a href="http://localhost:9000">http://localhost:9000</a></p>
 
-<p>For local testing we will use an in-memory &#8220;h2&#8221; database. To setup Play to use that database, edit the conf/application.conf file and uncomment or add the following lines:</p>
+<p>For local testing we will use an in-memory &ldquo;h2&rdquo; database. To setup Play to use that database, edit the conf/application.conf file and uncomment or add the following lines:</p>
 
 <blockquote><p>db.default.driver=org.h2.Driver<br/>db.default.url=&#8221;jdbc:h2:mem:play&#8221;</p></blockquote>
 
@@ -1054,7 +1054,7 @@ The java equivalent has been relocated to the end of the document due to its ver
 
 <p>On application startup the  configuration parameter will be used to determine which driver to use to setup the database connection.</p>
 
-<p>If you reload the http://localhost:9000 webpage in your browser, everything should still be working and you should see the following message in the Play STDOUT log:</p>
+<p>If you reload the <a href="http://localhost:9000">http://localhost:9000</a> webpage in your browser, everything should still be working and you should see the following message in the Play STDOUT log:</p>
 
 <blockquote><p>[info] play - database [default] connected at jdbc:h2:mem:play</p></blockquote>
 
@@ -1100,7 +1100,7 @@ The java equivalent has been relocated to the end of the document due to its ver
 
 <p>This is a very simple entity that will store a list of Bar objects. Each Bar has a name and an id property for the primary key. The case class in Scala is immutable and basically supercharges a class, adding a number of syntactic conveniences. It also allows it to be used for pattern matching, which can be quite handy when matching form values returned from the client. The Bars object is an instance of Table  Bar that Slick will map into the database.</p>
 
-<p>Begineer about slick, I will not use evolution to create database but let slick create it for me, let&#8217;s modify Global.scala as bellow :</p>
+<p>Begineer about slick, I will not use evolution to create database but let slick create it for me, let&rsquo;s modify Global.scala as bellow :</p>
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -1151,7 +1151,7 @@ The java equivalent has been relocated to the end of the document due to its ver
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>reload the http://localhost:9000 webpage to create bar table on your local in-memory database.
+<p>reload the <a href="http://localhost:9000">http://localhost:9000</a> webpage to create bar table on your local in-memory database.
 Test the Model</p>
 
 <p>The testing support in Play 2 is very powerful and fits well with the Test Driven Development style. Play 2 with Scala uses specs2 as the default for testing but we prefer ScalaTest. Lets create a simple test for the Bar model object. Start by adding the ScalaTest dependency to the project and modifying the testOptions setting.  Since scala 2.10.0-M6 scala-actor is an independent jar and must be add as dependencies.
@@ -1244,7 +1244,7 @@ Update the project/Build.scala file to contain:</p>
 <blockquote><p>[mySlickApp] $ test<br/>[info] BarSpec:<br/>[info] A Bar<br/>[info] - should be creatable<br/>[info] Passed: : Total 1, Failed 0, Errors 0, Passed 1, Skipped 0<br/>[success] Total time: 2 s, completed Oct 9, 2012 12:28:28 PM</p></blockquote>
 
 
-<p>If you&#8217;d like to have the tests run whenever the source changes then run:</p>
+<p>If you&rsquo;d like to have the tests run whenever the source changes then run:</p>
 
 <blockquote><p>play ~test</p></blockquote>
 
@@ -1389,7 +1389,7 @@ Creating Bars From a Web Form</p>
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>The barForm provides a mapping from a request parameter named name to the name property on the Bar case class (via it&#8217;s constructor). The index method has been updated to pass an instance of the barForm into the index template. We will update that template next. The addBar method binds the request parameters into an object named bar then in a session the bar is inserted into the database.  Then the user is redirected back to the index page. If the request parameters could not be mapped to a Bar using the barForm then a BadRequest error is returned.</p>
+<p>The barForm provides a mapping from a request parameter named name to the name property on the Bar case class (via it&rsquo;s constructor). The index method has been updated to pass an instance of the barForm into the index template. We will update that template next. The addBar method binds the request parameters into an object named bar then in a session the bar is inserted into the database.  Then the user is redirected back to the index page. If the request parameters could not be mapped to a Bar using the barForm then a BadRequest error is returned.</p>
 
 <p>Now we need to update the app/views/index.scala.html template to contain:</p>
 
@@ -1414,16 +1414,16 @@ Creating Bars From a Web Form</p>
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>The template now takes a Form[Bar] parameter which is passed from the index method on the Application controller. Then in the body of the template a new HTML form is rendered using Play 2&#8217;s form helper. The form contains an HTML field for the name and a submit button. Notice that the action of the form points from the route to the Application controller&#8217;s addBar method.</p>
+<p>The template now takes a Form[Bar] parameter which is passed from the index method on the Application controller. Then in the body of the template a new HTML form is rendered using Play 2&rsquo;s form helper. The form contains an HTML field for the name and a submit button. Notice that the action of the form points from the route to the Application controller&rsquo;s addBar method.</p>
 
-<p>If you look in the console window at this point you will see the error &#8220;value addBar is not a member of controllers.ReverseApplication&#8221;. This is because the route file is compiled and the view is checked for a valid route. But we haven&#8217;t created a route yet, so edit the conf/routes file and add a new line with the following:</p>
+<p>If you look in the console window at this point you will see the error &ldquo;value addBar is not a member of controllers.ReverseApplication&rdquo;. This is because the route file is compiled and the view is checked for a valid route. But we haven&rsquo;t created a route yet, so edit the conf/routes file and add a new line with the following:</p>
 
 <blockquote><p>POST    /bars                       controllers.Application.addBar</p></blockquote>
 
 
 <p>This creates a HTTP route that maps POST requests for the /bars URL to the addBar method.</p>
 
-<p>Now refresh http://localhost:9000 in your browser and you should see the very basic form for adding new Bar objects. If successful, after adding a new Bar the browser should just redirect back to the index page.</p>
+<p>Now refresh <a href="http://localhost:9000">http://localhost:9000</a> in your browser and you should see the very basic form for adding new Bar objects. If successful, after adding a new Bar the browser should just redirect back to the index page.</p>
 
 <p>Now lets add a RESTful service to the application that will return all of the Bar objects as JSON-serialized data. Start by adding a new method to the app/controllers/Application.scala file:</p>
 
@@ -1453,23 +1453,23 @@ Creating Bars From a Web Form</p>
 
 <p>This maps GET requests for /bars to the getBars method.</p>
 
-<p>Try this out in your browser by loading: http://localhost:9000/bars</p>
+<p>Try this out in your browser by loading: <a href="http://localhost:9000/bars">http://localhost:9000/bars</a></p>
 
-<p>You should see a list of the Bar objects you&#8217;ve created serialized as JSON.</p>
+<p>You should see a list of the Bar objects you&rsquo;ve created serialized as JSON.</p>
 
 <p>The syntax of the query demonstrates the power of Slick type-safe query language and the power of Scala to create DSLs.  The json val is then returned in an Ok (HTTP 200 status code response) with the content type set to application/json (the value of JSON).</p>
 
 <h2>References :</h2>
 
 
-<p><li>Slick : http://slick.typesafe.com </li>
-<li>Playframework :  http://www.playframework.org </li></p>
+<p><li>Slick : <a href="http://slick.typesafe.com">http://slick.typesafe.com</a> </li>
+<li>Playframework :  <a href="http://www.playframework.org">http://www.playframework.org</a> </li></p>
 
 <pre><code>                        https://github.com/playframework/Play20&lt;/li&gt;
 </code></pre>
 
-<p><li>Scala : http://www.scala-lang.org/downloads</li>
-<li>Squeryl + Playframework + Scala  : http://www.artima.com/articles/play2_scala_squeryl.html</li></p>
+<p><li>Scala : <a href="http://www.scala-lang.org/downloads">http://www.scala-lang.org/downloads</a></li>
+<li>Squeryl + Playframework + Scala  : <a href="http://www.artima.com/articles/play2_scala_squeryl.html">http://www.artima.com/articles/play2_scala_squeryl.html</a></li></p>
 ]]></content>
   </entry>
   
@@ -1509,7 +1509,7 @@ Creating Bars From a Web Form</p>
 <h2>How?</h2>
 
 
-<p>The use of a <a href="http://www.jcp.org/en/jsr/detail?id=322">JCA</a> resource adapter inside a JEE solution is the same as interacting with a database or queue: protocol communication and wire negotiation&#8230; are hidden to the final user.</p>
+<p>The use of a <a href="http://www.jcp.org/en/jsr/detail?id=322">JCA</a> resource adapter inside a JEE solution is the same as interacting with a database or queue: protocol communication and wire negotiation&hellip; are hidden to the final user.</p>
 
 <p>Two interfaces are presented to a customer:</p>
 
@@ -1602,7 +1602,7 @@ Creating Bars From a Web Form</p>
 
 <p>The message UpdateBalanceAndDate is used to adjust balances and expiry dates on the main account and the dedicated accounts. The sample I chooses here is only to update main balance :</p>
 
-<p>Let&#8217;s start with some helpful class :</p>
+<p>Let&rsquo;s start with some helpful class :</p>
 
 <p>1- InParameters class : contains In specific configuration like ip and port</p>
 
@@ -1969,7 +1969,7 @@ Creating Bars From a Web Form</p>
 <h2>Parse undeclared custom header</h2>
 
 
-<p>Let&#8217;s consider We need to read WSS UserToken non published in our WSDL :</p>
+<p>Let&rsquo;s consider We need to read WSS UserToken non published in our WSDL :</p>
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -2429,7 +2429,7 @@ After reading this later, I decided to share some tips about this EE environment
 <h2>Introduction</h2>
 
 
-<p>Two years ago, we decided to move to JEE 6 for our enterprise solutions and take a lot of fun with new EJB 3.1 features and annotations. Glassfish has made our lives easier, it was very easy to declare variables using it&#8217;s administration console.
+<p>Two years ago, we decided to move to JEE 6 for our enterprise solutions and take a lot of fun with new EJB 3.1 features and annotations. Glassfish has made our lives easier, it was very easy to declare variables using it&rsquo;s administration console.
 Less complicated than using global resource environment for properties It is also the continuation to this <a href="http://www.jroller.com/articles/jee-6-environmental-enterprise">tricks</a> this tutorial delegate to Glassfish EE server managing mail session.</p>
 
 <!-- more -->
@@ -2587,7 +2587,7 @@ To create and JavaMail Session :
 <h2>Conclusion :</h2>
 
 
-<p>Let&#8217;s EE Server manager MailSession for us, keep configuration on server and thanks to Glassfish administration console managing JavaMail Session became easier.</p>
+<p>Let&rsquo;s EE Server manager MailSession for us, keep configuration on server and thanks to Glassfish administration console managing JavaMail Session became easier.</p>
 ]]></content>
   </entry>
   
@@ -2633,7 +2633,7 @@ To create and JavaMail Session :
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>Unlike <a href="http://docs.oracle.com/javaee/5/api/javax/xml/ws/handler/LogicalHandler.html">LogicalHandler</a> SOAPHandler have access to the entire Soap Message. Let&#8217;s create an WSSUsernameTokenSecurityHandler Local Stateless Bean extending SOAPHandler to produce the previous header.
+<p>Unlike <a href="http://docs.oracle.com/javaee/5/api/javax/xml/ws/handler/LogicalHandler.html">LogicalHandler</a> SOAPHandler have access to the entire Soap Message. Let&rsquo;s create an WSSUsernameTokenSecurityHandler Local Stateless Bean extending SOAPHandler to produce the previous header.
 Below the WSSUsernameTokenSecurityHandler class</p>
 
 <figure class='code'><figcaption><span>WSSUsernameTokenSecurityHandler.java</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
@@ -2968,7 +2968,7 @@ Below the WSSUsernameTokenSecurityHandler class</p>
 <h2>Conclusion</h2>
 
 
-<p>We have heavily used handler on client side. On the server side things can change a bit, to be continued &#8230;</p>
+<p>We have heavily used handler on client side. On the server side things can change a bit, to be continued &hellip;</p>
 ]]></content>
   </entry>
   
@@ -2985,7 +2985,7 @@ Below the WSSUsernameTokenSecurityHandler class</p>
 <h2>INTRODUCTION</h2>
 
 
-<p>Two years ago, we decided to move to JEE 6 for our enterprise solutions and take a lot of fun with new EJB 3.1 features and annotations. Glassfish has made our lives easier, it was very easy to declare variables using it&#8217;s administration console.</p>
+<p>Two years ago, we decided to move to JEE 6 for our enterprise solutions and take a lot of fun with new EJB 3.1 features and annotations. Glassfish has made our lives easier, it was very easy to declare variables using it&rsquo;s administration console.</p>
 
 <!-- more -->
 
@@ -3169,7 +3169,7 @@ It was necessary to group parameters resources into a single resource by project
     <id>http://ouertani.github.com/blog/2011/09/11/basic-mdb-with-scala</id>
     <content type="html"><![CDATA[<p>While I am Akka fun, Typesafe follower, in this post I will continue presenting scala on JEE 6 environment and introduce basic message driven bean (MDB ) using scala language.</p>
 
-<p>As an example let&#8217;s take a simple one MDB that will consome operation command like add and substract and my be asked to replay by the result</p>
+<p>As an example let&rsquo;s take a simple one MDB that will consome operation command like add and substract and my be asked to replay by the result</p>
 
 <!-- more -->
 
@@ -3277,7 +3277,7 @@ It was necessary to group parameters resources into a single resource by project
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>Nothing especial here but be careful to not forget adding messageListenerInterface=classOf[MessageListener] on MessageDriven annotation this is because ScalaObject super class and that&#8217;s all for the listener.</p>
+<p>Nothing especial here but be careful to not forget adding messageListenerInterface=classOf[MessageListener] on MessageDriven annotation this is because ScalaObject super class and that&rsquo;s all for the listener.</p>
 
 <h2>III- The sender</h2>
 
@@ -3356,7 +3356,7 @@ It was necessary to group parameters resources into a single resource by project
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>Here we used an old trick to manage resources : <a href="http://www.jroller.com/ouertani/entry/scala_try_with_resources">http://www.jroller.com/ouertani/entry/scala_try_with_resources</a></p>
+<p>Here we used an old trick to manage resources : <a href="http://www.jroller.com/ouertani/entry/scala_try_with_resources"><a href="http://www.jroller.com/ouertani/entry/scala_try_with_resources">http://www.jroller.com/ouertani/entry/scala_try_with_resources</a></a></p>
 ]]></content>
   </entry>
   
@@ -3695,7 +3695,7 @@ Request 1</p>
     <link href="http://ouertani.github.com/blog/2011/06/30/wsdl-integration-problem-two-declarations-cause-a-collision/"/>
     <updated>2011-06-30T04:10:00+02:00</updated>
     <id>http://ouertani.github.com/blog/2011/06/30/wsdl-integration-problem-two-declarations-cause-a-collision</id>
-    <content type="html"><![CDATA[<p>Integration always hides some surprises especially when it comes to old systems where quick solutions aren&#8217;t the first aid.
+    <content type="html"><![CDATA[<p>Integration always hides some surprises especially when it comes to old systems where quick solutions aren&rsquo;t the first aid.
 In this post, we present a strange and rare situation when requesting WS using an old existing WSDL.</p>
 
 <!-- more -->
@@ -3860,7 +3860,7 @@ In this post, we present a strange and rare situation when requesting WS using a
 </ol>
 
 
-<p>As these tricks doesn&#8217;t work for the current case, hands on dirty jaxb binding customization :</p>
+<p>As these tricks doesn&rsquo;t work for the current case, hands on dirty jaxb binding customization :</p>
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -4121,7 +4121,7 @@ The best point here is that scala rather than other dynamic language do compilat
 
 
 <p>What if we need to add close method to theses class even final ones?
-Let&#8217;s open class by creation rich one:</p>
+Let&rsquo;s open class by creation rich one:</p>
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
