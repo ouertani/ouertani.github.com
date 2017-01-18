@@ -1,650 +1,282 @@
-
 <!DOCTYPE HTML>
+<!--
+	Directive by HTML5 UP
+	html5up.net | @ajlkn
+	Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
+-->
 <html>
-<head>
-	<meta charset="utf-8">
-	<title>Ouertani Blog</title>
-    <meta name="author" content="Ouertani">
-    
-	<meta name="description" content="Published on: Mar 9th, 2013 Tags: Rest, Scala, Vert.x A previous post introduced some features of using Scala with Vert.x. This post covers how to &hellip;">
-	
-	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-
-	<link href="/atom.xml" rel="alternate" title="Ouertani Blog" type="application/atom+xml">
-	<link rel="canonical" href="">
-	<link href="/favicon.ico" rel="shortcut icon">
-    <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
-
-    <link href='http://fonts.googleapis.com/css?family=Slackey' rel='stylesheet' type='text/css'>
-    <link href='http://fonts.googleapis.com/css?family=Fjalla+One' rel='stylesheet' type='text/css'>
-    <link href='http://fonts.googleapis.com/css?family=Amethysta' rel='stylesheet' type='text/css'>
-	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
-    <!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
-
-    <script type="text/javascript" src="/javascripts/jquery-tapir.js"></script>
-
-    <!-- remove or comment it to disable ajaxification -->   
-    <script src="/javascripts/ajaxify.js"></script>
-   
-    
-    
-	<script type="text/javascript">
-		var _gaq = _gaq || [];
-		_gaq.push(['_setAccount', 'UA-39743923-1']);
-		_gaq.push(['_trackPageview']);
-
-		(function() {
-			var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-			ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-			var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-		})();
-	</script>
-
-
-</head>
-
-
-<body>
-    <div id="wrapper">
-    <header id="header" class="inner"><!-- for more effects see _animate.scss -->
-<h1 class="animated bounceInDown">
-    <div id="headerbg">
-        Ouertani
-    </div>
-</h1>
-<br>
-
-<ul id="social-links" style="text-align:center">
-  
-  <!-- GitHub -->
-  <li>
-  <a href="https://github.com/ouertani" class="github" title="Github"></a>
-  </li>
-  
-  
-  <!-- Google Plus -->
-  <li>
-  <a href="http://plus.google.com/109645607918628014051?rel=author" class="google" title="Google+"></a>
-  </li>
-  
-  
-  
-  <!-- Twitter -->
-  <li>
-  <a href="http://www.twitter.com/ouertani" class="twitter" title="Twitter"></a>
-  </li>
-  
-  
-  
-  
-  
-</ul>
-
-
-<!-- use full url including 'index.html' for navigation bar if you are using ajax -->
-<ul id="nav">
-	<li id="ajax"><a href="/index.html">Home</a></li>
-	<li id="ajax"><a href="/blog/archives/index.html">Archives</a></li>
-    <li><a href="/atom.xml">RSS</a></li>
-    
-    <li>
-    <div id="dark">
-        <form method="get" action="/search.html" id="search">
-            <input name="query" type="text" placeholder="Search..." x-webkit-speech />
-        </form>
-    </div>
-    </li>
-        
-</ul>
-
-
-
-
-</header>
-
-<div id="toload">
-<!-- begin toload --> 
-    <div id="content" class="inner">
-        
-
-
-    <article class="post">
-	<h2 class="title">
-		
-		<a href="/blog/2013/03/09/rest-with-scala-and-vert-dot-x/">
-		
-			Rest With Scala and Vert.x</a>
-	</h2>
-    <div class="entry-content">
-    <div class="meta">
-      <div class="date">Published on: 
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2013-03-09T00:24:00+01:00" pubdate data-updated="true">Mar 9<span>th</span>, 2013</time></div>
-      <div class="tags">Tags: 
-
-
-	<a class='category' href='/blog/categories/rest/'>Rest</a>, <a class='category' href='/blog/categories/scala/'>Scala</a>, <a class='category' href='/blog/categories/vert-dot-x/'>Vert.x</a>
-
-
-</div>
-    </div>
-		<p>A previous post introduced some features of using Scala with <a href="http://vertx.io/">Vert.x</a>. This post covers how to publish Rest web services in an elegant and simple fashion.</p>
-
-<p>As in the previous post, Examples in Java and Scala are presented, source code been hosted on GitHub as part of lang-scala <a href="https://github.com/ouertani/vert.x/tree/master/vertx-lang/vertx-lang-scala"><a href="https://github.com/ouertani/vert.x/tree/master/vertx-lang/vertx-lang-scala">https://github.com/ouertani/vert.x/tree/master/vertx-lang/vertx-lang-scala</a></a></p>
-
-
-		
-		<a href="/blog/2013/03/09/rest-with-scala-and-vert-dot-x/" class="more-link">Read on &rarr;</a>
-	</div>
-
-<div class="meta">
-	
-</div>
-</article>
-
-
-    <article class="post">
-	<h2 class="title">
-		
-		<a href="/blog/2013/02/12/fun-with-scala-and-vert-dot-x/">
-		
-			Fun With Scala and Vert.x</a>
-	</h2>
-    <div class="entry-content">
-    <div class="meta">
-      <div class="date">Published on: 
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2013-02-12T18:43:00+01:00" pubdate data-updated="true">Feb 12<span>th</span>, 2013</time></div>
-      <div class="tags">Tags: 
-
-
-	<a class='category' href='/blog/categories/scala/'>Scala</a>, <a class='category' href='/blog/categories/vert-dot-x/'>Vert.x</a>
-
-
-</div>
-    </div>
-		<p><a href="http://vertx.io/">Vert.x</a> is a polyglot event-driven application framework that runs on the Java Virtual Machine (JAVA 7 is the minimum supported version). Like Node.js, Vert.x is asynchronous and scalable, and lets developers build modern and effective web applications.</p>
-
-<p>Being polyglot, Vert.x can be used in many flavors, among which : JavaScript,CoffeeScript, Ruby, Python,Groovy and Java. In order to enforce asynchronism and scalabity, Vert.x is built upon <a href="https://netty.io/">Netty</a>, leverage the <a href="http://en.wikipedia.org/wiki/Reactor_pattern">reactor pattern</a>, using a frightening number of handlers.</p>
-
-<p>This article aims at showing the powerful combination of Scala and Vert.x &ndash; the Java counterpart being provided as comparison.</p>
-
-
-		
-		<a href="/blog/2013/02/12/fun-with-scala-and-vert-dot-x/" class="more-link">Read on &rarr;</a>
-	</div>
-
-<div class="meta">
-	
-</div>
-</article>
-
-
-    <article class="post">
-	<h2 class="title">
-		
-		<a href="/blog/2012/10/18/getting-started-with-play-2-dot-1/">
-		
-			Play 2.1 Scala 2.10 and String Interpolation</a>
-	</h2>
-    <div class="entry-content">
-    <div class="meta">
-      <div class="date">Published on: 
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2012-10-18T19:00:00+02:00" pubdate data-updated="true">Oct 18<span>th</span>, 2012</time></div>
-      <div class="tags">Tags: 
-
-
-	<a class='category' href='/blog/categories/play/'>Play</a>, <a class='category' href='/blog/categories/scala/'>Scala</a>
-
-
-</div>
-    </div>
-		<p>Play Roadmap has been <a href="https://docs.google.com/document/d/1OEt6gZ3a-daSkNXqXGAM4jBs5LtuDkLZIzsWN9aeM1g/preview?sle=true">published</a>. The major feature will be the support of <a href="http://www.scala-lang.org/">scala 2.10</a> version.</p>
-
-<p>By using <a href="http://www.playframework.org/">Play 2.1</a> we can start profiting with <a href="https://docs.google.com/document/d/1NdxNxZYodPA-c4MLr33KzwzKFkzm9iW9POexT9PkJsU/edit">String interpolation</a></p>
-
-
-		
-		<a href="/blog/2012/10/18/getting-started-with-play-2-dot-1/" class="more-link">Read on &rarr;</a>
-	</div>
-
-<div class="meta">
-	
-</div>
-</article>
-
-
-    <article class="post">
-	<h2 class="title">
-		
-		<a href="/blog/2012/10/09/play-2-dot-1/">
-		
-			Play 2.1 , Scala 2.10 and Slick 0.11.1</a>
-	</h2>
-    <div class="entry-content">
-    <div class="meta">
-      <div class="date">Published on: 
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2012-10-09T15:17:00+02:00" pubdate data-updated="true">Oct 9<span>th</span>, 2012</time></div>
-      <div class="tags">Tags: 
-
-
-	<a class='category' href='/blog/categories/play/'>Play</a>, <a class='category' href='/blog/categories/scala/'>Scala</a>
-
-
-</div>
-    </div>
-		<p>Starting from scala <a href="http://www.scala-lang.org/downloads">2.10</a> version , <a href="http://slick.typesafe.com/">Slick</a> will be by defaut the database manager. In addition, <a href="http://www.playframework.org/">Playframework</a>  also will be based on scala 2.10  since version 2.1.</p>
-
-<p>In this tutorial, I will try to present an example using the last version of slick and scalatest based on <a href="http://www.scala-lang.org/downloads">scala 2.10.0-M7</a> and a developpment version of <a href="https://github.com/playframework/Play20">playframework</a></p>
-
-
-		
-		<a href="/blog/2012/10/09/play-2-dot-1/" class="more-link">Read on &rarr;</a>
-	</div>
-
-<div class="meta">
-	
-</div>
-</article>
-
-
-    <article class="post">
-	<h2 class="title">
-		
-		<a href="/blog/2012/09/26/xml-slash-rpc-driver-as-jca-scala-connector/">
-		
-			XML/RPC Driver as JCA Scala Connector</a>
-	</h2>
-    <div class="entry-content">
-    <div class="meta">
-      <div class="date">Published on: 
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2012-09-26T19:41:00+02:00" pubdate data-updated="true">Sep 26<span>th</span>, 2012</time></div>
-      <div class="tags">Tags: 
-
-
-	<a class='category' href='/blog/categories/jca/'>JCA</a>, <a class='category' href='/blog/categories/jee/'>JEE</a>, <a class='category' href='/blog/categories/rpc/'>RPC</a>, <a class='category' href='/blog/categories/scala/'>Scala</a>, <a class='category' href='/blog/categories/ucip/'>Ucip</a>, <a class='category' href='/blog/categories/xml/'>XML</a>
-
-
-</div>
-    </div>
-		<p>Interoperability and reusability are key features of SOA architecture.</p>
-
-<p>The <a href="http://en.wikipedia.org/wiki/Java_EE_Connector_Architecture">Java EE Connector architecture</a> defines a standard architecture for connecting the Java EE platform to heterogeneous EISs. This article presents an XML/RPC  adapter using a Scala JCA outbound connector to an IN/AIR legacy system.</p>
-
-
-		
-		<a href="/blog/2012/09/26/xml-slash-rpc-driver-as-jca-scala-connector/" class="more-link">Read on &rarr;</a>
-	</div>
-
-<div class="meta">
-	
-</div>
-</article>
-
-
-    <article class="post">
-	<h2 class="title">
-		
-		<a href="/blog/2012/06/29/xml-rpc-using-scala/">
-		
-			XML-RPC Using Scala</a>
-	</h2>
-    <div class="entry-content">
-    <div class="meta">
-      <div class="date">Published on: 
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2012-06-29T02:03:00+02:00" pubdate data-updated="true">Jun 29<span>th</span>, 2012</time></div>
-      <div class="tags">Tags: 
-
-
-	<a class='category' href='/blog/categories/scala/'>Scala</a>, <a class='category' href='/blog/categories/ucip/'>Ucip</a>, <a class='category' href='/blog/categories/xml-slash-rpc/'>XML/RPC</a>
-
-
-</div>
-    </div>
-		<h2>Purpose</h2>
-
-
-<p>Calling remote procedure using XML-RPC and Scala.</p>
-
-<h2>Introduction</h2>
-
-
-<p>On Telecom IT environment and specially middelware solution, we will rarely do all the work but rather delegate some of business process to other tiers. Web service communications is heavy used between solutions. However, many IT node continues to support older protocols like XML-RPC. Ericsson Intelligent Network (IN) and its subsystem uses AIR Integration Protocol user communication(UCIP) based on a variant of XM-RPC.</p>
-
-
-		
-		<a href="/blog/2012/06/29/xml-rpc-using-scala/" class="more-link">Read on &rarr;</a>
-	</div>
-
-<div class="meta">
-	
-</div>
-</article>
-
-
-    <article class="post">
-	<h2 class="title">
-		
-		<a href="/blog/2012/06/28/jaxws-header-part-2-server-side/">
-		
-			Jaxws Header : Part 2 : Server Side</a>
-	</h2>
-    <div class="entry-content">
-    <div class="meta">
-      <div class="date">Published on: 
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2012-06-28T03:19:00+02:00" pubdate data-updated="true">Jun 28<span>th</span>, 2012</time></div>
-      <div class="tags">Tags: 
-
-
-	<a class='category' href='/blog/categories/jax-ws/'>JAX-WS</a>, <a class='category' href='/blog/categories/jee/'>JEE</a>, <a class='category' href='/blog/categories/scala/'>Scala</a>
-
-
-</div>
-    </div>
-		<h2>Purpose</h2>
-
-
-<p>Manipulating JAXWS header on the server Side like reading WSS username token, logging saop message and publish a specific header.</p>
-
-<h2>Introduction</h2>
-
-
-<p>On Telecom IT environment and specially middelware solution web service communications are heavy used between solutions. This tutorial aims to introduce using handler on server side by publishing specific header, reading WSS UserToken or logging the soap message on console.</p>
-
-
-		
-		<a href="/blog/2012/06/28/jaxws-header-part-2-server-side/" class="more-link">Read on &rarr;</a>
-	</div>
-
-<div class="meta">
-	
-</div>
-</article>
-
-
-    <article class="post">
-	<h2 class="title">
-		
-		<a href="/blog/2012/06/28/sending-an-email-using-the-javamail-session-and-glassfish/">
-		
-			Sending an Email Using the JavaMail Session and Glassfish</a>
-	</h2>
-    <div class="entry-content">
-    <div class="meta">
-      <div class="date">Published on: 
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2012-06-28T02:18:00+02:00" pubdate data-updated="true">Jun 28<span>th</span>, 2012</time></div>
-      <div class="tags">Tags: 
-
-
-	<a class='category' href='/blog/categories/glassfish/'>Glassfish</a>, <a class='category' href='/blog/categories/jee/'>JEE</a>, <a class='category' href='/blog/categories/mail/'>MAIL</a>
-
-
-</div>
-    </div>
-		<h2>Purpose</h2>
-
-
-<p>This tutorial is a supplement to the article of oracle published <a href="http://www.oracle.com/webfolder/technetwork/tutorials/obe/java/javamail/javamail.html">here</a>.
-After reading this later, I decided to share some tips about this EE environment JavaMail api configuration.</p>
-
-<h2>Introduction</h2>
-
-
-<p>Two years ago, we decided to move to JEE 6 for our enterprise solutions and take a lot of fun with new EJB 3.1 features and annotations. Glassfish has made our lives easier, it was very easy to declare variables using it&rsquo;s administration console.
-Less complicated than using global resource environment for properties It is also the continuation to this <a href="http://www.jroller.com/articles/jee-6-environmental-enterprise">tricks</a> this tutorial delegate to Glassfish EE server managing mail session.</p>
-
-
-		
-		<a href="/blog/2012/06/28/sending-an-email-using-the-javamail-session-and-glassfish/" class="more-link">Read on &rarr;</a>
-	</div>
-
-<div class="meta">
-	
-</div>
-</article>
-
-
-    <article class="post">
-	<h2 class="title">
-		
-		<a href="/blog/2012/06/27/jax-ws-header-part-1-the-client-side/">
-		
-			JAX-WS Header : Part 1 the Client Side</a>
-	</h2>
-    <div class="entry-content">
-    <div class="meta">
-      <div class="date">Published on: 
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2012-06-27T03:32:00+02:00" pubdate data-updated="true">Jun 27<span>th</span>, 2012</time></div>
-      <div class="tags">Tags: 
-
-
-	<a class='category' href='/blog/categories/jax-ws/'>JAX-WS</a>, <a class='category' href='/blog/categories/jee/'>JEE</a>, <a class='category' href='/blog/categories/scala/'>SCALA</a>
-
-
-</div>
-    </div>
-		<h2>Purpose</h2>
-
-
-<p>Manipulating JAXWS header on the client Side like adding WSS username token or logging saop message.</p>
-
-<h2>Introduction</h2>
-
-
-<p>On Telecom IT environment and specially middelware solution, we will rarely do all the work but rather delegate some of business process to other tiers. Web service communications is heavy used between solutions. This tutorial aims to introduce using handler on client side by adding WSS UserToken or logging the soap message on console.</p>
-
-
-		
-		<a href="/blog/2012/06/27/jax-ws-header-part-1-the-client-side/" class="more-link">Read on &rarr;</a>
-	</div>
-
-<div class="meta">
-	
-</div>
-</article>
-
-
-    <article class="post">
-	<h2 class="title">
-		
-		<a href="/blog/2012/06/24/ee-6-environmental-enterprise-entries-and-glassfish/">
-		
-			EE 6 Environmental Enterprise Entries and Glassfish</a>
-	</h2>
-    <div class="entry-content">
-    <div class="meta">
-      <div class="date">Published on: 
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2012-06-24T02:55:00+02:00" pubdate data-updated="true">Jun 24<span>th</span>, 2012</time></div>
-      <div class="tags">Tags: 
-
-
-	<a class='category' href='/blog/categories/jee/'>JEE</a>, <a class='category' href='/blog/categories/jndi/'>JNDI</a>
-
-
-</div>
-    </div>
-		<h2>PURPOSE</h2>
-
-
-<p>This tutorial is a supplement to the article of oracle published <a href="http://www.oracle.com/webfolder/technetwork/tutorials/obe/java/env_entry/env_entry.html.">here</a>. After reading <a href="http://www.oracle.com/webfolder/technetwork/tutorials/obe/java/env_entry/env_entry.html.">this later</a>, I decided to share some tips about this EE environment configuration.</p>
-
-<h2>INTRODUCTION</h2>
-
-
-<p>Two years ago, we decided to move to JEE 6 for our enterprise solutions and take a lot of fun with new EJB 3.1 features and annotations. Glassfish has made our lives easier, it was very easy to declare variables using it&rsquo;s administration console.</p>
-
-
-		
-		<a href="/blog/2012/06/24/ee-6-environmental-enterprise-entries-and-glassfish/" class="more-link">Read on &rarr;</a>
-	</div>
-
-<div class="meta">
-	
-</div>
-</article>
-
-<nav id="pagenavi">
-    
-    
-        <a href="/blog/page/2/" class="next">Next</a>
-    
-    <div class="center"><a href="/blog/archives">Blog Archives</a></div>
-</nav>
-
-    </div>
-    <footer id="footer">
-    <div style="display:inline">
-    Copyright &copy; 2013
-
-    Ouertani
-. Powered by <a href="http://octopress.org">Octopress</a> | 
-    Theme <a href="http://github.com/panks/fabric">fabric</a> by <a href="http://panks.me">Pankaj Kumar</a>
-</div>
-
-
-    </footer>
-    <script src="/javascripts/fabric.js"></script>
-<script src="/javascripts/jquery.fancybox.pack.js"></script>
-<script type="text/javascript">
-(function($){
-	$('.fancybox').fancybox();
-})(jQuery);
-</script> <!-- Delete or comment this line to disable Fancybox -->
-
-
-<script type="text/javascript">
-      var disqus_shortname = 'ouertani';
-      
-        
-        var disqus_script = 'count.js';
-      
-    (function () {
-      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
-      dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
-      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
-    }());
-</script>
-
-
-
-
-
-<!-- end toload --> 
-</div>
-</div>
-<script src="/javascripts/jquery.ui.totop.js" type="text/javascript"></script>
-<script type="text/javascript">
-/*<![CDATA[*/
-;(function($){$().UItoTop({easingType:'easeOutCirc'});})(jQuery); 
-/*]]>*/
-</script><!-- remove it to remove the scroll to top button -->
-</body>
+	<head>
+		<title>Directive by HTML5 UP</title>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<!--[if lte IE 8]><script src="assets/js/ie/html5shiv.js"></script><![endif]-->
+		<link rel="stylesheet" href="assets/css/main.css" />
+		<!--[if lte IE 8]><link rel="stylesheet" href="assets/css/ie8.css" /><![endif]-->
+	</head>
+	<body>
+
+		<!-- Header -->
+			<div id="header">
+				<span class="logo icon fa-paper-plane-o"></span>
+				<h1>Hi. This is Directive.</h1>
+				<p>A responsive HTML5 + CSS3 site template designed by <a href="http://html5up.net">HTML5 UP</a>
+				<br />
+				and released for free under the <a href="http://html5up.net/license">Creative Commons license</a>.</p>
+			</div>
+
+		<!-- Main -->
+			<div id="main">
+
+				<header class="major container 75%">
+					<h2>We conduct experiments that
+					<br />
+					may or may not seriously
+					<br />
+					break the universe</h2>
+					<!--
+					<p>Tellus erat mauris ipsum fermentum<br />
+					etiam vivamus nunc nibh morbi.</p>
+					-->
+				</header>
+
+				<div class="box alt container">
+					<section class="feature left">
+						<a href="#" class="image icon fa-signal"><img src="images/pic01.jpg" alt="" /></a>
+						<div class="content">
+							<h3>The First Thing</h3>
+							<p>Vitae natoque dictum etiam semper magnis enim feugiat amet curabitur tempor orci penatibus. Tellus erat mauris ipsum fermentum etiam vivamus eget. Nunc nibh morbi quis fusce lacus.</p>
+						</div>
+					</section>
+					<section class="feature right">
+						<a href="#" class="image icon fa-code"><img src="images/pic02.jpg" alt="" /></a>
+						<div class="content">
+							<h3>The Second Thing</h3>
+							<p>Vitae natoque dictum etiam semper magnis enim feugiat amet curabitur tempor orci penatibus. Tellus erat mauris ipsum fermentum etiam vivamus eget. Nunc nibh morbi quis fusce lacus.</p>
+						</div>
+					</section>
+					<section class="feature left">
+						<a href="#" class="image icon fa-mobile"><img src="images/pic03.jpg" alt="" /></a>
+						<div class="content">
+							<h3>The Third Thing</h3>
+							<p>Vitae natoque dictum etiam semper magnis enim feugiat amet curabitur tempor orci penatibus. Tellus erat mauris ipsum fermentum etiam vivamus eget. Nunc nibh morbi quis fusce lacus.</p>
+						</div>
+					</section>
+				</div>
+
+				<!--
+				<div class="box container">
+					<header>
+						<h2>A lot of generic stuff</h2>
+					</header>
+					<section>
+						<header>
+							<h3>Paragraph</h3>
+							<p>This is the subtitle for this particular heading</p>
+						</header>
+						<p>Phasellus nisl nisl, varius id <sup>porttitor sed pellentesque</sup> ac orci. Pellentesque
+						habitant <strong>strong</strong> tristique <b>bold</b> et netus <i>italic</i> malesuada <em>emphasized</em> ac turpis egestas. Morbi
+						leo suscipit ut. Praesent <sub>id turpis vitae</sub> turpis pretium ultricies. Vestibulum sit
+						amet risus elit.</p>
+					</section>
+					<section>
+						<header>
+							<h3>Blockquote</h3>
+						</header>
+						<blockquote>Fringilla nisl. Donec accumsan interdum nisi, quis tincidunt felis sagittis eget.
+						tempus euismod. Vestibulum ante ipsum primis in faucibus.</blockquote>
+					</section>
+					<section>
+						<header>
+							<h3>Divider</h3>
+						</header>
+						<p>Donec consectetur vestibulum dolor et pulvinar. Etiam vel felis enim, at viverra
+						ligula. Ut porttitor sagittis lorem, quis eleifend nisi ornare vel. Praesent nec orci
+						facilisis leo magna. Cras sit amet urna eros, id egestas urna. Quisque aliquam
+						tempus euismod. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices
+						posuere cubilia.</p>
+						<hr />
+						<p>Donec consectetur vestibulum dolor et pulvinar. Etiam vel felis enim, at viverra
+						ligula. Ut porttitor sagittis lorem, quis eleifend nisi ornare vel. Praesent nec orci
+						facilisis leo magna. Cras sit amet urna eros, id egestas urna. Quisque aliquam
+						tempus euismod. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices
+						posuere cubilia.</p>
+					</section>
+					<section>
+						<header>
+							<h3>Unordered List</h3>
+						</header>
+						<ul class="default">
+							<li>Donec consectetur vestibulum dolor et pulvinar. Etiam vel felis enim, at viverra ligula. Ut porttitor sagittis lorem, quis eleifend nisi ornare vel.</li>
+							<li>Donec consectetur vestibulum dolor et pulvinar. Etiam vel felis enim, at viverra ligula. Ut porttitor sagittis lorem, quis eleifend nisi ornare vel.</li>
+							<li>Donec consectetur vestibulum dolor et pulvinar. Etiam vel felis enim, at viverra ligula. Ut porttitor sagittis lorem, quis eleifend nisi ornare vel.</li>
+							<li>Donec consectetur vestibulum dolor et pulvinar. Etiam vel felis enim, at viverra ligula. Ut porttitor sagittis lorem, quis eleifend nisi ornare vel.</li>
+						</ul>
+					</section>
+					<section>
+						<header>
+							<h3>Ordered List</h3>
+						</header>
+						<ol class="default">
+							<li>Donec consectetur vestibulum dolor et pulvinar. Etiam vel felis enim, at viverra ligula. Ut porttitor sagittis lorem, quis eleifend nisi ornare vel.</li>
+							<li>Donec consectetur vestibulum dolor et pulvinar. Etiam vel felis enim, at viverra ligula. Ut porttitor sagittis lorem, quis eleifend nisi ornare vel.</li>
+							<li>Donec consectetur vestibulum dolor et pulvinar. Etiam vel felis enim, at viverra ligula. Ut porttitor sagittis lorem, quis eleifend nisi ornare vel.</li>
+							<li>Donec consectetur vestibulum dolor et pulvinar. Etiam vel felis enim, at viverra ligula. Ut porttitor sagittis lorem, quis eleifend nisi ornare vel.</li>
+						</ol>
+					</section>
+					<section>
+						<header>
+							<h3>Table</h3>
+						</header>
+						<div class="table-wrapper">
+							<table class="default">
+								<thead>
+									<tr>
+										<th>ID</th>
+										<th>Name</th>
+										<th>Description</th>
+										<th>Price</th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr>
+										<td>45815</td>
+										<td>Something</td>
+										<td>Ut porttitor sagittis lorem, quis eleifend nisi ornare vel.</td>
+										<td>29.99</td>
+									</tr>
+									<tr>
+										<td>24524</td>
+										<td>Nothing</td>
+										<td>Ut porttitor sagittis lorem, quis eleifend nisi ornare vel.</td>
+										<td>19.99</td>
+									</tr>
+									<tr>
+										<td>45815</td>
+										<td>Something</td>
+										<td>Ut porttitor sagittis lorem, quis eleifend nisi ornare vel.</td>
+										<td>29.99</td>
+									</tr>
+									<tr>
+										<td>24524</td>
+										<td>Nothing</td>
+										<td>Ut porttitor sagittis lorem, quis eleifend nisi ornare vel.</td>
+										<td>19.99</td>
+									</tr>
+								</tbody>
+								<tfoot>
+									<tr>
+										<td colspan="3"></td>
+										<td>100.00</td>
+									</tr>
+								</tfoot>
+							</table>
+						</div>
+					</section>
+					<section>
+						<header>
+							<h3>Form</h3>
+						</header>
+						<form method="post" action="#">
+							<div class="row">
+								<div class="6u 12u(mobilep)">
+									<label for="name">Name</label>
+									<input class="text" type="text" name="name" id="name" value="" placeholder="John Doe" />
+								</div>
+								<div class="6u 12u(mobilep)">
+									<label for="email">Email</label>
+									<input class="text" type="text" name="email" id="email" value="" placeholder="johndoe@domain.tld" />
+								</div>
+							</div>
+							<div class="row">
+								<div class="12u">
+									<label for="subject">Subject</label>
+									<input class="text" type="text" name="subject" id="subject" value="" placeholder="Enter your subject" />
+								</div>
+							</div>
+							<div class="row">
+								<div class="12u">
+									<label for="subject">Message</label>
+									<textarea name="message" id="message" placeholder="Enter your message" rows="6"></textarea>
+								</div>
+							</div>
+							<div class="row">
+								<div class="12u">
+									<ul class="actions">
+										<li><input type="submit" value="Send" /></li>
+										<li><input type="reset" value="Reset" class="alt" /></li>
+									</ul>
+								</div>
+							</div>
+						</form>
+					</section>
+				</div>
+				-->
+
+				<footer class="major container 75%">
+					<h3>Get shady with science</h3>
+					<p>Vitae natoque dictum etiam semper magnis enim feugiat amet curabitur tempor orci penatibus. Tellus erat mauris ipsum fermentum etiam vivamus.</p>
+					<ul class="actions">
+						<li><a href="#" class="button">Join our crew</a></li>
+					</ul>
+				</footer>
+
+			</div>
+
+		<!-- Footer -->
+			<div id="footer">
+				<div class="container 75%">
+
+					<header class="major last">
+						<h2>Questions or comments?</h2>
+					</header>
+
+					<p>Vitae natoque dictum etiam semper magnis enim feugiat amet curabitur tempor
+					orci penatibus. Tellus erat mauris ipsum fermentum etiam vivamus.</p>
+
+					<form method="post" action="#">
+						<div class="row">
+							<div class="6u 12u(mobilep)">
+								<input type="text" name="name" placeholder="Name" />
+							</div>
+							<div class="6u 12u(mobilep)">
+								<input type="email" name="email" placeholder="Email" />
+							</div>
+						</div>
+						<div class="row">
+							<div class="12u">
+								<textarea name="message" placeholder="Message" rows="6"></textarea>
+							</div>
+						</div>
+						<div class="row">
+							<div class="12u">
+								<ul class="actions">
+									<li><input type="submit" value="Send Message" /></li>
+								</ul>
+							</div>
+						</div>
+					</form>
+
+					<ul class="icons">
+						<li><a href="#" class="icon fa-twitter"><span class="label">Twitter</span></a></li>
+						<li><a href="#" class="icon fa-facebook"><span class="label">Facebook</span></a></li>
+						<li><a href="#" class="icon fa-instagram"><span class="label">Instagram</span></a></li>
+						<li><a href="#" class="icon fa-github"><span class="label">Github</span></a></li>
+						<li><a href="#" class="icon fa-dribbble"><span class="label">Dribbble</span></a></li>
+					</ul>
+
+					<ul class="copyright">
+						<li>&copy; Untitled. All rights reserved.</li><li>Design: <a href="http://html5up.net">HTML5 UP</a></li>
+					</ul>
+
+				</div>
+			</div>
+
+		<!-- Scripts -->
+			<script src="assets/js/jquery.min.js"></script>
+			<script src="assets/js/skel.min.js"></script>
+			<script src="assets/js/util.js"></script>
+			<!--[if lte IE 8]><script src="assets/js/ie/respond.min.js"></script><![endif]-->
+			<script src="assets/js/main.js"></script>
+
+	</body>
 </html>
