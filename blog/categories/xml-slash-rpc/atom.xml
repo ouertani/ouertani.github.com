@@ -1,0 +1,260 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: XML/RPC | Ouertani Blog]]></title>
+  <link href="http://ouertani.github.io/blog/categories/xml-slash-rpc/atom.xml" rel="self"/>
+  <link href="http://ouertani.github.io/"/>
+  <updated>2013-08-09T16:30:13+02:00</updated>
+  <id>http://ouertani.github.io/</id>
+  <author>
+    <name><![CDATA[Ouertani]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[XML-RPC using scala]]></title>
+    <link href="http://ouertani.github.io/blog/2012/06/29/xml-rpc-using-scala/"/>
+    <updated>2012-06-29T02:03:00+02:00</updated>
+    <id>http://ouertani.github.io/blog/2012/06/29/xml-rpc-using-scala</id>
+    <content type="html"><![CDATA[<h2>Purpose</h2>
+
+
+<p>Calling remote procedure using XML-RPC and Scala.</p>
+
+<h2>Introduction</h2>
+
+
+<p>On Telecom IT environment and specially middelware solution, we will rarely do all the work but rather delegate some of business process to other tiers. Web service communications is heavy used between solutions. However, many IT node continues to support older protocols like XML-RPC. Ericsson Intelligent Network (IN) and its subsystem uses AIR Integration Protocol user communication(UCIP) based on a variant of XM-RPC.</p>
+
+<!-- more -->
+
+
+<h2>Why UCIP ?</h2>
+
+
+<p>UCIP is intended for user self services such as Adjustments, Account Refill, and Account Inquiries and to extract account details. UCIP is an IP-based protocol used for integration towards the AIR server from the external application.</p>
+
+<h2>Why Scala ?</h2>
+
+
+<p>UCIP is an XML over HTTP based protocol, which makes it easy to integrate with a central integration point within a network. In addition, Scala can be used to easily create, parse, and process XML documents. XML data can be represented in Scala either by using a generic data representation, or with a data-specific data representation.</p>
+
+<h2>Scala & XML-RPC</h2>
+
+
+<p>Rather than using an precompiled version of XML-RPC library, we will do our home solution using httpclient library from apache :
+<code>xml
+&lt;dependency&gt;
+ &lt;groupId&gt;org.apache.httpcomponents&lt;/groupId&gt;
+ &lt;artifactId&gt;httpclient&lt;/artifactId&gt;
+ &lt;version&gt;4.1&lt;/version&gt;
+&lt;/dependency&gt;
+</code></p>
+
+<h3>UPDATEBALANCEANDDATE</h3>
+
+
+<p>The message UpdateBalanceAndDate is used to adjust balances and expiry dates on the main account and the dedicated accounts. The sample I chooses here is only to update main balance :</p>
+
+<p>Let&rsquo;s start with some helpful class :</p>
+
+<p>1- InParameters class : contains In specific configuration like ip and port
+<code>scala
+case class InParameters(ip:String,port:Int,user:String,pwd:String,agent:String,url:String)
+</code>
+2- XMLRPCVo abstract class : groups all XML request message like the transaction generated Id and date
+<code>scala
+object XmlRpcVo {
+ val f = new SimpleDateFormat("yyyyMMdd'T'HH:mm:ssZ");
+}
+abstract class XmlRpcVo {
+ def originTransactionID = System currentTimeMillis
+ def dateTime:String= XmlRpcVo.f.format(new Date())
+}
+</code>
+3- UpdateBalanceAndDateParameter class with extend our XMLRPCVo and contains all data needed by Update main balance operation like subscriber number
+<code>scala
+case class UpdateBalanceAndDateParameter(subscriberNumber:String,
+ originNodeType:String,
+ originHostName:String,
+ transactionCurrency:String,
+ amount: Int )
+extends XmlRpcVo
+</code>
+4-UCIP suggests to add custom header on XML-RPC message. XmlRpcHttpClient class dialogue with IN nodes using generic execute method
+```scala
+class XmlRpcHttpClient(inp :InParameters) extends LogHelper{</p>
+
+<p>  private val httpclient:DefaultHttpClient = client</p>
+
+<p>  private [this] def client() =
+  {</p>
+
+<pre><code>val httpclient = new DefaultHttpClient();
+
+httpclient.getCredentialsProvider().setCredentials(
+  new AuthScope(inp.ip, inp.port),
+  new UsernamePasswordCredentials(inp.user, inp.pwd)) 
+
+
+httpclient.getParams().setParameter(CoreProtocolPNames.USER_AGENT, inp.agent) 
+httpclient
+</code></pre>
+
+<p>  }
+  private [this] def poster(elem:Elem) ={</p>
+
+<pre><code>val httppost = new HttpPost(inp.url)
+httppost.addHeader("Content-Type", "text/xml")
+httppost.addHeader("Content-Disposition", "form-data; name=\"fname\"; filename=\"request.xml\"")
+
+val comment = new StringBody(""+elem)
+
+val reqEntity = new MultipartEntity()
+reqEntity.addPart("fname", comment)
+httppost.setEntity(reqEntity)
+httppost
+</code></pre>
+
+<p>  }</p>
+
+<p>  def execute(requestVo:scala.xml.Elem):HttpResponse = {</p>
+
+<pre><code>try     { client.execute(poster(requestVo))}
+catch   { case e =&gt;  throw new connectionExecption(e) }
+finally {  client.getConnectionManager().shutdown() }
+</code></pre>
+
+<p>  }
+}
+```
+XML-RPC is a Remote Procedure Calling protocol and the body of an XML-RPC request is formatted using XML. A procedure executes on the AIR server and the value it returns is also formatted in XML. The interface to the AIR server interface uses XML-RPC over HTTP. Sending an XML to update the main balance will be using this class.</p>
+
+<p>5- UpdateBalanceAndDate class : generates an UpdateBalanceAndDate XML request message
+```scala
+class UpdateBalanceAndDate (ubdp :UpdateBalanceAndDateParameter)  {</p>
+
+<pre><code>def request=
+  &lt;methodCall&gt;
+    &lt;methodName&gt;UpdateBalanceAndDate&lt;/methodName&gt;
+    &lt;params&gt;
+      &lt;param&gt;
+        &lt;value&gt;
+          &lt;struct&gt;
+            &lt;member&gt;
+              &lt;name&gt;originNodeType&lt;/name&gt;
+              &lt;value&gt;
+                &lt;string&gt;{ubdp.originNodeType}&lt;/string&gt;
+              &lt;/value&gt;
+            &lt;/member&gt;
+            &lt;member&gt;
+              &lt;name&gt;originHostName&lt;/name&gt;
+              &lt;value&gt;
+                &lt;string&gt;{ubdp.originHostName}&lt;/string&gt;
+              &lt;/value&gt;
+            &lt;/member&gt;
+            &lt;member&gt;
+              &lt;name&gt;originTransactionID&lt;/name&gt;
+              &lt;value&gt;
+                &lt;string&gt;{ubdp.originTransactionID}&lt;/string&gt;
+              &lt;/value&gt;
+            &lt;/member&gt;
+            &lt;member&gt;
+              &lt;name&gt;originTimeStamp&lt;/name&gt;
+              &lt;value&gt;
+                &lt;dateTime.iso8601&gt;{ubdp.dateTime}&lt;/dateTime.iso8601&gt;
+              &lt;/value&gt;
+            &lt;/member&gt;
+            &lt;member&gt;
+              &lt;name&gt;subscriberNumber&lt;/name&gt;
+              &lt;value&gt;
+                &lt;string&gt;{ubdp.subscriberNumber}&lt;/string&gt;
+              &lt;/value&gt;
+            &lt;/member&gt;
+            &lt;member&gt;
+              &lt;name&gt;transactionCurrency&lt;/name&gt;
+              &lt;value&gt;
+                &lt;string&gt;{ubdp.transactionCurrency}&lt;/string&gt;
+              &lt;/value&gt;
+            &lt;/member&gt;
+            &lt;member&gt;
+              &lt;name&gt;adjustmentAmountRelative&lt;/name&gt;
+              &lt;value&gt;
+                &lt;string&gt;{ubdp.amount}&lt;/string&gt;
+              &lt;/value&gt;
+            &lt;/member&gt;                
+          &lt;/struct&gt;
+        &lt;/value&gt;
+      &lt;/param&gt;
+    &lt;/params&gt;
+  &lt;/methodCall&gt;
+</code></pre>
+
+<p>  }
+<code>
+6- UpdateBalanceAndDate companion object is used to parse response and validate the transaction
+</code>scala
+object UpdateBalanceAndDate {</p>
+
+<p>  @throws (classOf[ClientProtocolException])
+  @throws (classOf[IOException])
+  def  getResponse(response:HttpResponse ):Int=  {</p>
+
+<pre><code>try {
+  val entity = response.getEntity();
+  if (entity != null) {      
+    val s = EntityUtils.toString(entity)
+    val elem =  XML.loadString(s)      
+
+    val tuple=   for {
+      x &lt;- (elem \\ "member")
+      name = (x \ "name" ) .text
+      code = ( x  \ "value"  \ "i4" ).text  if(name == "responseCode")
+        } yield (code)
+
+      if(tuple.size == 1)  {
+        return tuple(0).toInt 
+      }
+      return RESPONSE_PARSE_EXCEPTION
+    }
+    else { return NULL_RESPONSE  }
+  }
+  catch {
+    case _ =&gt;  return  UNEXCEPTED_ERROR_WHILE_PARSE_RESPONSE         
+  }
+}
+</code></pre>
+
+<p>  }
+<code>
+7- UpdateBalanceAndDateController controlleur class orchestrate requests and utilities class
+</code>scala
+class UpdateBalanceAndDateController {</p>
+
+<p>  def update(inp: InParameters, ubdp : UpdateBalanceAndDateParameter ):Int={</p>
+
+<pre><code>try {
+  val c = new XmlRpcHttpClient(inp)
+  val ubd = new  UpdateBalanceAndDate (ubdp)
+  val rep=  c execute(ubd.request)
+  return UpdateBalanceAndDate.getResponse(rep ) 
+}catch {
+  case e:connectionExecption =&gt; return AIR_EXCEPTION  
+  case e =&gt;  return UNEXPECTED_CONNECTION__EXCEPTION 
+}
+</code></pre>
+
+<p>  }
+}
+```</p>
+
+<h2>Conclusion</h2>
+
+
+<p>Create XML message and parse it using scala is like a baby toy and makes using UCIP protocol easier and simpler. This sample can be generalized to the other UCIP messages like GetBalanceAndDate or GetAccountDetails and any other XML-RPC communication.</p>
+]]></content>
+  </entry>
+  
+</feed>

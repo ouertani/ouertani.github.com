@@ -1,0 +1,848 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: SCALA | Ouertani Blog]]></title>
+  <link href="http://ouertani.github.io/blog/categories/scala/atom.xml" rel="self"/>
+  <link href="http://ouertani.github.io/"/>
+  <updated>2013-08-09T16:30:13+02:00</updated>
+  <id>http://ouertani.github.io/</id>
+  <author>
+    <name><![CDATA[Ouertani]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[JAX-WS Header : Part 1 the Client Side]]></title>
+    <link href="http://ouertani.github.io/blog/2012/06/27/jax-ws-header-part-1-the-client-side/"/>
+    <updated>2012-06-27T03:32:00+02:00</updated>
+    <id>http://ouertani.github.io/blog/2012/06/27/jax-ws-header-part-1-the-client-side</id>
+    <content type="html"><![CDATA[<h2>Purpose</h2>
+
+
+<p>Manipulating JAXWS header on the client Side like adding WSS username token or logging saop message.</p>
+
+<h2>Introduction</h2>
+
+
+<p>On Telecom IT environment and specially middelware solution, we will rarely do all the work but rather delegate some of business process to other tiers. Web service communications is heavy used between solutions. This tutorial aims to introduce using handler on client side by adding WSS UserToken or logging the soap message on console.</p>
+
+<!-- more -->
+
+
+<h2>Adding undeclared custom header</h2>
+
+
+<p>Some Ws client needs to add a custom header which are not declared on WSDL. Adding WSS Username Token is like adding this XML snippet on header element:
+```xml
+&lt;soapenv:Header></p>
+
+<pre><code>  &lt;wsse:Security  xmlns:wsse="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd" xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd"&gt;
+     &lt;wsse:UsernameToken wsu:Id="UsernameToken-1"&gt;
+        &lt;wsse:Username&gt;login&lt;/wsse:Username&gt;
+        &lt;wsse:Password Type="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-username-token-profile-1.0#PasswordText"&gt;XXXX&lt;/wsse:Password&gt;        
+     &lt;/wsse:UsernameToken&gt;
+  &lt;/wsse:Security&gt;
+</code></pre>
+
+<p> &lt;/soapenv:Header>
+<code>
+Unlike &lt;a href="http://docs.oracle.com/javaee/5/api/javax/xml/ws/handler/LogicalHandler.html"&gt;LogicalHandler&lt;/a&gt; SOAPHandler have access to the entire Soap Message. Let's create an WSSUsernameTokenSecurityHandler Local Stateless Bean extending SOAPHandler to produce the previous header.
+Below the WSSUsernameTokenSecurityHandler class
+</code> java WSSUsernameTokenSecurityHandler.java
+package me.slim.ouertani;</p>
+
+<p>import java.util.Set;
+import java.util.TreeSet;
+import javax.annotation.Resource;
+import javax.ejb.LocalBean;
+import javax.ejb.Stateless;
+import javax.xml.namespace.QName;
+import javax.xml.soap.*;
+import javax.xml.ws.handler.MessageContext;
+import javax.xml.ws.handler.soap.SOAPHandler;
+import javax.xml.ws.handler.soap.SOAPMessageContext;</p>
+
+<p>@Stateless
+@LocalBean
+public class WSSUsernameTokenSecurityHandler implements SOAPHandler<SOAPMessageContext> {</p>
+
+<pre><code>@Resource(lookup = "login")
+private String login;
+@Resource(lookup = "pwd")
+private String pwd;
+
+public WSSUsernameTokenSecurityHandler() {
+}
+
+@Override
+public boolean handleMessage(SOAPMessageContext context) {
+
+    Boolean outboundProperty =
+            (Boolean) context.get(MessageContext.MESSAGE_OUTBOUND_PROPERTY);
+    if (outboundProperty.booleanValue()) {
+
+        try {
+            SOAPEnvelope envelope = context.getMessage().getSOAPPart().getEnvelope();
+            SOAPFactory factory = SOAPFactory.newInstance();
+            String prefix = "wsse";
+            String uri = "http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd";
+            SOAPElement securityElem =
+                    factory.createElement("Security", prefix, uri);
+            SOAPElement tokenElem =
+                    factory.createElement("UsernameToken", prefix, uri);
+            tokenElem.addAttribute(QName.valueOf("wsu:Id"), "UsernameToken-2");
+            tokenElem.addAttribute(QName.valueOf("xmlns:wsu"), "http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd");
+            SOAPElement userElem =
+                    factory.createElement("Username", prefix, uri);
+            userElem.addTextNode(login);
+            SOAPElement pwdElem =
+                    factory.createElement("Password", prefix, uri);
+            pwdElem.addTextNode(pwd);
+            pwdElem.addAttribute(QName.valueOf("Type"), "http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-username-token-profile-1.0#PasswordText");
+            tokenElem.addChildElement(userElem);
+            tokenElem.addChildElement(pwdElem);
+            securityElem.addChildElement(tokenElem);
+            SOAPHeader header = envelope.addHeader();
+            header.addChildElement(securityElem);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    } else {
+        // inbound
+    }
+    return true;
+}
+
+@Override
+public Set&lt;QName&gt; getHeaders() {
+    return new TreeSet();
+}
+
+@Override
+public boolean handleFault(SOAPMessageContext context) {
+    return false;
+}
+
+@Override
+public void close(MessageContext context) {
+    //
+}
+</code></pre>
+
+<p>}
+<code>
+Next, declare the StatelessBean and inject both Webservice via @WebServiceRef and WSSUsernameTokenSecurityHandler via @EJB. A callback init method will add a HandlerResolver to the service. Below the full implementation
+</code> java WebServiceClientBean.java
+@Stateless
+@LocalBean
+public class WebServiceClientBean {</p>
+
+<pre><code>@WebServiceRef()
+private WsService service;
+@EJB
+private WSSUsernameTokenSecurityHandler wSSUsernameTokenSecurityHandler;
+
+@PostConstruct
+private void init() {
+    service.setHandlerResolver( new HandlerResolver() {
+
+        @Override
+        public List&lt;Handler&gt; getHandlerChain(PortInfo portInfo) {
+            List&lt;Handler&gt; handlerList = new ArrayList&lt;Handler&gt;();
+            handlerList.add(wSSUsernameTokenSecurityHandler);
+            return handlerList;
+        }
+    });
+}
+</code></pre>
+
+<p>  public WsResponse getService(WsRequest wsRequest) {</p>
+
+<pre><code>    WsPort port = service.getPort();
+    return port.invoqueService(wsRequest);
+}
+</code></pre>
+
+<p>}
+```</p>
+
+<h2>Logging SOAP messages</h2>
+
+
+<p>Logging exchange xml message can be also using handlers, below the scala snippet handler used to log both in and out messages:
+``` scala RequestResponsePrinter.scala
+class RequestResponsePrinter  extends SOAPHandler[SOAPMessageContext] with LogHelper {</p>
+
+<p>override def getHeaders(): Set[QName] = {</p>
+
+<pre><code>return new TreeSet();
+</code></pre>
+
+<p>  }</p>
+
+<p>  override def handleMessage(context: SOAPMessageContext): Boolean = {</p>
+
+<pre><code>val sb = new ToStringBuilder(this).append("Call operation", "handleMessage");
+
+L.debug(sb);
+val outboundProperty = context.get(MessageContext.MESSAGE_OUTBOUND_PROPERTY).asInstanceOf[Boolean]
+
+
+  try {
+        val msg = context.getMessage()
+        val out = new ByteArrayOutputStream();
+        msg.writeTo(out);
+        val strMsg = new String(out.toByteArray());
+        L.debug("outbound  : "+outboundProperty.booleanValue()+" [" + strMsg + "]");
+
+  } catch {
+    case e: Exception =&gt;
+      L.error(sb.append("EXCEPTION", e.getMessage()), e);
+  }
+
+return true;
+</code></pre>
+
+<p>  }</p>
+
+<p>  override def handleFault(context: SOAPMessageContext): Boolean = {</p>
+
+<pre><code>return false;
+</code></pre>
+
+<p>  }</p>
+
+<p>  override def close(context: MessageContext) {</p>
+
+<pre><code>//
+</code></pre>
+
+<p>  }
+}
+```</p>
+
+<p>``` scala scala version of Handler resolver HandlerResolver.scala
+new HandlerResolver() {</p>
+
+<pre><code>  override def getHandlerChain(portInfo: PortInfo): java.util.List[javax.xml.ws.handler.Handler[_ &lt;: javax.xml.ws.handler.MessageContext]] = {
+    import scala.collection.mutable.ArrayBuffer
+    val handlerList = ArrayBuffer[Handler[_ &lt;: javax.xml.ws.handler.MessageContext]]()       
+    handlerList += new RequestResponsePrinter()
+    return handlerList
+
+  }
+};
+</code></pre>
+
+<p>```</p>
+
+<h2>Conclusion</h2>
+
+
+<p>We have heavily used handler on client side. On the server side things can change a bit, to be continued &hellip;</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Basic MDB with Scala]]></title>
+    <link href="http://ouertani.github.io/blog/2011/09/11/basic-mdb-with-scala/"/>
+    <updated>2011-09-11T03:41:00+02:00</updated>
+    <id>http://ouertani.github.io/blog/2011/09/11/basic-mdb-with-scala</id>
+    <content type="html"><![CDATA[<p>While I am Akka fun, Typesafe follower, in this post I will continue presenting scala on JEE 6 environment and introduce basic message driven bean (MDB ) using scala language.</p>
+
+<p>As an example let&rsquo;s take a simple one MDB that will consome operation command like add and substract and my be asked to replay by the result</p>
+
+<!-- more -->
+
+
+<h2>I- Exchange API</h2>
+
+
+<p><code>scala
+sealed trait TOperation
+case class Add(x:Int) extends  TOperation
+case class Sub(x:Int) extends TOperation
+case class Sum extends TOperation
+case class Count(x:Int) extends TOperation
+</code></p>
+
+<h2>II- The listener</h2>
+
+
+<p>The object
+<code>scala
+object MDbListener {
+  var count = 0
+  val L = Logger.getLogger(classOf[MDbListener])
+}
+</code>
+The class
+``` scala
+@MessageDriven(
+  messageListenerInterface=classOf[MessageListener],
+  mappedName = &ldquo;jms/toMdb&rdquo;,
+  activationConfig = Array(</p>
+
+<pre><code>new ActivationConfigProperty(propertyName = "acknowledgeMode", propertyValue = "Auto-acknowledge"),
+new ActivationConfigProperty(propertyName = "destinationType", propertyValue = "javax.jms.Queue")))
+</code></pre>
+
+<p>class MDbListener extends MessageListener {</p>
+
+<p>  import MDbListener._</p>
+
+<p>  override def onMessage(message: Message) {</p>
+
+<pre><code>L.debug("Message Received")
+
+message match {
+  case o: ObjectMessage =&gt; {
+      try {
+        val obj = o.getObject()
+        obj match {
+          case action: TOperation =&gt; handle(action)
+          case _ =&gt; L.warn("Unkownen msg")
+        }
+      } catch {
+        case ex: Exception =&gt; L.error("&gt;&gt;&gt; Exception", ex)
+      }
+
+    }
+  case _ =&gt; L.warn("unknown msg")
+}
+</code></pre>
+
+<p>  }</p>
+
+<p>  def handle(op: TOperation ) = op match {/<em> TODO </em>/
+  }
+}
+```
+Nothing especial here but be careful to not forget adding messageListenerInterface=classOf[MessageListener] on MessageDriven annotation this is because ScalaObject super class and that&rsquo;s all for the listener.</p>
+
+<h2>III- The sender</h2>
+
+
+<p>The handle method will do mathematical operation and can be requested to send the sum to another JMS Queue.
+``` scala
+def handle(op: TOperation ) = op match {</p>
+
+<pre><code>case   Add(x) =&gt; count +=x
+case   Sub(x) =&gt; count -=x
+case   s:Sum =&gt;  sendJMSMessageToTt( Count (count))
+case   c:Count =&gt; L.warn ("Wrong message destination!")
+</code></pre>
+
+<p>  }
+```
+Very easy with pattern matching!</p>
+
+<p>The sendJmsMessageToIt method can be done like the following</p>
+
+<p>``` scala
+@Resource(mappedName = &ldquo;jms/Rep&rdquo;)
+ var  queue :Queue=<em>
+ @Resource(mappedName = &ldquo;jms/RepFactory&rdquo;)
+ var  factory:ConnectionFactory=</em></p>
+
+<p> private [ws ] def sendJMSMessageToTt( messageData:Count)  {
+   def  createJMSMessageForjmsTt( session:Session,  messageData:Count):Message={</p>
+
+<pre><code> val om = session.createObjectMessage()
+ om.setObject(messageData)
+ om
+</code></pre>
+
+<p>   }</p>
+
+<p>   def tryWith<a href="ac%20:A">A&lt;%{ def close()}</a>(f: A=> Unit)
+   {</p>
+
+<pre><code> try {f} finally { ac.close }
+</code></pre>
+
+<p>   }</p>
+
+<p>   tryWith(factory.createConnection()){</p>
+
+<pre><code> connection =&gt; tryWith(connection.createSession(false, Session.AUTO_ACKNOWLEDGE)) {
+    session =&gt;  tryWith( session createProducer queue ){
+            messageProducer =&gt; messageProducer.send(createJMSMessageForjmsTt(session, messageData))
+   }
+ }
+</code></pre>
+
+<p>   }
+ }
+```
+Here we used an old trick to manage resources : <a href="http://www.jroller.com/ouertani/entry/scala_try_with_resources"><a href="http://www.jroller.com/ouertani/entry/scala_try_with_resources">http://www.jroller.com/ouertani/entry/scala_try_with_resources</a></a></p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Basic WS with Scala]]></title>
+    <link href="http://ouertani.github.io/blog/2011/09/10/basic-ws-with-scala/"/>
+    <updated>2011-09-10T03:55:00+02:00</updated>
+    <id>http://ouertani.github.io/blog/2011/09/10/basic-ws-with-scala</id>
+    <content type="html"><![CDATA[<p>I recently had a chance to work on building SOA platforme using JEE 6 and Scala language. I will share here some snippets my be helpfull to start publishing web services using Scala, Sbt and JAX-WS.
+Consider the example to calculate the quotient and remainder using euclidean algorithm. Not very complexe if the inputs are positives numbers.</p>
+
+<!-- more -->
+
+
+<h2>I- Sbt</h2>
+
+
+<p>Let’s create an sbt projet and add required dependencies
+<blockquote><p>$ mkdir sws<br/>$ cd sws<br/>$ touch build.sbt<br/>$ edit build.sbt as following :</p></blockquote>
+```scala
+name := &ldquo;Euclide&rdquo;</p>
+
+<p>version := &ldquo;1.0&rdquo;</p>
+
+<p>organization := &ldquo;me.ouertani&rdquo;</p>
+
+<p>scalaVersion := &ldquo;2.9.1&rdquo;</p>
+
+<p>scalaSource in Compile &lt;&lt;= baseDirectory(_ / &ldquo;src&rdquo;)</p>
+
+<p>scalaSource in Test &lt;&lt;= baseDirectory(_ / &ldquo;test&rdquo;)</p>
+
+<p>libraryDependencies += &ldquo;javax&rdquo; % &ldquo;javaee-api&rdquo; % &ldquo;6.0&rdquo; % &ldquo;provided&rdquo;</p>
+
+<p>libraryDependencies += &ldquo;log4j&rdquo; % &ldquo;log4j&rdquo; % &ldquo;1.2.16&rdquo; % &ldquo;provided&rdquo;</p>
+
+<p>libraryDependencies += &ldquo;junit&rdquo; % &ldquo;junit&rdquo; % &ldquo;4.8.2&rdquo; % &ldquo;test&rdquo;
+```
+<blockquote><p>$ mkdir src<br/>$ touch src/Euclide.scala</p></blockquote></p>
+
+<p>That’a all for project configuration.</p>
+
+<h2>II- Create the WS</h2>
+
+
+<p>We will use a single Euclide.scala file for all class this will be easier for visibility</p>
+
+<ol>
+<li>Create a Request Class and don’t forget :</li>
+    <ol>
+    <li>default constructor</li>
+    <li>field access annotation</li></ol>
+```scala
+@XmlAccessorType(XmlAccessType.FIELD)
+case class Request(a : Int, b : Int ){ def this(){this(0,0)}}
+```
+<li>Create a Response Class</li>
+```scala
+@XmlAccessorType(XmlAccessType.FIELD)
+@XmlType(name = "output")
+case class Response (c: Int, d: Int){ def this(){this(0,0)}}
+```
+<li>Why not to create an exception class to handle exceptions like b is equal to 0</li>
+```scala
+@XmlAccessorType(XmlAccessType.FIELD)
+case class ResponseException(why : String){  def this(){this("")}}
+ 
+@XmlAccessorType(XmlAccessType.FIELD)
+case class FaultResponse(@BeanProperty faultInfo : ResponseException) extends Exception { def this(){this(ResponseException(""))}}
+```
+Don’t forget to add BeanProperty annotation to faultInfo input !
+
+<li>Let’s add an interceptor to log all ws method call</li>
+
+```scala
+object TracingInterceptor{
+  import org.apache.log4j.Logger
+  val L = Logger.getLogger(classOf[TracingInterceptor])
+}
+ 
+import TracingInterceptor._
+class TracingInterceptor { 
+ 
+  @AroundInvoke
+  def  log( context:InvocationContext):Object ={
+    try {
+      if (L.isDebugEnabled()) {
+        val clazz = context.getMethod().getDeclaringClass().getName()
+        val method = context.getMethod().getName()        
+        L.debug(clazz + " : Is invoking method: " + method + " With Parameters : " + context.getParameters().mkString("[", ",","]"))
+      }
+    } catch { 
+      case  ex :Exception =>    L.warn("Unable to Intercept Method Call", ex)
+    } 
+    context.proceed()
+  }
+}
+```
+<li>The WS class and it’s divide method using intercpetor and stateless EJB 3.1</li>
+```scala
+@WebService(serviceName = "Euclide", targetNamespace = "http://slim.ouertani.me/")
+@Stateless()
+@Interceptors(Array(classOf[TracingInterceptor]))
+class Euclide {
+  @throws(classOf[FaultResponse])
+  def divide( @WebParam(name="input" )  @XmlElement(required = true, nillable = false)
+    req :Request):Response =  req match {
+      case Request(_, 0 ) => throw FaultResponse(ResponseException("Can't divide by ZERO!"))
+      case Request(a, b ) =>  Response(a / b ,a % b) 
+    }
+}
+```
+<li>Don’t forget package , imports at the head of file and it’s all :</li>
+</ol>
+
+
+<p>```scala
+package me.ouertani.scala.ws</p>
+
+<p>import javax.interceptor.Interceptors
+import javax.xml.bind.annotation.XmlElement
+import javax.interceptor.{ AroundInvoke , InvocationContext }
+import javax.xml.bind.annotation. { XmlAccessType , XmlAccessorType, XmlElement, XmlType}
+import javax.ejb. { EJB ,Stateless }
+import javax.jws. {WebService , WebParam }
+import scala.reflect.BeanProperty
+```</p>
+
+<h2>III- packaging and run WS</h2>
+
+
+<ol>
+    <li>Let’s start compiling our projet</li>
+$ xsbt compile
+    <li>package the jar</li>
+$ xsbt package
+    <li>deploy it to your JEE 6 container ( mine is Glassfish 3.1.1 )</li>
+</ol>
+
+
+<h2>IV – test it</h2>
+
+
+<p>1- After depoyed let’s test it using soapUI tool
+Request 1
+```xml
+&lt;soapenv:Envelope xmlns:soapenv=&ldquo;<a href="http://schemas.xmlsoap.org/soap/envelope/">http://schemas.xmlsoap.org/soap/envelope/</a>&rdquo; xmlns:slim=&ldquo;<a href="http://slim.ouertani.me/">http://slim.ouertani.me/</a>&rdquo;>
+   &lt;soapenv:Header/>
+   &lt;soapenv:Body></p>
+
+<pre><code>  &lt;slim:divide&gt;
+     &lt;input&gt;
+        &lt;a&gt;6&lt;/a&gt;
+        &lt;b&gt;4&lt;/b&gt;
+     &lt;/input&gt;
+  &lt;/slim:divide&gt;
+</code></pre>
+
+<p>   &lt;/soapenv:Body>
+&lt;/soapenv:Envelope>
+```</p>
+
+<p>Response 1 :
+```xml
+&lt;S:Envelope xmlns:S=&ldquo;<a href="http://schemas.xmlsoap.org/soap/envelope/">http://schemas.xmlsoap.org/soap/envelope/</a>&rdquo;>
+   &lt;S:Body></p>
+
+<pre><code>  &lt;ns2:divideResponse xmlns:ns2="http://slim.ouertani.me/"&gt;
+     &lt;return&gt;
+        &lt;c&gt;3&lt;/c&gt;
+        &lt;d&gt;0&lt;/d&gt;
+     &lt;/return&gt;
+  &lt;/ns2:divideResponse&gt;
+</code></pre>
+
+<p>   &lt;/S:Body>
+&lt;/S:Envelope>
+<code>
+Request 2 :
+</code>xml
+&lt;soapenv:Envelope xmlns:soapenv=&ldquo;<a href="http://schemas.xmlsoap.org/soap/envelope/">http://schemas.xmlsoap.org/soap/envelope/</a>&rdquo; xmlns:slim=&ldquo;<a href="http://slim.ouertani.me/">http://slim.ouertani.me/</a>&rdquo;>
+   &lt;soapenv:Header/>
+   &lt;soapenv:Body></p>
+
+<pre><code>  &lt;slim:divide&gt;
+     &lt;input&gt;
+        &lt;a&gt;6&lt;/a&gt;
+        &lt;b&gt;0&lt;/b&gt;
+     &lt;/input&gt;
+  &lt;/slim:divide&gt;
+</code></pre>
+
+<p>   &lt;/soapenv:Body>
+&lt;/soapenv:Envelope>
+<code>
+Response 2 :
+</code>xml
+&lt;S:Envelope xmlns:S=&ldquo;<a href="http://schemas.xmlsoap.org/soap/envelope/">http://schemas.xmlsoap.org/soap/envelope/</a>&rdquo;>
+   &lt;S:Body></p>
+
+<pre><code>  &lt;S:Fault xmlns:ns4="http://www.w3.org/2003/05/soap-envelope"&gt;
+     &lt;faultcode&gt;S:Server&lt;/faultcode&gt;
+     &lt;faultstring&gt;me.ouertani.scala.ws.FaultResponse&lt;/faultstring&gt;
+     &lt;detail&gt;
+        &lt;ns2:FaultResponse xmlns:ns2="http://slim.ouertani.me/"&gt;
+           &lt;faultInfo&gt;
+              &lt;why&gt;Can't divide by ZERO!&lt;/why&gt;
+           &lt;/faultInfo&gt;
+        &lt;/ns2:FaultResponse&gt;
+     &lt;/detail&gt;
+  &lt;/S:Fault&gt;
+</code></pre>
+
+<p>   &lt;/S:Body>
+&lt;/S:Envelope>
+```
+Fine!</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Scala try-with-resources]]></title>
+    <link href="http://ouertani.github.io/blog/2010/12/06/scala-try-with-resources/"/>
+    <updated>2010-12-06T04:29:00+01:00</updated>
+    <id>http://ouertani.github.io/blog/2010/12/06/scala-try-with-resources</id>
+    <content type="html"><![CDATA[<p>Have you ever had this duplication of code in java?</p>
+
+<!-- more -->
+
+
+<p>```java
+public void doQuery(String q) throws SQLException {</p>
+
+<pre><code>   PreparedStatement preparedStatement = null;
+   ResultSet resultSet = null;     
+   Connection conn = null;
+   try {
+       conn = getConnection();
+       preparedStatement = conn.prepareStatement(q);        
+       resultSet = preparedStatement.executeQuery();
+
+
+   } finally {
+       close(resultSet);
+       close(preparedStatement);
+       close(conn);           
+   }
+</code></pre>
+
+<p>   }</p>
+
+<pre><code>  private static void close(Connection connection) {
+   try {
+       if (connection != null) {
+           connection.close();
+       }
+   } catch (Exception e) {
+      error( e);
+   }
+</code></pre>
+
+<p>   }</p>
+
+<p>   private static void close(PreparedStatement ps) {</p>
+
+<pre><code>   try {
+       if (ps != null) {
+           ps.close();
+       }
+   } catch (Exception e) {
+      error( e);
+   }
+</code></pre>
+
+<p>   }</p>
+
+<p>   private static void close(ResultSet rs) {</p>
+
+<pre><code>   try {
+       if (rs != null) {
+           rs.close();
+       }
+   } catch (Exception e) {
+      error( e);
+   }
+</code></pre>
+
+<p>   }
+```</p>
+
+<p>we have duplicated the close method (using cascading try or not ) because Connection, PreparedStatement and ResultSet does not share the same interface (may be the future AutoCloseable interface).</p>
+
+<p>Next java version will introduce try-with ressource wich. We try to give the same behavior using scala futures.</p>
+
+<h2>I- BASIC ENHANCEMENT : ONE CLOSE METHOD</h2>
+
+
+<p>```scala
+@throws(classOf[SQLException])
+def doQuery( q:String)   {
+  var  preparedStatement:PreparedStatement = null;
+  var resultSet:ResultSet = null;
+  var conn:Connection = null;
+  try {</p>
+
+<pre><code>conn = getConnection()
+preparedStatement = conn.prepareStatement(q)
+resultSet = preparedStatement.executeQuery()
+</code></pre>
+
+<p>  } finally {</p>
+
+<pre><code>close(resultSet)
+close(preparedStatement)
+close(conn)
+</code></pre>
+
+<p>  }
+}
+def getConnection():Connection=null</p>
+
+<p>def close(x : {def close()}){
+  try {</p>
+
+<pre><code>      if (x != null) {
+          x.close();
+      }
+  } catch  {
+     case  e:Exception =&gt; error(e);
+  }
+</code></pre>
+
+<p>}
+```
+Scala is a full object ( Java is not). x : {def close()} means any class that has this method as signature.
+The best point here is that scala rather than other dynamic language do compilation check, the worst is the performance.</p>
+
+<h2>II- GENERIC CLOSE</h2>
+
+
+<p>We can use var args close version :
+<code>scala
+def close(x : {def close()}*){
+  x.foreach (close)    
+}
+</code>
+and
+<code>scala
+close(resultSet)
+close(preparedStatement)
+close(conn)
+</code>
+will be :
+<code>scala
+close(resultSet,preparedStatement,conn)
+</code></p>
+
+<h2>III- OPEN CLASS</h2>
+
+
+<p>What if we need to add close method to theses class even final ones?
+Let&rsquo;s open class by creation rich one:
+```scala
+class RichConnection (c:Connection){
+  def &lt;>(){</p>
+
+<pre><code>close(c)
+</code></pre>
+
+<p>  }
+}
+class RichPreparedStatement(p :PreparedStatement){
+  def &lt;>(){</p>
+
+<pre><code>close(p)
+</code></pre>
+
+<p>  }
+}
+class RichResultSet(r:ResultSet){
+  def  &lt;>(){</p>
+
+<pre><code>close(r)
+</code></pre>
+
+<p>  }
+}
+<code>
+and introduce implicit conversions :
+</code>scala
+implicit def toRichConnection(c:Connection):RichConnection= new RichConnection&copy;
+implicit def toRichPreparedStatement(p:PreparedStatement):RichPreparedStatement= new RichPreparedStatement(p)
+implicit def toRichResultSet(r:ResultSet):RichResultSet= new RichResultSet &reg;
+<code>
+and as the result the call will be :
+</code>scala
+finally {</p>
+
+<pre><code>  resultSet.&lt;&gt;
+  preparedStatement.&lt;&gt;
+  conn.&lt;&gt;
+}
+</code></pre>
+
+<p>```</p>
+
+<h2>IV- USING TYPES</h2>
+
+
+<p>define type :
+<code>scala
+type AutoCloseable={def close()}
+</code>
+and close definition will be
+```scala
+def close(x : AutoCloseable){</p>
+
+<pre><code> try {
+       if (x != null) {
+           x.close();
+       }
+   } catch  {
+      case  e:Exception =&gt; error(e);
+   }
+</code></pre>
+
+<p>  }
+ def close(x : AutoCloseable*){
+   x.foreach (close)  <br/>
+ }
+```</p>
+
+<h2>V-CHAINED TRY-WITH</h2>
+
+
+<p>we introduce a curring tryWith method as
+```scala
+def tryWith<a href="ac%20:A">A&lt;%AutoCloseable</a>(f: A=> Unit)
+{
+  try {</p>
+
+<pre><code>f
+</code></pre>
+
+<p>  } finally {
+   close(ac)
+  }
+}
+<code>
+tryWith enable us to use doQuery as :
+</code>scala
+def doQuery( q:String)   {
+   tryWith (getConnection()) { conn =></p>
+
+<pre><code> tryWith ( conn.prepareStatement(q)) {ps =&gt;
+   tryWith (ps.executeQuery()){rs =&gt;
+     }
+ }     
+</code></pre>
+
+<p>  }
+}
+```</p>
+]]></content>
+  </entry>
+  
+</feed>
