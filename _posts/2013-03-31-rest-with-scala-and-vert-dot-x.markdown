@@ -244,7 +244,7 @@ public class SampleResticle extends Verticle {
     }
 }
 ```
-####Java Blog
+#### Java Blog
 
 ``` 		
 public class Blog {
@@ -268,4 +268,4 @@ public class Blog {
 ```
 ## Conclusion
 
-Despite the fact that Resticle is in first development step, Rest support is by far simpler and elegant in scala than in java. As described in first tutorial Vert.x java version is burdened with a frightening number of handlers. Will Vert.x 2.0 address this point using <a href="https://github.com/vert-x/vert.x/wiki/Vert.x-2.0-plan">Promises/Deferred APIs </a>?
+Despite the fact that Resticle is in first development step, Rest support is by far simpler and elegant in scala than in java. As described in first tutorial Vert.x java version is burdened with a frightening number of handlers. Will Vert.x 2.0 address this point using [Promises/Deferred APIs](https://github.com/vert-x/vert.x/wiki/Vert.x-2.0-plan)?
