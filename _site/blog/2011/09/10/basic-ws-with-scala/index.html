@@ -237,8 +237,18 @@ $ touch src/Euclide.scala
 <div class="language-scala highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nd">@XmlAccessorType</span><span class="o">(</span><span class="nv">XmlAccessType</span><span class="o">.</span><span class="py">FIELD</span><span class="o">)</span>
 <span class="k">case</span> <span class="k">class</span> <span class="nc">Request</span><span class="o">(</span><span class="n">a</span> <span class="k">:</span> <span class="kt">Int</span><span class="o">,</span> <span class="n">b</span> <span class="k">:</span> <span class="kt">Int</span> <span class="o">){</span> <span class="k">def</span> <span class="nf">this</span><span class="o">(){</span><span class="nf">this</span><span class="o">(</span><span class="mi">0</span><span class="o">,</span><span class="mi">0</span><span class="o">)}}</span>
 </code></pre></div></div>
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>- Create a Response Class ```scala @XmlAccessorType(XmlAccessType.FIELD) @XmlType(name = "output") case class Response (c: Int, d: Int){ def this(){this(0,0)}} ``` - Why not to create an exception class to handle exceptions like b is equal to 0 ```scala @XmlAccessorType(XmlAccessType.FIELD) case class ResponseException(why : String){  def this(){this("")}}
-</code></pre></div></div>
+<ul>
+  <li>Create a Response Class
+    <div class="language-scala highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nd">@XmlAccessorType</span><span class="o">(</span><span class="nv">XmlAccessType</span><span class="o">.</span><span class="py">FIELD</span><span class="o">)</span>
+<span class="nd">@XmlType</span><span class="o">(</span><span class="n">name</span> <span class="k">=</span> <span class="s">"output"</span><span class="o">)</span>
+<span class="k">case</span> <span class="k">class</span> <span class="nc">Response</span> <span class="o">(</span><span class="n">c</span><span class="k">:</span> <span class="kt">Int</span><span class="o">,</span> <span class="n">d</span><span class="k">:</span> <span class="kt">Int</span><span class="o">){</span> <span class="k">def</span> <span class="nf">this</span><span class="o">(){</span><span class="nf">this</span><span class="o">(</span><span class="mi">0</span><span class="o">,</span><span class="mi">0</span><span class="o">)}}</span>
+</code></pre></div>    </div>
+  </li>
+  <li>Why not to create an exception class to handle exceptions like b is equal to 0
+```scala
+@XmlAccessorType(XmlAccessType.FIELD)
+case class ResponseException(why : String){  def this(){this(“”)}}</li>
+</ul>
 
 <p>@XmlAccessorType(XmlAccessType.FIELD)
 case class FaultResponse(@BeanProperty faultInfo : ResponseException) extends Exception { def this(){this(ResponseException(“”))}}</p>

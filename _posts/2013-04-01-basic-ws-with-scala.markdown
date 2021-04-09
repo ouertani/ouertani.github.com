@@ -57,7 +57,7 @@ We will use a single Euclide.scala file for all class this will be easier for vi
 @XmlAccessorType(XmlAccessType.FIELD)
 case class Request(a : Int, b : Int ){ def this(){this(0,0)}}
 ```
-	- Create a Response Class
+- Create a Response Class
 ```scala
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "output")
