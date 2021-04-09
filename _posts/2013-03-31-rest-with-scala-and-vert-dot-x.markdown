@@ -42,7 +42,8 @@ In Hello World snippet, let us publish a static GET service :
 <li>GET : /hello → code : 200 , body : world</li>
 <h4>Scala</h4>
 
-```	scala	SampleResticle.scala
+```scala	SampleResticle.scala
+
 class SampleResticle extends Resticle
 {
   override def handles =

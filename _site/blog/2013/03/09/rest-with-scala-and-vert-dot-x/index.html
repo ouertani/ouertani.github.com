@@ -217,8 +217,9 @@
 <li>GET : /hello → code : 200 , body : world</li>
 <h4>Scala</h4>
 
-<p>```	scala	SampleResticle.scala
-class SampleResticle extends Resticle
+<p>```scala	SampleResticle.scala</p>
+
+<p>class SampleResticle extends Resticle
 {
   override def handles =
          { GET(“/hello”)      :&gt;  OK( _ =&gt; “world “) }
