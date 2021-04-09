@@ -119,11 +119,12 @@ class SampleWebServer extends Verticle ( x =>
 .listen(8080, "localhost")
 )()
 ```
-<h2>III-HttpClient</h2>
+## III-HttpClient
 
 Vert.x also provides an HttpClient API, so as to interact with the server part. The following samples create and send a GET request, then log the server's response.
 
-<h4>Java</h4>
+#### Java
+
 ```
 import org.vertx.java.core.Handler;
 import org.vertx.java.core.http.HttpClient;
@@ -131,7 +132,6 @@ import org.vertx.java.core.http.HttpClientRequest;
 import org.vertx.java.core.http.HttpClientResponse;
 import org.vertx.java.core.logging.Logger;
 import org.vertx.java.deploy.Verticle;
-
 
 public class SampleHttpClient extends Verticle {
 
