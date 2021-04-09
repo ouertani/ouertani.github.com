@@ -124,7 +124,7 @@ class SampleWebServer extends Verticle ( x =>
 Vert.x also provides an HttpClient API, so as to interact with the server part. The following samples create and send a GET request, then log the server's response.
 
 <h4>Java</h4>
-```	java SampleHttpClient.java
+```
 import org.vertx.java.core.Handler;
 import org.vertx.java.core.http.HttpClient;
 import org.vertx.java.core.http.HttpClientRequest;

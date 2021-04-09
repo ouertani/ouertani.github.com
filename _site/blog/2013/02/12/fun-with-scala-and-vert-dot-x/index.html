@@ -295,29 +295,30 @@ class SampleWebServer extends Verticle ( x =&gt;
 <p>Vert.x also provides an HttpClient API, so as to interact with the server part. The following samples create and send a GET request, then log the server’s response.</p>
 
 <h4>Java</h4>
-<p>```	java SampleHttpClient.java
-import org.vertx.java.core.Handler;
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>import org.vertx.java.core.Handler;
 import org.vertx.java.core.http.HttpClient;
 import org.vertx.java.core.http.HttpClientRequest;
 import org.vertx.java.core.http.HttpClientResponse;
 import org.vertx.java.core.logging.Logger;
-import org.vertx.java.deploy.Verticle;</p>
+import org.vertx.java.deploy.Verticle;
 
-<p>public class SampleHttpClient extends Verticle {</p>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>@Override
-public void start() throws Exception {
-    HttpClient client = vertx.createHttpClient().setHost("127.0.0.1");
-    final Logger log = getContainer().getLogger();
+public class SampleHttpClient extends Verticle {
 
-    HttpClientRequest request = client.post("/some-path/", new Handler&lt;HttpClientResponse&gt;() {
-        public void handle(HttpClientResponse resp) {
-            log.info("Got a response: ");
-        }
-    });
+    @Override
+    public void start() throws Exception {
+        HttpClient client = vertx.createHttpClient().setHost("127.0.0.1");
+        final Logger log = getContainer().getLogger();
 
-    request.end();
-} } ```
+        HttpClientRequest request = client.post("/some-path/", new Handler&lt;HttpClientResponse&gt;() {
+            public void handle(HttpClientResponse resp) {
+                log.info("Got a response: ");
+            }
+        });
+
+        request.end();
+    }
+}
 </code></pre></div></div>
 <h4>Scala</h4>
 <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>import org.vertx.scala.deploy.Verticle
