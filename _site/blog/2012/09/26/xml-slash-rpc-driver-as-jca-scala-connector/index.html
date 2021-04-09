@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="en">
+<!-- Beautiful Jekyll 5.0.0 | Copyright Dean Attali 2020 -->
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+  
+
+  
+
+  <title>XML/RPC driver as JCA Scala connector</title>
+
+  
+  <meta name="author" content="Slim Ouertani">
+  
+
+  <meta name="description" content="Interoperability and reusability are key features of SOA architecture. The Java EE Connector architecture defines a standard architecture for connecting the Java EE platform to heterogeneous EISs. This article presents an XML/RPC adapter using a Scala JCA outbound connector to an IN/AIR legacy system. JCA and integration JCA 1.6 p...">
+
+  
+
+  
+
+  <link rel="alternate" type="application/rss+xml" title="Ouertani Personal Blog" href="/feed.xml">
+
+  
+
+  
+
+  
+
+
+  
+    
+      
+  <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+
+
+    
+      
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css">
+
+
+    
+      
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic">
+
+
+    
+      
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800">
+
+
+    
+  
+
+  
+    
+      <link rel="stylesheet" href="/assets/css/bootstrap-social.css">
+    
+      <link rel="stylesheet" href="/assets/css/beautifuljekyll.css">
+    
+  
+
+  
+
+  
+  
+  
+
+  
+
+  
+  <meta property="og:site_name" content="Ouertani Personal Blog">
+  <meta property="og:title" content="XML/RPC driver as JCA Scala connector">
+  <meta property="og:description" content="Interoperability and reusability are key features of SOA architecture. The Java EE Connector architecture defines a standard architecture for connecting the Java EE platform to heterogeneous EISs. This article presents an XML/RPC adapter using a Scala JCA outbound connector to an IN/AIR legacy system. JCA and integration JCA 1.6 p...">
+
+  
+  <meta property="og:image" content="/assets/img/avatar-icon.png">
+  
+
+  
+  <meta property="og:type" content="article">
+  <meta property="og:article:author" content="Slim Ouertani">
+  <meta property="og:article:published_time" content="2012-09-26T19:41:00-04:00">
+  <meta property="og:url" content="/blog/2012/09/26/xml-slash-rpc-driver-as-jca-scala-connector/">
+  <link rel="canonical" href="/blog/2012/09/26/xml-slash-rpc-driver-as-jca-scala-connector/">
+  
+
+  
+  <meta name="twitter:card" content="summary">
+  
+  <meta name="twitter:site" content="@ouertani">
+  <meta name="twitter:creator" content="@ouertani">
+
+  <meta property="twitter:title" content="XML/RPC driver as JCA Scala connector">
+  <meta property="twitter:description" content="Interoperability and reusability are key features of SOA architecture. The Java EE Connector architecture defines a standard architecture for connecting the Java EE platform to heterogeneous EISs. This article presents an XML/RPC adapter using a Scala JCA outbound connector to an IN/AIR legacy system. JCA and integration JCA 1.6 p...">
+
+  
+  <meta name="twitter:image" content="/assets/img/avatar-icon.png">
+  
+
+  
+
+
+  
+
+  
+
+</head>
+
+
+<body>
+
+  
+
+
+  <nav class="navbar navbar-expand-xl navbar-light fixed-top navbar-custom top-nav-regular"><a class="navbar-brand" href="">Ouertani Personal Blog</a><button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#main-navbar" aria-controls="main-navbar" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+
+  <div class="collapse navbar-collapse" id="main-navbar">
+    <ul class="navbar-nav ml-auto">
+          <li class="nav-item">
+            <a class="nav-link" href="/aboutme">About Me</a>
+          </li></ul>
+  </div>
+
+  
+
+  
+    <div class="avatar-container">
+      <div class="avatar-img-border">
+        <a href="">
+          <img alt="Navigation bar avatar" class="avatar-img" src="/assets/img/avatar-icon.png" />
+        </a>
+      </div>
+    </div>
+  
+
+</nav>
+
+
+  <!-- TODO this file has become a mess, refactor it -->
+
+
+
+
+
+
+
+<header class="header-section ">
+
+<div class="intro-header no-img">
+  <div class="container-md">
+    <div class="row">
+      <div class="col-xl-8 offset-xl-2 col-lg-10 offset-lg-1">
+        <div class="post-heading">
+          <h1>XML/RPC driver as JCA Scala connector</h1>
+          
+
+          
+            <span class="post-meta">Posted on September 26, 2012</span>
+            
+            
+          
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</header>
+
+
+
+
+
+<div class=" container-md ">
+  <div class="row">
+    <div class=" col-xl-8 offset-xl-2 col-lg-10 offset-lg-1 ">
+
+      
+
+      
+
+      <article role="main" class="blog-post">
+        <p>Interoperability and reusability are key features of SOA architecture.</p>
+
+<p>The <a href="http://en.wikipedia.org/wiki/Java_EE_Connector_Architecture">Java EE Connector architecture</a> defines a standard architecture for connecting the Java EE platform to heterogeneous EISs. This article presents an XML/RPC  adapter using a Scala JCA outbound connector to an IN/AIR legacy system.
+<!-- more --></p>
+<h2>JCA and integration</h2>
+<blockquote>
+JCA 1.6 p 35
+ "For enterprise application integration, bi-directional connectivity between enterprise applications and EIS is essential. The Java EE Connector architecture defines standard contracts that allow bi-directional connectivity between enterprise applications and EISs. It also formalizes the relationships, interactions, and the packaging of the integration layer, thus enabling enterprise application integration."
+
+</blockquote>
+
+<p>The connector architecture defines a set of scalable, secure, and transactional mechanisms that enable the integration of EISs with application servers and enterprise application.</p>
+
+<p><img src="/images/jca.jpg" alt="JCA" /></p>
+
+<p>Using a UCIP JCA connector rather than using an <a href="http://java.dzone.com/articles/xml-rpc-using-scala">XML/RPC raw driver</a> lets you:</p>
+<ol>
+<li>Hide connection complexity.</li>
+<li>Use connection pooling and scalability.</li>
+<li>Use a standard adapter that can be deployed with any JEE 6 server from an m x n integration problem to an m + n solution</li>
+</ol>
+<h2>How?</h2>
+<p>The use of a <a href="http://www.jcp.org/en/jsr/detail?id=322">JCA</a> resource adapter inside a JEE solution is the same as interacting with a database or queue: protocol communication and wire negotiation… are hidden to the final user.</p>
+
+<p>Two interfaces are presented to a customer:</p>
+
+<h3>1) A factory trait:</h3>
+<div class="language-scala highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">trait</span> <span class="nc">AirConnectorFactory</span> <span class="k">extends</span> <span class="nc">Referenceable</span> <span class="k">with</span> <span class="nc">Function0</span><span class="o">[</span><span class="kt">AirConnector</span><span class="o">]</span>
+</code></pre></div></div>
+<h3>2) The connector trait:</h3>
+<div class="language-scala highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">trait</span> <span class="nc">AirConnector</span> <span class="o">{</span>
+<span class="k">def</span> <span class="nf">fire</span><span class="o">(</span><span class="n">elem</span> <span class="k">:</span> <span class="kt">Elem</span><span class="o">)</span> <span class="k">:</span> <span class="kt">Option</span><span class="o">[</span><span class="kt">Elem</span><span class="o">]</span>
+<span class="o">}</span>
+</code></pre></div></div>
+<p>As an outbound communication where the resource adapter allows an ESB or EE application server to connect to an IN/AIR node and perform work. All communication is initiated by the application. The Air connector factory should be injected as any resource and used like the following.</p>
+<div class="language-scala highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nd">@Resource</span><span class="o">(</span><span class="n">name</span><span class="o">=</span><span class="s">"AIR"</span><span class="o">)</span>
+<span class="k">var</span> <span class="n">airConnectorFactory</span> <span class="k">:</span> <span class="kt">AirConnectorFactory</span> <span class="o">=</span> <span class="k">_</span>
+
+<span class="k">val</span> <span class="nv">output</span> <span class="k">=</span> <span class="nf">airConnectorFactory</span><span class="o">().</span><span class="py">fire</span><span class="o">(</span><span class="n">input</span><span class="o">)</span>
+</code></pre></div></div>
+<blockquote>
+Source code is based on JCA 1.6 specification and hosted on <a href="https://github.com/ouertani/TelcoCX">github</a>.
+</blockquote>
+
+      </article>
+
+      
+
+      
+
+      
+        <!-- Check if any share-links are active -->
+
+
+
+
+<section id = "social-share-section">
+  <span class="sr-only">Share: </span>
+
+  
+    <a href="https://twitter.com/intent/tweet?text=XML%2FRPC+driver+as+JCA+Scala+connector&url=%2Fblog%2F2012%2F09%2F26%2Fxml-slash-rpc-driver-as-jca-scala-connector%2F"
+      class="btn btn-social-icon btn-twitter" title="Share on Twitter">
+      <span class="fab fa-fw fa-twitter" aria-hidden="true"></span>
+      <span class="sr-only">Twitter</span>
+    </a>
+  
+
+  
+    <a href="https://www.facebook.com/sharer/sharer.php?u=%2Fblog%2F2012%2F09%2F26%2Fxml-slash-rpc-driver-as-jca-scala-connector%2F"
+      class="btn btn-social-icon btn-facebook" title="Share on Facebook">
+      <span class="fab fa-fw fa-facebook" aria-hidden="true"></span>
+      <span class="sr-only">Facebook</span>
+    </a>
+  
+
+  
+    <a href="https://www.linkedin.com/shareArticle?mini=true&url=%2Fblog%2F2012%2F09%2F26%2Fxml-slash-rpc-driver-as-jca-scala-connector%2F"
+      class="btn btn-social-icon btn-linkedin" title="Share on LinkedIn">
+      <span class="fab fa-fw fa-linkedin" aria-hidden="true"></span>
+      <span class="sr-only">LinkedIn</span>
+    </a>
+  
+
+  
+
+</section>
+
+
+
+      
+
+      <ul class="pagination blog-pager">
+        
+        <li class="page-item previous">
+          <a class="page-link" href="/blog/2012/06/29/xml-rpc-using-scala/" data-toggle="tooltip" data-placement="top" title="XML-RPC using scala">&larr; Previous Post</a>
+        </li>
+        
+        
+        <li class="page-item next">
+          <a class="page-link" href="/blog/2012/10/09/play-2-dot-1/" data-toggle="tooltip" data-placement="top" title="Play 2.1 , Scala 2.10 and Slick 0.11.1">Next Post &rarr;</a>
+        </li>
+        
+      </ul>
+      
+  
+  
+  
+
+  
+
+
+
+
+    </div>
+  </div>
+</div>
+
+
+  <footer>
+  <div class="container-md beautiful-jekyll-footer">
+    <div class="row">
+      <div class="col-xl-8 offset-xl-2 col-lg-10 offset-lg-1">
+      <ul class="list-inline text-center footer-links"><li class="list-inline-item">
+    <a href="/feed.xml" title="RSS">
+      <span class="fa-stack fa-lg" aria-hidden="true">
+        <i class="fas fa-circle fa-stack-2x"></i>
+        <i class="fas fa-rss fa-stack-1x fa-inverse"></i>
+      </span>
+      <span class="sr-only">RSS</span>
+    </a>
+  </li><li class="list-inline-item">
+    <a href="mailto:ouertani@gmail.com" title="Email me">
+      <span class="fa-stack fa-lg" aria-hidden="true">
+        <i class="fas fa-circle fa-stack-2x"></i>
+        <i class="fas fa-envelope fa-stack-1x fa-inverse"></i>
+      </span>
+      <span class="sr-only">Email me</span>
+   </a>
+  </li><li class="list-inline-item">
+    <a href="https://github.com/ouertani" title="GitHub">
+      <span class="fa-stack fa-lg" aria-hidden="true">
+        <i class="fas fa-circle fa-stack-2x"></i>
+        <i class="fab fa-github fa-stack-1x fa-inverse"></i>
+      </span>
+      <span class="sr-only">GitHub</span>
+   </a>
+  </li><li class="list-inline-item">
+    <a href="https://twitter.com/ouertani" title="Twitter">
+      <span class="fa-stack fa-lg" aria-hidden="true">
+        <i class="fas fa-circle fa-stack-2x"></i>
+        <i class="fab fa-twitter fa-stack-1x fa-inverse"></i>
+      </span>
+      <span class="sr-only">Twitter</span>
+   </a>
+  </li></ul>
+
+      
+      <p class="copyright text-muted">
+      
+        Slim Ouertani
+        &nbsp;&bull;&nbsp;
+      
+      2021
+
+      
+
+      
+      </p>
+      <p class="theme-by text-muted">
+        Powered by
+        <a href="https://beautifuljekyll.com">Beautiful Jekyll</a>
+      </p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+
+  
+  
+    
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha256-4+XzXVhsDmqanXGHaHvgh1gMQKX40OUvDEBTu8JcmNs=" crossorigin="anonymous"></script>
+
+
+  
+    
+  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+
+
+  
+    
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+
+
+  
+
+
+
+  
+    <!-- doing something a bit funky here because I want to be careful not to include JQuery twice! -->
+    
+      <script src="/assets/js/beautifuljekyll.js"></script>
+    
+  
+
+
+
+
+
+
+
+
+
+</body>
+</html>

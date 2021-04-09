@@ -1,0 +1,542 @@
+<!DOCTYPE html>
+<html lang="en">
+<!-- Beautiful Jekyll 5.0.0 | Copyright Dean Attali 2020 -->
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+  
+
+  
+
+  <title>Basic WS with Scala</title>
+
+  
+  <meta name="author" content="Slim Ouertani">
+  
+
+  <meta name="description" content="I recently had a chance to work on building SOA platforme using JEE 6 and Scala language. I will share here some snippets my be helpfull to start publishing web services using Scala, Sbt and JAX-WS. Consider the example to calculate the quotient and remainder using euclidean algorithm. Not very...">
+
+  
+
+  
+
+  <link rel="alternate" type="application/rss+xml" title="Ouertani Personal Blog" href="/feed.xml">
+
+  
+
+  
+
+  
+
+
+  
+    
+      
+  <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+
+
+    
+      
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css">
+
+
+    
+      
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic">
+
+
+    
+      
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800">
+
+
+    
+  
+
+  
+    
+      <link rel="stylesheet" href="/assets/css/bootstrap-social.css">
+    
+      <link rel="stylesheet" href="/assets/css/beautifuljekyll.css">
+    
+  
+
+  
+
+  
+  
+  
+
+  
+
+  
+  <meta property="og:site_name" content="Ouertani Personal Blog">
+  <meta property="og:title" content="Basic WS with Scala">
+  <meta property="og:description" content="I recently had a chance to work on building SOA platforme using JEE 6 and Scala language. I will share here some snippets my be helpfull to start publishing web services using Scala, Sbt and JAX-WS. Consider the example to calculate the quotient and remainder using euclidean algorithm. Not very...">
+
+  
+  <meta property="og:image" content="/assets/img/avatar-icon.png">
+  
+
+  
+  <meta property="og:type" content="article">
+  <meta property="og:article:author" content="Slim Ouertani">
+  <meta property="og:article:published_time" content="2011-09-10T03:55:00-04:00">
+  <meta property="og:url" content="/blog/2011/09/10/basic-ws-with-scala/">
+  <link rel="canonical" href="/blog/2011/09/10/basic-ws-with-scala/">
+  
+
+  
+  <meta name="twitter:card" content="summary">
+  
+  <meta name="twitter:site" content="@ouertani">
+  <meta name="twitter:creator" content="@ouertani">
+
+  <meta property="twitter:title" content="Basic WS with Scala">
+  <meta property="twitter:description" content="I recently had a chance to work on building SOA platforme using JEE 6 and Scala language. I will share here some snippets my be helpfull to start publishing web services using Scala, Sbt and JAX-WS. Consider the example to calculate the quotient and remainder using euclidean algorithm. Not very...">
+
+  
+  <meta name="twitter:image" content="/assets/img/avatar-icon.png">
+  
+
+  
+
+
+  
+
+  
+
+</head>
+
+
+<body>
+
+  
+
+
+  <nav class="navbar navbar-expand-xl navbar-light fixed-top navbar-custom top-nav-regular"><a class="navbar-brand" href="">Ouertani Personal Blog</a><button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#main-navbar" aria-controls="main-navbar" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+
+  <div class="collapse navbar-collapse" id="main-navbar">
+    <ul class="navbar-nav ml-auto">
+          <li class="nav-item">
+            <a class="nav-link" href="/aboutme">About Me</a>
+          </li></ul>
+  </div>
+
+  
+
+  
+    <div class="avatar-container">
+      <div class="avatar-img-border">
+        <a href="">
+          <img alt="Navigation bar avatar" class="avatar-img" src="/assets/img/avatar-icon.png" />
+        </a>
+      </div>
+    </div>
+  
+
+</nav>
+
+
+  <!-- TODO this file has become a mess, refactor it -->
+
+
+
+
+
+
+
+<header class="header-section ">
+
+<div class="intro-header no-img">
+  <div class="container-md">
+    <div class="row">
+      <div class="col-xl-8 offset-xl-2 col-lg-10 offset-lg-1">
+        <div class="post-heading">
+          <h1>Basic WS with Scala</h1>
+          
+
+          
+            <span class="post-meta">Posted on September 10, 2011</span>
+            
+            
+          
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</header>
+
+
+
+
+
+<div class=" container-md ">
+  <div class="row">
+    <div class=" col-xl-8 offset-xl-2 col-lg-10 offset-lg-1 ">
+
+      
+
+      
+
+      <article role="main" class="blog-post">
+        <p>I recently had a chance to work on building SOA platforme using JEE 6 and Scala language. I will share here some snippets my be helpfull to start publishing web services using Scala, Sbt and JAX-WS.
+Consider the example to calculate the quotient and remainder using euclidean algorithm. Not very complexe if the inputs are positives numbers.
+<!-- more --></p>
+<h2>I- Sbt</h2>
+
+<p>Let’s create an sbt projet and add required dependencies</p>
+<blockquote>
+$ mkdir sws
+$ cd sws
+$ touch build.sbt
+$ edit build.sbt as following :
+</blockquote>
+<div class="language-scala highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">name</span> <span class="o">:=</span> <span class="s">"Euclide"</span>
+
+<span class="n">version</span> <span class="o">:=</span> <span class="s">"1.0"</span>
+
+<span class="n">organization</span> <span class="o">:=</span> <span class="s">"me.ouertani"</span>
+
+<span class="n">scalaVersion</span> <span class="o">:=</span> <span class="s">"2.9.1"</span>
+
+<span class="n">scalaSource</span> <span class="n">in</span> <span class="nc">Compile</span> <span class="o">&lt;&lt;=</span> <span class="nf">baseDirectory</span><span class="o">(</span><span class="k">_</span> <span class="o">/</span> <span class="s">"src"</span><span class="o">)</span>
+
+<span class="n">scalaSource</span> <span class="n">in</span> <span class="nc">Test</span> <span class="o">&lt;&lt;=</span> <span class="nf">baseDirectory</span><span class="o">(</span><span class="k">_</span> <span class="o">/</span> <span class="s">"test"</span><span class="o">)</span>
+
+<span class="n">libraryDependencies</span> <span class="o">+=</span> <span class="s">"javax"</span> <span class="o">%</span> <span class="s">"javaee-api"</span> <span class="o">%</span> <span class="s">"6.0"</span> <span class="o">%</span> <span class="s">"provided"</span>
+
+<span class="n">libraryDependencies</span> <span class="o">+=</span> <span class="s">"log4j"</span> <span class="o">%</span> <span class="s">"log4j"</span> <span class="o">%</span> <span class="s">"1.2.16"</span> <span class="o">%</span> <span class="s">"provided"</span>
+
+<span class="n">libraryDependencies</span> <span class="o">+=</span> <span class="s">"junit"</span> <span class="o">%</span> <span class="s">"junit"</span> <span class="o">%</span> <span class="s">"4.8.2"</span> <span class="o">%</span> <span class="s">"test"</span>
+</code></pre></div></div>
+<blockquote>
+$ mkdir src
+$ touch src/Euclide.scala
+</blockquote>
+
+<p>That’a all for project configuration.</p>
+
+<h2>II- Create the WS</h2>
+
+<p>We will use a single Euclide.scala file for all class this will be easier for visibility</p>
+<ol>
+<li>Create a Request Class and don’t forget :</li>
+	<ol>
+	<li>default constructor</li>
+	<li>field access annotation</li></ol>
+```scala
+@XmlAccessorType(XmlAccessType.FIELD)
+case class Request(a : Int, b : Int ){ def this(){this(0,0)}}
+```
+<li>Create a Response Class</li>
+```scala
+@XmlAccessorType(XmlAccessType.FIELD)
+@XmlType(name = "output")
+case class Response (c: Int, d: Int){ def this(){this(0,0)}}
+```
+<li>Why not to create an exception class to handle exceptions like b is equal to 0</li>
+```scala
+@XmlAccessorType(XmlAccessType.FIELD)
+case class ResponseException(why : String){  def this(){this("")}}
+
+@XmlAccessorType(XmlAccessType.FIELD)
+case class FaultResponse(@BeanProperty faultInfo : ResponseException) extends Exception { def this(){this(ResponseException(""))}}
+```
+Don’t forget to add BeanProperty annotation to faultInfo input !
+
+<li>Let’s add an interceptor to log all ws method call</li>
+
+```scala
+object TracingInterceptor{
+  import org.apache.log4j.Logger
+  val L = Logger.getLogger(classOf[TracingInterceptor])
+}
+
+import TracingInterceptor._
+class TracingInterceptor {
+
+  @AroundInvoke
+  def  log( context:InvocationContext):Object ={
+    try {
+      if (L.isDebugEnabled()) {
+        val clazz = context.getMethod().getDeclaringClass().getName()
+        val method = context.getMethod().getName()        
+        L.debug(clazz + " : Is invoking method: " + method + " With Parameters : " + context.getParameters().mkString("[", ",","]"))
+      }
+    } catch {
+      case  ex :Exception =&gt;    L.warn("Unable to Intercept Method Call", ex)
+    }
+    context.proceed()
+  }
+}
+```
+<li>The WS class and it’s divide method using intercpetor and stateless EJB 3.1</li>
+```scala
+@WebService(serviceName = "Euclide", targetNamespace = "http://slim.ouertani.me/")
+@Stateless()
+@Interceptors(Array(classOf[TracingInterceptor]))
+class Euclide {
+  @throws(classOf[FaultResponse])
+  def divide( @WebParam(name="input" )  @XmlElement(required = true, nillable = false)
+    req :Request):Response =  req match {
+      case Request(_, 0 ) =&gt; throw FaultResponse(ResponseException("Can't divide by ZERO!"))
+      case Request(a, b ) =&gt;  Response(a / b ,a % b)
+    }
+}
+```
+<li>Don’t forget package , imports at the head of file and it’s all :</li>
+</ol>
+<div class="language-scala highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">package</span> <span class="nn">me.ouertani.scala.ws</span>
+
+<span class="k">import</span> <span class="nn">javax.interceptor.Interceptors</span>
+<span class="k">import</span> <span class="nn">javax.xml.bind.annotation.XmlElement</span>
+<span class="k">import</span> <span class="nn">javax.interceptor.</span><span class="o">{</span> <span class="nc">AroundInvoke</span> <span class="o">,</span> <span class="nc">InvocationContext</span> <span class="o">}</span>
+<span class="k">import</span> <span class="nn">javax.xml.bind.annotation.</span> <span class="o">{</span> <span class="nc">XmlAccessType</span> <span class="o">,</span> <span class="nc">XmlAccessorType</span><span class="o">,</span> <span class="nc">XmlElement</span><span class="o">,</span> <span class="nc">XmlType</span><span class="o">}</span>
+<span class="k">import</span> <span class="nn">javax.ejb.</span> <span class="o">{</span> <span class="nc">EJB</span> <span class="o">,</span><span class="nc">Stateless</span> <span class="o">}</span>
+<span class="k">import</span> <span class="nn">javax.jws.</span> <span class="o">{</span><span class="nc">WebService</span> <span class="o">,</span> <span class="nc">WebParam</span> <span class="o">}</span>
+<span class="k">import</span> <span class="nn">scala.reflect.BeanProperty</span>
+</code></pre></div></div>
+<h2>III- packaging and run WS</h2>
+<ol>
+	<li>Let’s start compiling our projet</li>
+$ xsbt compile
+	<li>package the jar</li>
+$ xsbt package
+	<li>deploy it to your JEE 6 container ( mine is Glassfish 3.1.1 )</li>
+</ol>
+<h2>IV – test it</h2>
+<p>1- After depoyed let’s test it using soapUI tool
+Request 1</p>
+<div class="language-xml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nt">&lt;soapenv:Envelope</span> <span class="na">xmlns:soapenv=</span><span class="s">"http://schemas.xmlsoap.org/soap/envelope/"</span> <span class="na">xmlns:slim=</span><span class="s">"http://slim.ouertani.me/"</span><span class="nt">&gt;</span>
+   <span class="nt">&lt;soapenv:Header/&gt;</span>
+   <span class="nt">&lt;soapenv:Body&gt;</span>
+      <span class="nt">&lt;slim:divide&gt;</span>
+         <span class="nt">&lt;input&gt;</span>
+            <span class="nt">&lt;a&gt;</span>6<span class="nt">&lt;/a&gt;</span>
+            <span class="nt">&lt;b&gt;</span>4<span class="nt">&lt;/b&gt;</span>
+         <span class="nt">&lt;/input&gt;</span>
+      <span class="nt">&lt;/slim:divide&gt;</span>
+   <span class="nt">&lt;/soapenv:Body&gt;</span>
+<span class="nt">&lt;/soapenv:Envelope&gt;</span>
+</code></pre></div></div>
+
+<p>Response 1 :</p>
+<div class="language-xml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nt">&lt;S:Envelope</span> <span class="na">xmlns:S=</span><span class="s">"http://schemas.xmlsoap.org/soap/envelope/"</span><span class="nt">&gt;</span>
+   <span class="nt">&lt;S:Body&gt;</span>
+      <span class="nt">&lt;ns2:divideResponse</span> <span class="na">xmlns:ns2=</span><span class="s">"http://slim.ouertani.me/"</span><span class="nt">&gt;</span>
+         <span class="nt">&lt;return&gt;</span>
+            <span class="nt">&lt;c&gt;</span>3<span class="nt">&lt;/c&gt;</span>
+            <span class="nt">&lt;d&gt;</span>0<span class="nt">&lt;/d&gt;</span>
+         <span class="nt">&lt;/return&gt;</span>
+      <span class="nt">&lt;/ns2:divideResponse&gt;</span>
+   <span class="nt">&lt;/S:Body&gt;</span>
+<span class="nt">&lt;/S:Envelope&gt;</span>
+</code></pre></div></div>
+<p>Request 2 :</p>
+<div class="language-xml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nt">&lt;soapenv:Envelope</span> <span class="na">xmlns:soapenv=</span><span class="s">"http://schemas.xmlsoap.org/soap/envelope/"</span> <span class="na">xmlns:slim=</span><span class="s">"http://slim.ouertani.me/"</span><span class="nt">&gt;</span>
+   <span class="nt">&lt;soapenv:Header/&gt;</span>
+   <span class="nt">&lt;soapenv:Body&gt;</span>
+      <span class="nt">&lt;slim:divide&gt;</span>
+         <span class="nt">&lt;input&gt;</span>
+            <span class="nt">&lt;a&gt;</span>6<span class="nt">&lt;/a&gt;</span>
+            <span class="nt">&lt;b&gt;</span>0<span class="nt">&lt;/b&gt;</span>
+         <span class="nt">&lt;/input&gt;</span>
+      <span class="nt">&lt;/slim:divide&gt;</span>
+   <span class="nt">&lt;/soapenv:Body&gt;</span>
+<span class="nt">&lt;/soapenv:Envelope&gt;</span>
+</code></pre></div></div>
+<p>Response 2 :</p>
+<div class="language-xml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nt">&lt;S:Envelope</span> <span class="na">xmlns:S=</span><span class="s">"http://schemas.xmlsoap.org/soap/envelope/"</span><span class="nt">&gt;</span>
+   <span class="nt">&lt;S:Body&gt;</span>
+      <span class="nt">&lt;S:Fault</span> <span class="na">xmlns:ns4=</span><span class="s">"http://www.w3.org/2003/05/soap-envelope"</span><span class="nt">&gt;</span>
+         <span class="nt">&lt;faultcode&gt;</span>S:Server<span class="nt">&lt;/faultcode&gt;</span>
+         <span class="nt">&lt;faultstring&gt;</span>me.ouertani.scala.ws.FaultResponse<span class="nt">&lt;/faultstring&gt;</span>
+         <span class="nt">&lt;detail&gt;</span>
+            <span class="nt">&lt;ns2:FaultResponse</span> <span class="na">xmlns:ns2=</span><span class="s">"http://slim.ouertani.me/"</span><span class="nt">&gt;</span>
+               <span class="nt">&lt;faultInfo&gt;</span>
+                  <span class="nt">&lt;why&gt;</span>Can't divide by ZERO!<span class="nt">&lt;/why&gt;</span>
+               <span class="nt">&lt;/faultInfo&gt;</span>
+            <span class="nt">&lt;/ns2:FaultResponse&gt;</span>
+         <span class="nt">&lt;/detail&gt;</span>
+      <span class="nt">&lt;/S:Fault&gt;</span>
+   <span class="nt">&lt;/S:Body&gt;</span>
+<span class="nt">&lt;/S:Envelope&gt;</span>
+</code></pre></div></div>
+<p>Fine!</p>
+
+      </article>
+
+      
+
+      
+
+      
+        <!-- Check if any share-links are active -->
+
+
+
+
+<section id = "social-share-section">
+  <span class="sr-only">Share: </span>
+
+  
+    <a href="https://twitter.com/intent/tweet?text=Basic+WS+with+Scala&url=%2Fblog%2F2011%2F09%2F10%2Fbasic-ws-with-scala%2F"
+      class="btn btn-social-icon btn-twitter" title="Share on Twitter">
+      <span class="fab fa-fw fa-twitter" aria-hidden="true"></span>
+      <span class="sr-only">Twitter</span>
+    </a>
+  
+
+  
+    <a href="https://www.facebook.com/sharer/sharer.php?u=%2Fblog%2F2011%2F09%2F10%2Fbasic-ws-with-scala%2F"
+      class="btn btn-social-icon btn-facebook" title="Share on Facebook">
+      <span class="fab fa-fw fa-facebook" aria-hidden="true"></span>
+      <span class="sr-only">Facebook</span>
+    </a>
+  
+
+  
+    <a href="https://www.linkedin.com/shareArticle?mini=true&url=%2Fblog%2F2011%2F09%2F10%2Fbasic-ws-with-scala%2F"
+      class="btn btn-social-icon btn-linkedin" title="Share on LinkedIn">
+      <span class="fab fa-fw fa-linkedin" aria-hidden="true"></span>
+      <span class="sr-only">LinkedIn</span>
+    </a>
+  
+
+  
+
+</section>
+
+
+
+      
+
+      <ul class="pagination blog-pager">
+        
+        <li class="page-item previous">
+          <a class="page-link" href="/blog/2011/06/30/wsdl-integration-problem-two-declarations-cause-a-collision/" data-toggle="tooltip" data-placement="top" title="WSDL integration problem : Two declarations cause a collision">&larr; Previous Post</a>
+        </li>
+        
+        
+        <li class="page-item next">
+          <a class="page-link" href="/blog/2011/09/11/basic-mdb-with-scala/" data-toggle="tooltip" data-placement="top" title="Basic MDB with Scala">Next Post &rarr;</a>
+        </li>
+        
+      </ul>
+      
+  
+  
+  
+
+  
+
+
+
+
+    </div>
+  </div>
+</div>
+
+
+  <footer>
+  <div class="container-md beautiful-jekyll-footer">
+    <div class="row">
+      <div class="col-xl-8 offset-xl-2 col-lg-10 offset-lg-1">
+      <ul class="list-inline text-center footer-links"><li class="list-inline-item">
+    <a href="/feed.xml" title="RSS">
+      <span class="fa-stack fa-lg" aria-hidden="true">
+        <i class="fas fa-circle fa-stack-2x"></i>
+        <i class="fas fa-rss fa-stack-1x fa-inverse"></i>
+      </span>
+      <span class="sr-only">RSS</span>
+    </a>
+  </li><li class="list-inline-item">
+    <a href="mailto:ouertani@gmail.com" title="Email me">
+      <span class="fa-stack fa-lg" aria-hidden="true">
+        <i class="fas fa-circle fa-stack-2x"></i>
+        <i class="fas fa-envelope fa-stack-1x fa-inverse"></i>
+      </span>
+      <span class="sr-only">Email me</span>
+   </a>
+  </li><li class="list-inline-item">
+    <a href="https://github.com/ouertani" title="GitHub">
+      <span class="fa-stack fa-lg" aria-hidden="true">
+        <i class="fas fa-circle fa-stack-2x"></i>
+        <i class="fab fa-github fa-stack-1x fa-inverse"></i>
+      </span>
+      <span class="sr-only">GitHub</span>
+   </a>
+  </li><li class="list-inline-item">
+    <a href="https://twitter.com/ouertani" title="Twitter">
+      <span class="fa-stack fa-lg" aria-hidden="true">
+        <i class="fas fa-circle fa-stack-2x"></i>
+        <i class="fab fa-twitter fa-stack-1x fa-inverse"></i>
+      </span>
+      <span class="sr-only">Twitter</span>
+   </a>
+  </li></ul>
+
+      
+      <p class="copyright text-muted">
+      
+        Slim Ouertani
+        &nbsp;&bull;&nbsp;
+      
+      2021
+
+      
+
+      
+      </p>
+      <p class="theme-by text-muted">
+        Powered by
+        <a href="https://beautifuljekyll.com">Beautiful Jekyll</a>
+      </p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+
+  
+  
+    
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha256-4+XzXVhsDmqanXGHaHvgh1gMQKX40OUvDEBTu8JcmNs=" crossorigin="anonymous"></script>
+
+
+  
+    
+  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+
+
+  
+    
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+
+
+  
+
+
+
+  
+    <!-- doing something a bit funky here because I want to be careful not to include JQuery twice! -->
+    
+      <script src="/assets/js/beautifuljekyll.js"></script>
+    
+  
+
+
+
+
+
+
+
+
+
+</body>
+</html>

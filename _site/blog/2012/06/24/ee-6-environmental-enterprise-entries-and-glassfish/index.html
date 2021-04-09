@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="en">
+<!-- Beautiful Jekyll 5.0.0 | Copyright Dean Attali 2020 -->
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+  
+
+  
+
+  <title>EE 6 Environmental Enterprise Entries and Glassfish</title>
+
+  
+  <meta name="author" content="Slim Ouertani">
+  
+
+  <meta name="description" content="PURPOSE This tutorial is a supplement to the article of oracle published here. After reading this later, I decided to share some tips about this EE environment configuration. INTRODUCTION Two years ago, we decided to move to JEE 6 for our enterprise solutions and take a lot of fun with...">
+
+  
+
+  
+
+  <link rel="alternate" type="application/rss+xml" title="Ouertani Personal Blog" href="/feed.xml">
+
+  
+
+  
+
+  
+
+
+  
+    
+      
+  <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+
+
+    
+      
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css">
+
+
+    
+      
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic">
+
+
+    
+      
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800">
+
+
+    
+  
+
+  
+    
+      <link rel="stylesheet" href="/assets/css/bootstrap-social.css">
+    
+      <link rel="stylesheet" href="/assets/css/beautifuljekyll.css">
+    
+  
+
+  
+
+  
+  
+  
+
+  
+
+  
+  <meta property="og:site_name" content="Ouertani Personal Blog">
+  <meta property="og:title" content="EE 6 Environmental Enterprise Entries and Glassfish">
+  <meta property="og:description" content="PURPOSE This tutorial is a supplement to the article of oracle published here. After reading this later, I decided to share some tips about this EE environment configuration. INTRODUCTION Two years ago, we decided to move to JEE 6 for our enterprise solutions and take a lot of fun with...">
+
+  
+  <meta property="og:image" content="/assets/img/avatar-icon.png">
+  
+
+  
+  <meta property="og:type" content="article">
+  <meta property="og:article:author" content="Slim Ouertani">
+  <meta property="og:article:published_time" content="2012-06-24T02:55:00-04:00">
+  <meta property="og:url" content="/blog/2012/06/24/ee-6-environmental-enterprise-entries-and-glassfish/">
+  <link rel="canonical" href="/blog/2012/06/24/ee-6-environmental-enterprise-entries-and-glassfish/">
+  
+
+  
+  <meta name="twitter:card" content="summary">
+  
+  <meta name="twitter:site" content="@ouertani">
+  <meta name="twitter:creator" content="@ouertani">
+
+  <meta property="twitter:title" content="EE 6 Environmental Enterprise Entries and Glassfish">
+  <meta property="twitter:description" content="PURPOSE This tutorial is a supplement to the article of oracle published here. After reading this later, I decided to share some tips about this EE environment configuration. INTRODUCTION Two years ago, we decided to move to JEE 6 for our enterprise solutions and take a lot of fun with...">
+
+  
+  <meta name="twitter:image" content="/assets/img/avatar-icon.png">
+  
+
+  
+
+
+  
+
+  
+
+</head>
+
+
+<body>
+
+  
+
+
+  <nav class="navbar navbar-expand-xl navbar-light fixed-top navbar-custom top-nav-regular"><a class="navbar-brand" href="">Ouertani Personal Blog</a><button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#main-navbar" aria-controls="main-navbar" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+
+  <div class="collapse navbar-collapse" id="main-navbar">
+    <ul class="navbar-nav ml-auto">
+          <li class="nav-item">
+            <a class="nav-link" href="/aboutme">About Me</a>
+          </li></ul>
+  </div>
+
+  
+
+  
+    <div class="avatar-container">
+      <div class="avatar-img-border">
+        <a href="">
+          <img alt="Navigation bar avatar" class="avatar-img" src="/assets/img/avatar-icon.png" />
+        </a>
+      </div>
+    </div>
+  
+
+</nav>
+
+
+  <!-- TODO this file has become a mess, refactor it -->
+
+
+
+
+
+
+
+<header class="header-section ">
+
+<div class="intro-header no-img">
+  <div class="container-md">
+    <div class="row">
+      <div class="col-xl-8 offset-xl-2 col-lg-10 offset-lg-1">
+        <div class="post-heading">
+          <h1>EE 6 Environmental Enterprise Entries and Glassfish</h1>
+          
+
+          
+            <span class="post-meta">Posted on June 24, 2012</span>
+            
+            
+          
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</header>
+
+
+
+
+
+<div class=" container-md ">
+  <div class="row">
+    <div class=" col-xl-8 offset-xl-2 col-lg-10 offset-lg-1 ">
+
+      
+
+      
+
+      <article role="main" class="blog-post">
+        <h2>PURPOSE</h2>
+<p>This tutorial is a supplement to the article of oracle published <a href="http://www.oracle.com/webfolder/technetwork/tutorials/obe/java/env_entry/env_entry.html.">here</a>. After reading <a href="http://www.oracle.com/webfolder/technetwork/tutorials/obe/java/env_entry/env_entry.html.">this later</a>, I decided to share some tips about this EE environment configuration.</p>
+<h2>INTRODUCTION</h2>
+
+<p>Two years ago, we decided to move to JEE 6 for our enterprise solutions and take a lot of fun with new EJB 3.1 features and annotations. Glassfish has made our lives easier, it was very easy to declare variables using it’s administration console.
+<!-- more -->
+Less complicated than using <b>ejb-jar.xml</b> are two methods using Glassfish server and resources :</p>
+<h2>I- OLD FASHION WITH RESOURCE PER PARAM (SIMILAR TO ORACLE TUTORIAL) </h2>
+<ol>
+<li>Declare an EJB with toBeInjected resource :</li>
+```java
+import javax.annotation.Resource;
+import javax.ejb.Stateless;
+import javax.ejb.LocalBean;
+
+/**
+ *
+ * @author slim
+ */
+@Stateless
+@LocalBean
+public class MyEjbBean {
+  @Resource(lookup="resName")
+  protected String toBeInjected;
+
+
+  ////
+
+}
+```
+<li>Open admin console ( localhost:4848 by default ) -&gt; Resources -&gt; Custom Resources -&gt; New -&gt; and fill the informations as below</li>
+</ol>
+<p><img src="/images/jndiee1.jpg" alt="JNDI EE" /></p>
+
+<p>At first glance, it looks simple and fast forward but problems start after just after a first project.</p>
+
+<h3>Problems ! Why ?</h3>
+<p>We achieved more than 20 variables and some resource names begin to confuse them. I was very hard for our operations team to catch the name of the correct setting and update its value.
+It was necessary to group parameters resources into a single resource by project.</p>
+
+<h2>NEXT FASHION : GROUPING RESOURCES </h2>
+
+<p>In this section I will use scala (similar class can be translated easy to java).</p>
+<ol>
+<li>First of all, we need to create our single resource class as simple bean</li>
+
+```java
+package me.slim.ouertani
+class Ressource {
+  var param1 : String = _
+  var parma2 : String = _
+}
+```
+
+<li>Next, let's create a resource factory class :</li>
+</ol>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">package</span> <span class="nn">me.slim.ouertani</span>
+<span class="kd">class</span> <span class="nc">RessourceFactory</span> <span class="kd">extends</span> <span class="nc">ObjectFactory</span> <span class="o">{</span>
+
+  <span class="n">override</span> <span class="n">def</span> <span class="nf">getObjectInstance</span><span class="o">(</span><span class="nl">obj:</span> <span class="nc">Object</span><span class="o">,</span> <span class="nl">name:</span> <span class="n">javax</span><span class="o">.</span><span class="na">naming</span><span class="o">.</span><span class="na">Name</span><span class="o">,</span> <span class="nl">nameCtx:</span> <span class="n">javax</span><span class="o">.</span><span class="na">naming</span><span class="o">.</span><span class="na">Context</span><span class="o">,</span> <span class="nl">environment:</span> <span class="nc">Hashtable</span><span class="o">[</span><span class="n">_</span><span class="o">,</span> <span class="n">_</span><span class="o">]):</span> <span class="nc">Object</span> <span class="o">=</span> <span class="o">{</span>
+    <span class="n">val</span> <span class="n">ressource</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">Ressource</span><span class="o">();</span>
+    <span class="n">val</span> <span class="n">reference</span> <span class="o">=</span> <span class="n">obj</span><span class="o">.</span><span class="na">asInstanceOf</span><span class="o">[</span><span class="nc">Reference</span><span class="o">];</span>
+    <span class="n">val</span> <span class="n">attributes</span> <span class="o">=</span> <span class="n">reference</span><span class="o">.</span><span class="na">getAll</span><span class="o">();</span>
+    <span class="k">while</span> <span class="o">(</span><span class="n">attributes</span><span class="o">.</span><span class="na">hasMoreElements</span><span class="o">())</span> <span class="o">{</span>
+      <span class="n">val</span> <span class="n">refAddr</span> <span class="o">=</span> <span class="n">attributes</span><span class="o">.</span><span class="na">nextElement</span><span class="o">().</span><span class="na">asInstanceOf</span><span class="o">[</span><span class="nc">RefAddr</span><span class="o">];</span>
+      <span class="n">init</span><span class="o">(</span><span class="n">ressource</span><span class="o">,</span> <span class="n">refAddr</span><span class="o">.</span><span class="na">getType</span><span class="o">(),</span> <span class="n">refAddr</span><span class="o">.</span><span class="na">getContent</span><span class="o">());</span>
+    <span class="o">}</span>
+    <span class="k">return</span> <span class="n">ressource</span><span class="o">;</span>
+  <span class="o">}</span>
+
+  <span class="kd">private</span><span class="o">[</span><span class="k">this</span><span class="o">]</span> <span class="n">def</span> <span class="nf">init</span><span class="o">(</span><span class="nl">ressource:</span> <span class="nc">Ressource</span><span class="o">,</span> <span class="nl">tipe:</span> <span class="nc">String</span><span class="o">,</span> <span class="nl">content:</span> <span class="nc">Object</span><span class="o">)</span> <span class="o">{</span>
+    <span class="n">tipe</span> <span class="n">match</span> <span class="o">{</span>  
+
+      <span class="k">case</span> <span class="s">"param1"</span> <span class="o">=&gt;</span> <span class="n">ressource</span><span class="o">.</span><span class="na">param1</span> <span class="o">=</span> <span class="n">content</span><span class="o">.</span><span class="na">toString</span><span class="o">()</span>
+      <span class="k">case</span> <span class="s">"param2"</span> <span class="o">=&gt;</span> <span class="n">ressource</span><span class="o">.</span><span class="na">param2</span> <span class="o">=</span> <span class="n">content</span><span class="o">.</span><span class="na">toString</span><span class="o">()</span>
+
+    <span class="o">}</span>
+  <span class="o">}</span>
+<span class="o">}</span>
+</code></pre></div></div>
+<p>The purpose of object factory is to read injectable parameters and populate a resource class</p>
+
+<li>Back to Glassfish admininstration console, create a single resource ( see screenshot below) :</li>
+<ol>
+	<li>Jndi Name =&gt; the resource name to be used by project for example
+	<li>Resource Type =&gt; check second radio button, and fill the resource full name ( with package)
+	<li>Factory class =&gt; Our RessourceFactory class full name ( with package)
+	<li>Add two (or more) properties to be injected in our resource class.&lt;/ol&gt;
+![JNDI EE](/images/jndiee2.jpg)
+
+<li>At the end we inject our resource in EJB class :</li>
+
+```java
+@Stateless
+@LocalBean
+class MyEjbBean {
+  @Resource(lookup="globalRes")
+  protected var res:Ressource= _
+
+  /// res.param1
+}
+```
+<h2>CONCLUSION</h2>
+
+Having a single resource per project facilitates business management and thanks to Glassfish administration console managing JNDI became easier.
+</li></li></li></li></ol>
+
+      </article>
+
+      
+
+      
+
+      
+        <!-- Check if any share-links are active -->
+
+
+
+
+<section id = "social-share-section">
+  <span class="sr-only">Share: </span>
+
+  
+    <a href="https://twitter.com/intent/tweet?text=EE+6+Environmental+Enterprise+Entries+and+Glassfish&url=%2Fblog%2F2012%2F06%2F24%2Fee-6-environmental-enterprise-entries-and-glassfish%2F"
+      class="btn btn-social-icon btn-twitter" title="Share on Twitter">
+      <span class="fab fa-fw fa-twitter" aria-hidden="true"></span>
+      <span class="sr-only">Twitter</span>
+    </a>
+  
+
+  
+    <a href="https://www.facebook.com/sharer/sharer.php?u=%2Fblog%2F2012%2F06%2F24%2Fee-6-environmental-enterprise-entries-and-glassfish%2F"
+      class="btn btn-social-icon btn-facebook" title="Share on Facebook">
+      <span class="fab fa-fw fa-facebook" aria-hidden="true"></span>
+      <span class="sr-only">Facebook</span>
+    </a>
+  
+
+  
+    <a href="https://www.linkedin.com/shareArticle?mini=true&url=%2Fblog%2F2012%2F06%2F24%2Fee-6-environmental-enterprise-entries-and-glassfish%2F"
+      class="btn btn-social-icon btn-linkedin" title="Share on LinkedIn">
+      <span class="fab fa-fw fa-linkedin" aria-hidden="true"></span>
+      <span class="sr-only">LinkedIn</span>
+    </a>
+  
+
+  
+
+</section>
+
+
+
+      
+
+      <ul class="pagination blog-pager">
+        
+        <li class="page-item previous">
+          <a class="page-link" href="/blog/2011/09/11/basic-mdb-with-scala/" data-toggle="tooltip" data-placement="top" title="Basic MDB with Scala">&larr; Previous Post</a>
+        </li>
+        
+        
+        <li class="page-item next">
+          <a class="page-link" href="/blog/2012/06/27/jax-ws-header-part-1-the-client-side/" data-toggle="tooltip" data-placement="top" title="JAX-WS Header : Part 1 the Client Side">Next Post &rarr;</a>
+        </li>
+        
+      </ul>
+      
+  
+  
+  
+
+  
+
+
+
+
+    </div>
+  </div>
+</div>
+
+
+  <footer>
+  <div class="container-md beautiful-jekyll-footer">
+    <div class="row">
+      <div class="col-xl-8 offset-xl-2 col-lg-10 offset-lg-1">
+      <ul class="list-inline text-center footer-links"><li class="list-inline-item">
+    <a href="/feed.xml" title="RSS">
+      <span class="fa-stack fa-lg" aria-hidden="true">
+        <i class="fas fa-circle fa-stack-2x"></i>
+        <i class="fas fa-rss fa-stack-1x fa-inverse"></i>
+      </span>
+      <span class="sr-only">RSS</span>
+    </a>
+  </li><li class="list-inline-item">
+    <a href="mailto:ouertani@gmail.com" title="Email me">
+      <span class="fa-stack fa-lg" aria-hidden="true">
+        <i class="fas fa-circle fa-stack-2x"></i>
+        <i class="fas fa-envelope fa-stack-1x fa-inverse"></i>
+      </span>
+      <span class="sr-only">Email me</span>
+   </a>
+  </li><li class="list-inline-item">
+    <a href="https://github.com/ouertani" title="GitHub">
+      <span class="fa-stack fa-lg" aria-hidden="true">
+        <i class="fas fa-circle fa-stack-2x"></i>
+        <i class="fab fa-github fa-stack-1x fa-inverse"></i>
+      </span>
+      <span class="sr-only">GitHub</span>
+   </a>
+  </li><li class="list-inline-item">
+    <a href="https://twitter.com/ouertani" title="Twitter">
+      <span class="fa-stack fa-lg" aria-hidden="true">
+        <i class="fas fa-circle fa-stack-2x"></i>
+        <i class="fab fa-twitter fa-stack-1x fa-inverse"></i>
+      </span>
+      <span class="sr-only">Twitter</span>
+   </a>
+  </li></ul>
+
+      
+      <p class="copyright text-muted">
+      
+        Slim Ouertani
+        &nbsp;&bull;&nbsp;
+      
+      2021
+
+      
+
+      
+      </p>
+      <p class="theme-by text-muted">
+        Powered by
+        <a href="https://beautifuljekyll.com">Beautiful Jekyll</a>
+      </p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+
+  
+  
+    
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha256-4+XzXVhsDmqanXGHaHvgh1gMQKX40OUvDEBTu8JcmNs=" crossorigin="anonymous"></script>
+
+
+  
+    
+  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+
+
+  
+    
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+
+
+  
+
+
+
+  
+    <!-- doing something a bit funky here because I want to be careful not to include JQuery twice! -->
+    
+      <script src="/assets/js/beautifuljekyll.js"></script>
+    
+  
+
+
+
+
+
+
+
+
+
+</body>
+</html>

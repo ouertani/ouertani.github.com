@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="en">
+<!-- Beautiful Jekyll 5.0.0 | Copyright Dean Attali 2020 -->
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+  
+
+  
+
+  <title>Play 2.1 Scala 2.10 and String Interpolation</title>
+
+  
+  <meta name="author" content="Slim Ouertani">
+  
+
+  <meta name="description" content="Play Roadmap has been published. The major feature will be the support of scala 2.10 version. By using Play 2.1 we can start profiting with String interpolation STRING INTERPOLATION: QUICK EXAMPLE ? val n = 20 &quot;Bob is &quot;+n+&quot; years old&quot; can be replaced by : s&quot;Bob is $n years...">
+
+  
+
+  
+
+  <link rel="alternate" type="application/rss+xml" title="Ouertani Personal Blog" href="/feed.xml">
+
+  
+
+  
+
+  
+
+
+  
+    
+      
+  <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+
+
+    
+      
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css">
+
+
+    
+      
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic">
+
+
+    
+      
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800">
+
+
+    
+  
+
+  
+    
+      <link rel="stylesheet" href="/assets/css/bootstrap-social.css">
+    
+      <link rel="stylesheet" href="/assets/css/beautifuljekyll.css">
+    
+  
+
+  
+
+  
+  
+  
+
+  
+
+  
+  <meta property="og:site_name" content="Ouertani Personal Blog">
+  <meta property="og:title" content="Play 2.1 Scala 2.10 and String Interpolation">
+  <meta property="og:description" content="Play Roadmap has been published. The major feature will be the support of scala 2.10 version. By using Play 2.1 we can start profiting with String interpolation STRING INTERPOLATION: QUICK EXAMPLE ? val n = 20 &quot;Bob is &quot;+n+&quot; years old&quot; can be replaced by : s&quot;Bob is $n years...">
+
+  
+  <meta property="og:image" content="/assets/img/avatar-icon.png">
+  
+
+  
+  <meta property="og:type" content="article">
+  <meta property="og:article:author" content="Slim Ouertani">
+  <meta property="og:article:published_time" content="2012-10-18T19:00:00-04:00">
+  <meta property="og:url" content="/blog/2012/10/18/getting-started-with-play-2-dot-1/">
+  <link rel="canonical" href="/blog/2012/10/18/getting-started-with-play-2-dot-1/">
+  
+
+  
+  <meta name="twitter:card" content="summary">
+  
+  <meta name="twitter:site" content="@ouertani">
+  <meta name="twitter:creator" content="@ouertani">
+
+  <meta property="twitter:title" content="Play 2.1 Scala 2.10 and String Interpolation">
+  <meta property="twitter:description" content="Play Roadmap has been published. The major feature will be the support of scala 2.10 version. By using Play 2.1 we can start profiting with String interpolation STRING INTERPOLATION: QUICK EXAMPLE ? val n = 20 &quot;Bob is &quot;+n+&quot; years old&quot; can be replaced by : s&quot;Bob is $n years...">
+
+  
+  <meta name="twitter:image" content="/assets/img/avatar-icon.png">
+  
+
+  
+
+
+  
+
+  
+
+</head>
+
+
+<body>
+
+  
+
+
+  <nav class="navbar navbar-expand-xl navbar-light fixed-top navbar-custom top-nav-regular"><a class="navbar-brand" href="">Ouertani Personal Blog</a><button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#main-navbar" aria-controls="main-navbar" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+
+  <div class="collapse navbar-collapse" id="main-navbar">
+    <ul class="navbar-nav ml-auto">
+          <li class="nav-item">
+            <a class="nav-link" href="/aboutme">About Me</a>
+          </li></ul>
+  </div>
+
+  
+
+  
+    <div class="avatar-container">
+      <div class="avatar-img-border">
+        <a href="">
+          <img alt="Navigation bar avatar" class="avatar-img" src="/assets/img/avatar-icon.png" />
+        </a>
+      </div>
+    </div>
+  
+
+</nav>
+
+
+  <!-- TODO this file has become a mess, refactor it -->
+
+
+
+
+
+
+
+<header class="header-section ">
+
+<div class="intro-header no-img">
+  <div class="container-md">
+    <div class="row">
+      <div class="col-xl-8 offset-xl-2 col-lg-10 offset-lg-1">
+        <div class="post-heading">
+          <h1>Play 2.1 Scala 2.10 and String Interpolation</h1>
+          
+
+          
+            <span class="post-meta">Posted on October 18, 2012</span>
+            
+            
+          
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</header>
+
+
+
+
+
+<div class=" container-md ">
+  <div class="row">
+    <div class=" col-xl-8 offset-xl-2 col-lg-10 offset-lg-1 ">
+
+      
+
+      
+
+      <article role="main" class="blog-post">
+        <p>Play Roadmap has been <a href="https://docs.google.com/document/d/1OEt6gZ3a-daSkNXqXGAM4jBs5LtuDkLZIzsWN9aeM1g/preview?sle=true">published</a>. The major feature will be the support of <a href="http://www.scala-lang.org/">scala 2.10</a> version.</p>
+
+<p>By using <a href="http://www.playframework.org/">Play 2.1</a> we can start profiting with <a href="https://docs.google.com/document/d/1NdxNxZYodPA-c4MLr33KzwzKFkzm9iW9POexT9PkJsU/edit">String interpolation</a>
+<!-- more --></p>
+<h2>STRING INTERPOLATION: QUICK EXAMPLE ? </h2>
+
+<div class="language-scala highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">val</span> <span class="nv">n</span> <span class="k">=</span> <span class="mi">20</span>
+ 
+<span class="s">"Bob is "</span><span class="o">+</span><span class="n">n</span><span class="o">+</span><span class="s">" years old"</span>
+</code></pre></div></div>
+<p>can be replaced by :</p>
+<div class="language-scala highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">s</span><span class="s">"Bob is $n years old"</span>
+</code></pre></div></div>
+<p>The benefit of using String interpolation are :</p>
+
+<li>one or two characters in less</li>
+<li>compile time check</li>
+<li>compile time transformation ( thanks to <a href="http://scalamacros.org/">macros</a>)</li>
+
+<h2>PLAY 2.1</h2>
+
+<p>On Play framework an sample action can be :</p>
+<div class="language-scala highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">index</span> <span class="k">=</span> <span class="nc">Action</span> <span class="o">{</span>
+  <span class="k">val</span> <span class="nv">version</span> <span class="k">=</span> <span class="mf">2.10</span>
+  <span class="nc">Ok</span><span class="o">(</span><span class="s">"hello scala "</span><span class="o">+</span> <span class="n">version</span><span class="o">)</span>
+<span class="o">}</span>
+</code></pre></div></div>
+<p>And by String interpolation we can rewrite it as :</p>
+<div class="language-scala highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">index</span> <span class="k">=</span> <span class="nc">Action</span> <span class="o">{</span>
+  <span class="k">val</span> <span class="nv">version</span> <span class="k">=</span> <span class="mf">2.10</span>
+  <span class="nc">Ok</span><span class="o">(</span><span class="n">s</span><span class="s">"hello scala $version"</span><span class="o">)</span>
+<span class="o">}</span>
+</code></pre></div></div>
+<h2>BETTER ! </h2>
+
+<p>Let’s do better and remove parenthesizes and ‘s’ characters</p>
+
+<p>First create an <a href="http://docs.scala-lang.org/sips/pending/implicit-classes.html">implicit class</a> (scala 2.10 features) to wrap a call to Ok object and define an ok object :</p>
+<div class="language-scala highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">implicit</span> <span class="k">class</span> <span class="nc">HTTPInterpolation</span><span class="o">(</span><span class="n">s</span><span class="k">:</span> <span class="kt">StringContext</span><span class="o">)</span> <span class="o">{</span>
+   <span class="k">object</span> <span class="nc">ok</span> <span class="o">{</span>
+     <span class="k">def</span> <span class="nf">apply</span><span class="o">(</span><span class="n">exprs</span><span class="k">:</span> <span class="kt">Any*</span><span class="o">)</span> <span class="k">=</span> <span class="o">{</span>
+       <span class="nc">Ok</span><span class="o">(</span><span class="nv">s</span><span class="o">.</span><span class="py">s</span><span class="o">(</span><span class="n">exprs</span><span class="k">:</span> <span class="k">_</span><span class="kt">*</span><span class="o">))</span>
+     <span class="o">}</span>
+   <span class="o">}</span>
+ <span class="o">}</span>
+</code></pre></div></div>
+<p>Now we can use it as</p>
+<div class="language-scala highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">index</span> <span class="k">=</span> <span class="nc">Action</span> <span class="o">{</span>
+    <span class="k">val</span> <span class="nv">version</span> <span class="k">=</span> <span class="mf">2.10</span>
+    <span class="n">ok</span><span class="s">"hello scala $version"</span>
+<span class="o">}</span>
+</code></pre></div></div>
+<p>Short and concise !</p>
+
+<h2>REFERENCES :</h2>
+
+<li>Play RaodMap: <a href="https://docs.google.com/document/d/1OEt6gZ3a-daSkNXqXGAM4jBs5LtuDkLZIzsWN9aeM1g/preview?sle=true.">https://docs.google.com/document/d/1OEt6gZ3a-daSkNXqXGAM4jBs5LtuDkLZIzsWN9aeM1g/preview?sle=true.</a></li>
+<li>String interpolation : <a href="https://docs.google.com/document/d/1NdxNxZYodPA-c4MLr33KzwzKFkzm9iW9POexT9PkJsU/edit">https://docs.google.com/document/d/1NdxNxZYodPA-c4MLr33KzwzKFkzm9iW9POexT9PkJsU/edit</a></li>
+<li>Implicit Class : <a href="http://docs.scala-lang.org/sips/pending/implicit-classes.html">http://docs.scala-lang.org/sips/pending/implicit-classes.html</a>
+<li>Macro : <a href="http://scalamacros.org/">http://scalamacros.org/</a></li>
+<li>String interpolation with concise samples : <a href="http://www.blog.project13.pl/index.php/coding/1540/scala-2-10-0-hello-string-interpolation/">http://www.blog.project13.pl/index.php/coding/1540/scala-2-10-0-hello-string-interpolation/</a></li>
+</li>
+
+      </article>
+
+      
+
+      
+
+      
+        <!-- Check if any share-links are active -->
+
+
+
+
+<section id = "social-share-section">
+  <span class="sr-only">Share: </span>
+
+  
+    <a href="https://twitter.com/intent/tweet?text=Play+2.1+Scala+2.10+and+String+Interpolation&url=%2Fblog%2F2012%2F10%2F18%2Fgetting-started-with-play-2-dot-1%2F"
+      class="btn btn-social-icon btn-twitter" title="Share on Twitter">
+      <span class="fab fa-fw fa-twitter" aria-hidden="true"></span>
+      <span class="sr-only">Twitter</span>
+    </a>
+  
+
+  
+    <a href="https://www.facebook.com/sharer/sharer.php?u=%2Fblog%2F2012%2F10%2F18%2Fgetting-started-with-play-2-dot-1%2F"
+      class="btn btn-social-icon btn-facebook" title="Share on Facebook">
+      <span class="fab fa-fw fa-facebook" aria-hidden="true"></span>
+      <span class="sr-only">Facebook</span>
+    </a>
+  
+
+  
+    <a href="https://www.linkedin.com/shareArticle?mini=true&url=%2Fblog%2F2012%2F10%2F18%2Fgetting-started-with-play-2-dot-1%2F"
+      class="btn btn-social-icon btn-linkedin" title="Share on LinkedIn">
+      <span class="fab fa-fw fa-linkedin" aria-hidden="true"></span>
+      <span class="sr-only">LinkedIn</span>
+    </a>
+  
+
+  
+
+</section>
+
+
+
+      
+
+      <ul class="pagination blog-pager">
+        
+        <li class="page-item previous">
+          <a class="page-link" href="/blog/2012/10/09/play-2-dot-1/" data-toggle="tooltip" data-placement="top" title="Play 2.1 , Scala 2.10 and Slick 0.11.1">&larr; Previous Post</a>
+        </li>
+        
+        
+        <li class="page-item next">
+          <a class="page-link" href="/blog/2013/02/12/fun-with-scala-and-vert-dot-x/" data-toggle="tooltip" data-placement="top" title="Fun with Scala and Vert.x">Next Post &rarr;</a>
+        </li>
+        
+      </ul>
+      
+  
+  
+  
+
+  
+
+
+
+
+    </div>
+  </div>
+</div>
+
+
+  <footer>
+  <div class="container-md beautiful-jekyll-footer">
+    <div class="row">
+      <div class="col-xl-8 offset-xl-2 col-lg-10 offset-lg-1">
+      <ul class="list-inline text-center footer-links"><li class="list-inline-item">
+    <a href="/feed.xml" title="RSS">
+      <span class="fa-stack fa-lg" aria-hidden="true">
+        <i class="fas fa-circle fa-stack-2x"></i>
+        <i class="fas fa-rss fa-stack-1x fa-inverse"></i>
+      </span>
+      <span class="sr-only">RSS</span>
+    </a>
+  </li><li class="list-inline-item">
+    <a href="mailto:ouertani@gmail.com" title="Email me">
+      <span class="fa-stack fa-lg" aria-hidden="true">
+        <i class="fas fa-circle fa-stack-2x"></i>
+        <i class="fas fa-envelope fa-stack-1x fa-inverse"></i>
+      </span>
+      <span class="sr-only">Email me</span>
+   </a>
+  </li><li class="list-inline-item">
+    <a href="https://github.com/ouertani" title="GitHub">
+      <span class="fa-stack fa-lg" aria-hidden="true">
+        <i class="fas fa-circle fa-stack-2x"></i>
+        <i class="fab fa-github fa-stack-1x fa-inverse"></i>
+      </span>
+      <span class="sr-only">GitHub</span>
+   </a>
+  </li><li class="list-inline-item">
+    <a href="https://twitter.com/ouertani" title="Twitter">
+      <span class="fa-stack fa-lg" aria-hidden="true">
+        <i class="fas fa-circle fa-stack-2x"></i>
+        <i class="fab fa-twitter fa-stack-1x fa-inverse"></i>
+      </span>
+      <span class="sr-only">Twitter</span>
+   </a>
+  </li></ul>
+
+      
+      <p class="copyright text-muted">
+      
+        Slim Ouertani
+        &nbsp;&bull;&nbsp;
+      
+      2021
+
+      
+
+      
+      </p>
+      <p class="theme-by text-muted">
+        Powered by
+        <a href="https://beautifuljekyll.com">Beautiful Jekyll</a>
+      </p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+
+  
+  
+    
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha256-4+XzXVhsDmqanXGHaHvgh1gMQKX40OUvDEBTu8JcmNs=" crossorigin="anonymous"></script>
+
+
+  
+    
+  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+
+
+  
+    
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+
+
+  
+
+
+
+  
+    <!-- doing something a bit funky here because I want to be careful not to include JQuery twice! -->
+    
+      <script src="/assets/js/beautifuljekyll.js"></script>
+    
+  
+
+
+
+
+
+
+
+
+
+</body>
+</html>

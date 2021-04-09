@@ -1,0 +1,665 @@
+<!DOCTYPE html>
+<html lang="en">
+<!-- Beautiful Jekyll 5.0.0 | Copyright Dean Attali 2020 -->
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+  
+
+  
+
+  <title>Play 2.1 , Scala 2.10 and Slick 0.11.1</title>
+
+  
+  <meta name="author" content="Slim Ouertani">
+  
+
+  <meta name="description" content="Starting from scala 2.10 version , Slick will be by defaut the database manager. In addition, Playframework also will be based on scala 2.10 since version 2.1. In this tutorial, I will try to present an example using the last version of slick and scalatest based on scala 2.10.0-M7 and...">
+
+  
+
+  
+
+  <link rel="alternate" type="application/rss+xml" title="Ouertani Personal Blog" href="/feed.xml">
+
+  
+
+  
+
+  
+
+
+  
+    
+      
+  <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+
+
+    
+      
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css">
+
+
+    
+      
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic">
+
+
+    
+      
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800">
+
+
+    
+  
+
+  
+    
+      <link rel="stylesheet" href="/assets/css/bootstrap-social.css">
+    
+      <link rel="stylesheet" href="/assets/css/beautifuljekyll.css">
+    
+  
+
+  
+
+  
+  
+  
+
+  
+
+  
+  <meta property="og:site_name" content="Ouertani Personal Blog">
+  <meta property="og:title" content="Play 2.1 , Scala 2.10 and Slick 0.11.1">
+  <meta property="og:description" content="Starting from scala 2.10 version , Slick will be by defaut the database manager. In addition, Playframework also will be based on scala 2.10 since version 2.1. In this tutorial, I will try to present an example using the last version of slick and scalatest based on scala 2.10.0-M7 and...">
+
+  
+  <meta property="og:image" content="/assets/img/avatar-icon.png">
+  
+
+  
+  <meta property="og:type" content="article">
+  <meta property="og:article:author" content="Slim Ouertani">
+  <meta property="og:article:published_time" content="2012-10-09T15:17:00-04:00">
+  <meta property="og:url" content="/blog/2012/10/09/play-2-dot-1/">
+  <link rel="canonical" href="/blog/2012/10/09/play-2-dot-1/">
+  
+
+  
+  <meta name="twitter:card" content="summary">
+  
+  <meta name="twitter:site" content="@ouertani">
+  <meta name="twitter:creator" content="@ouertani">
+
+  <meta property="twitter:title" content="Play 2.1 , Scala 2.10 and Slick 0.11.1">
+  <meta property="twitter:description" content="Starting from scala 2.10 version , Slick will be by defaut the database manager. In addition, Playframework also will be based on scala 2.10 since version 2.1. In this tutorial, I will try to present an example using the last version of slick and scalatest based on scala 2.10.0-M7 and...">
+
+  
+  <meta name="twitter:image" content="/assets/img/avatar-icon.png">
+  
+
+  
+
+
+  
+
+  
+
+</head>
+
+
+<body>
+
+  
+
+
+  <nav class="navbar navbar-expand-xl navbar-light fixed-top navbar-custom top-nav-regular"><a class="navbar-brand" href="">Ouertani Personal Blog</a><button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#main-navbar" aria-controls="main-navbar" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+
+  <div class="collapse navbar-collapse" id="main-navbar">
+    <ul class="navbar-nav ml-auto">
+          <li class="nav-item">
+            <a class="nav-link" href="/aboutme">About Me</a>
+          </li></ul>
+  </div>
+
+  
+
+  
+    <div class="avatar-container">
+      <div class="avatar-img-border">
+        <a href="">
+          <img alt="Navigation bar avatar" class="avatar-img" src="/assets/img/avatar-icon.png" />
+        </a>
+      </div>
+    </div>
+  
+
+</nav>
+
+
+  <!-- TODO this file has become a mess, refactor it -->
+
+
+
+
+
+
+
+<header class="header-section ">
+
+<div class="intro-header no-img">
+  <div class="container-md">
+    <div class="row">
+      <div class="col-xl-8 offset-xl-2 col-lg-10 offset-lg-1">
+        <div class="post-heading">
+          <h1>Play 2.1 , Scala 2.10 and Slick 0.11.1</h1>
+          
+
+          
+            <span class="post-meta">Posted on October 9, 2012</span>
+            
+            
+          
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</header>
+
+
+
+
+
+<div class=" container-md ">
+  <div class="row">
+    <div class=" col-xl-8 offset-xl-2 col-lg-10 offset-lg-1 ">
+
+      
+
+      
+
+      <article role="main" class="blog-post">
+        <p>Starting from scala <a href="http://www.scala-lang.org/downloads">2.10</a> version , <a href="http://slick.typesafe.com/">Slick</a> will be by defaut the database manager. In addition, <a href="http://www.playframework.org/">Playframework</a>  also will be based on scala 2.10  since version 2.1.</p>
+
+<p>In this tutorial, I will try to present an example using the last version of slick and scalatest based on <a href="http://www.scala-lang.org/downloads">scala 2.10.0-M7</a> and a developpment version of <a href="https://github.com/playframework/Play20">playframework</a><br />
+<!-- more -->
+This post follow this <a href="http://www.artima.com/articles/play2_scala_squeryl.html">famous tutorial</a> !</p>
+
+<p>Setup <a href="http://slick.typesafe.com/">Slick</a> in Play 2</p>
+
+<p>If you don’t already have a Play 2 project, then create a new one after installing Play 2:</p>
+<blockquote>
+play new mySlickApp
+</blockquote>
+<p>Choose Scala as the language for the project.</p>
+
+<p>The Slick library needs to be added to the Play project.</p>
+
+<p>Edit the project/Build.scala file and update the dependencies:</p>
+<div class="language-scala highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">val</span> <span class="nv">appDependencies</span> <span class="k">=</span> <span class="nc">Seq</span><span class="o">(</span>
+   <span class="s">"com.typesafe"</span> <span class="o">%</span> <span class="s">"slick_2.10.0-M7"</span> <span class="o">%</span> <span class="s">"0.11.1"</span>
+<span class="o">)</span>
+</code></pre></div></div>
+<p>Then if you are using an Eclipse or IntelliJ Play can automatically create the project for you using either:</p>
+<blockquote>
+play idea
+
+or
+
+play eclipse
+</blockquote>
+
+<p>Note that we created the project files after updating the dependencies, so the projects would be configured with the required libraries. If the dependencies change in the future, just re-run the commands to create the projects.</p>
+
+<p>You can now start the application from within your project’s root directory:</p>
+<blockquote>
+play ~run
+</blockquote>
+
+<p>Verify that the server is running by opening the following URL in your browser: http://localhost:9000</p>
+
+<p>For local testing we will use an in-memory “h2” database. To setup Play to use that database, edit the conf/application.conf file and uncomment or add the following lines:</p>
+<blockquote>
+db.default.driver=org.h2.Driver
+db.default.url="jdbc:h2:mem:play"
+</blockquote>
+
+<p>The final setup step is to provide Squeryl a database connection, but we still want to use the standard Play configuration system to get the database connection information. This is easily done by adding a Global class that can hook into the startup phase of the Play application lifecycle. Create a new file named app/Global.scala containing:</p>
+<div class="language-scala highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">import</span> <span class="nn">play.api.db.DB</span>
+<span class="k">import</span> <span class="nn">play.api.GlobalSettings</span>
+<span class="c1">// Use H2Driver to connect to an H2 database</span>
+<span class="k">import</span> <span class="nn">scala.slick.driver.H2Driver.simple._</span>
+
+<span class="c1">// Use the implicit threadLocalSession</span>
+<span class="k">import</span> <span class="nn">Database.threadLocalSession</span>
+
+<span class="k">import</span> <span class="nn">play.api.Application</span>
+<span class="k">import</span> <span class="nn">play.api.Play.current</span>
+
+
+<span class="k">object</span> <span class="nc">Global</span> <span class="k">extends</span> <span class="nc">GlobalSettings</span> <span class="o">{</span>
+
+  <span class="k">override</span> <span class="k">def</span> <span class="nf">onStart</span><span class="o">(</span><span class="n">app</span><span class="k">:</span> <span class="kt">Application</span><span class="o">)</span> <span class="o">{</span>
+
+    <span class="k">lazy</span> <span class="k">val</span> <span class="nv">database</span> <span class="k">=</span> <span class="nv">Database</span><span class="o">.</span><span class="py">forDataSource</span><span class="o">(</span><span class="nv">DB</span><span class="o">.</span><span class="py">getDataSource</span><span class="o">())</span>
+
+  <span class="o">}</span>
+<span class="o">}</span>
+</code></pre></div></div>
+<p>On application startup the  configuration parameter will be used to determine which driver to use to setup the database connection.</p>
+
+<p>If you reload the http://localhost:9000 webpage in your browser, everything should still be working and you should see the following message in the Play STDOUT log:</p>
+<blockquote>
+[info] play - database [default] connected at jdbc:h2:mem:play
+</blockquote>
+
+<p>Create an Entity</p>
+
+<p>Now lets create a simple entity object that will be used to persist data into the database. Create a new file named app/models/Bar.scala containing:</p>
+<div class="language-scala highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">package</span> <span class="nn">models</span>
+
+<span class="k">import</span> <span class="nn">scala.slick.driver.H2Driver.simple._</span>
+
+
+<span class="k">case</span> <span class="k">class</span> <span class="nc">Bar</span><span class="o">(</span><span class="n">id</span><span class="k">:</span> <span class="kt">Option</span><span class="o">[</span><span class="kt">Int</span><span class="o">]</span> <span class="k">=</span> <span class="nc">None</span><span class="o">,</span> <span class="n">name</span><span class="k">:</span> <span class="kt">String</span><span class="o">)</span>
+
+<span class="k">object</span> <span class="nc">Bars</span> <span class="k">extends</span> <span class="nc">Table</span><span class="o">[</span><span class="kt">Bar</span><span class="o">](</span><span class="s">"bar"</span><span class="o">)</span> <span class="o">{</span>
+  <span class="k">def</span> <span class="nf">id</span> <span class="k">=</span> <span class="n">column</span><span class="o">[</span><span class="kt">Int</span><span class="o">](</span><span class="s">"id"</span><span class="o">,</span> <span class="nv">O</span><span class="o">.</span><span class="py">PrimaryKey</span><span class="o">,</span> <span class="nv">O</span><span class="o">.</span><span class="py">AutoInc</span><span class="o">)</span>
+
+  <span class="c1">// This is the primary key column</span>
+  <span class="k">def</span> <span class="nf">name</span> <span class="k">=</span> <span class="n">column</span><span class="o">[</span><span class="kt">String</span><span class="o">](</span><span class="s">"name"</span><span class="o">)</span>
+
+  <span class="c1">// Every table needs a * projection with the same type as the table's type parameter</span>
+  <span class="k">def</span> <span class="nf">*</span> <span class="k">=</span> <span class="n">id</span><span class="o">.?</span> <span class="o">~</span> <span class="n">name</span> <span class="o">&lt;&gt;(</span><span class="nc">Bar</span><span class="o">,</span> <span class="nv">Bar</span><span class="o">.</span><span class="py">unapply</span> <span class="k">_</span><span class="o">)</span>
+<span class="o">}</span>
+</code></pre></div></div>
+<p>This is a very simple entity that will store a list of Bar objects. Each Bar has a name and an id property for the primary key. The case class in Scala is immutable and basically supercharges a class, adding a number of syntactic conveniences. It also allows it to be used for pattern matching, which can be quite handy when matching form values returned from the client. The Bars object is an instance of Table  Bar that Slick will map into the database.</p>
+
+<p>Begineer about slick, I will not use evolution to create database but let slick create it for me, let’s modify Global.scala as bellow :</p>
+<div class="language-scala highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">import</span> <span class="nn">play.api.db.DB</span>
+<span class="k">import</span> <span class="nn">play.api.GlobalSettings</span>
+<span class="c1">// Use H2Driver to connect to an H2 database</span>
+<span class="k">import</span> <span class="nn">scala.slick.driver.H2Driver.simple._</span>
+
+<span class="c1">// Use the implicit threadLocalSession</span>
+<span class="k">import</span> <span class="nn">Database.threadLocalSession</span>
+
+<span class="k">import</span> <span class="nn">play.api.Application</span>
+<span class="k">import</span> <span class="nn">play.api.Play.current</span>
+<span class="k">import</span> <span class="nn">models.Bars</span>
+
+<span class="k">object</span> <span class="nc">Global</span> <span class="k">extends</span> <span class="nc">GlobalSettings</span> <span class="o">{</span>
+
+  <span class="k">override</span> <span class="k">def</span> <span class="nf">onStart</span><span class="o">(</span><span class="n">app</span><span class="k">:</span> <span class="kt">Application</span><span class="o">)</span> <span class="o">{</span>
+
+    <span class="k">lazy</span> <span class="k">val</span> <span class="nv">database</span> <span class="k">=</span> <span class="nv">Database</span><span class="o">.</span><span class="py">forDataSource</span><span class="o">(</span><span class="nv">DB</span><span class="o">.</span><span class="py">getDataSource</span><span class="o">())</span>
+
+    <span class="n">database</span> <span class="o">.</span><span class="py">withSession</span> <span class="o">{</span>
+     <span class="nv">Bars</span><span class="o">.</span><span class="py">ddl</span><span class="o">.</span><span class="py">create</span>
+    <span class="o">}</span>
+  <span class="o">}</span>
+<span class="o">}</span>
+</code></pre></div></div>
+<p>reload the http://localhost:9000 webpage to create bar table on your local in-memory database.
+Test the Model</p>
+
+<p>The testing support in Play 2 is very powerful and fits well with the Test Driven Development style. Play 2 with Scala uses specs2 as the default for testing but we prefer ScalaTest. Lets create a simple test for the Bar model object. Start by adding the ScalaTest dependency to the project and modifying the testOptions setting.  Since scala 2.10.0-M6 scala-actor is an independent jar and must be add as dependencies.
+Update the project/Build.scala file to contain:</p>
+<div class="language-scala highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">val</span> <span class="nv">appDependencies</span> <span class="k">=</span> <span class="nc">Seq</span><span class="o">(</span>
+      <span class="s">"org.scalatest"</span> <span class="o">%</span> <span class="s">"scalatest_2.10.0-M7"</span> <span class="o">%</span> <span class="s">"2.0.M4-2.10.0-M7-B1"</span> <span class="o">%</span> <span class="s">"test"</span><span class="o">,</span>
+      <span class="s">"org.scala-lang"</span> <span class="o">%</span> <span class="s">"scala-actors"</span> <span class="o">%</span> <span class="s">"2.10.0-M7"</span>    <span class="o">%</span> <span class="s">"test"</span><span class="o">,</span>
+      <span class="s">"com.typesafe"</span> <span class="o">%</span> <span class="s">"slick_2.10.0-M7"</span> <span class="o">%</span> <span class="s">"0.11.1"</span>
+<span class="o">)</span>
+
+<span class="k">val</span> <span class="nv">main</span> <span class="k">=</span> <span class="nc">PlayProject</span><span class="o">(</span><span class="n">appName</span><span class="o">,</span> <span class="n">appVersion</span><span class="o">,</span> <span class="n">appDependencies</span><span class="o">,</span> <span class="n">mainLang</span> <span class="k">=</span> <span class="nc">SCALA</span><span class="o">).</span><span class="py">settings</span><span class="o">(</span>
+  <span class="n">testOptions</span> <span class="n">in</span> <span class="nc">Test</span> <span class="o">:=</span> <span class="nc">Nil</span>
+  <span class="c1">// Add your own project settings here</span>
+<span class="o">)</span>
+</code></pre></div></div>
+<p>Now create a new file named test/BarSpec.scala containing.</p>
+<div class="language-scala highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">import</span> <span class="nn">models.</span><span class="o">{</span><span class="nc">Bars</span><span class="o">,</span> <span class="nc">Bar</span><span class="o">}</span>
+
+<span class="k">import</span> <span class="nn">org.scalatest.FlatSpec</span>
+<span class="k">import</span> <span class="nn">org.scalatest.matchers.ShouldMatchers</span>
+<span class="c1">// Use H2Driver to connect to an H2 database</span>
+<span class="k">import</span> <span class="nn">scala.slick.driver.H2Driver.simple._</span>
+
+<span class="c1">// Use the implicit threadLocalSession</span>
+<span class="k">import</span> <span class="nn">Database.threadLocalSession</span>
+
+<span class="k">import</span> <span class="nn">play.api.test._</span>
+<span class="k">import</span> <span class="nn">play.api.test.Helpers._</span>
+
+<span class="k">class</span> <span class="nc">BarSpec</span> <span class="k">extends</span> <span class="nc">FlatSpec</span> <span class="k">with</span> <span class="nc">ShouldMatchers</span> <span class="o">{</span>
+
+  <span class="s">"A Bar"</span> <span class="n">should</span> <span class="s">"be creatable"</span> <span class="n">in</span> <span class="o">{</span>
+    <span class="nv">Database</span><span class="o">.</span><span class="py">forURL</span><span class="o">(</span><span class="s">"jdbc:h2:mem:test1"</span><span class="o">,</span> <span class="n">driver</span> <span class="k">=</span> <span class="s">"org.h2.Driver"</span><span class="o">)</span> <span class="n">withSession</span> <span class="o">{</span>
+
+      <span class="nv">Bars</span><span class="o">.</span><span class="py">ddl</span><span class="o">.</span><span class="py">create</span>
+      <span class="nv">Bars</span><span class="o">.</span><span class="py">insert</span><span class="o">(</span><span class="nc">Bar</span><span class="o">(</span><span class="nc">None</span><span class="o">,</span> <span class="s">"foo"</span><span class="o">))</span>
+      <span class="k">val</span> <span class="nv">b</span> <span class="k">=</span> <span class="nf">for</span><span class="o">(</span><span class="n">b</span> <span class="k">&lt;-</span> <span class="nc">Bars</span><span class="o">)</span> <span class="k">yield</span> <span class="n">b</span>
+      <span class="nv">b</span><span class="o">.</span><span class="py">first</span><span class="o">.</span><span class="py">id</span><span class="o">.</span><span class="py">get</span>     <span class="n">should</span>  <span class="nf">equal</span><span class="o">(</span><span class="mi">1</span><span class="o">)</span>
+    <span class="o">}</span>
+  <span class="o">}</span>
+<span class="o">}</span>
+</code></pre></div></div>
+<p>This test uses a  an in-memory database to run the test.  The body of the test simply creates a new instance of Bar and tests that the id is equal to one.  Different from Play 1, test are run from the command line using:</p>
+
+<p>play test</p>
+
+<p>If the tests worked, then you should see the following message in the Play STDOUT log:</p>
+<blockquote>
+[mySlickApp] $ test
+[info] BarSpec:
+[info] A Bar
+[info] - should be creatable
+[info] Passed: : Total 1, Failed 0, Errors 0, Passed 1, Skipped 0
+[success] Total time: 2 s, completed Oct 9, 2012 12:28:28 PM
+</blockquote>
+
+<p>If you’d like to have the tests run whenever the source changes then run:</p>
+<blockquote>
+play ~test
+</blockquote>
+<p>You can keep both the ~run and ~test commands running in the background. This allows you to quickly test the application from both programmatic unit / functional tests and from manual browser tests.
+Creating Bars From a Web Form</p>
+
+<p>Now lets add a basic web UI for creating new Bar objects. Note that this code will not compile until this entire section is completed.</p>
+
+<p>First update the app/controllers/Application.scala file to contain:</p>
+<div class="language-scala highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">package</span> <span class="nn">controllers</span>
+
+<span class="k">import</span> <span class="nn">play.api._</span>
+<span class="k">import</span> <span class="nn">play.api.mvc._</span>
+
+
+<span class="k">import</span> <span class="nn">play.api.data.Form</span>
+
+<span class="k">import</span> <span class="nn">play.api.data._</span>
+<span class="k">import</span> <span class="nn">play.api.data.Forms._</span>
+
+<span class="c1">// Use H2Driver to connect to an H2 database</span>
+
+<span class="k">import</span> <span class="nn">scala.slick.driver.H2Driver.simple._</span>
+
+<span class="c1">// Use the implicit threadLocalSession</span>
+<span class="c1">//import Database.threadLocalSession</span>
+
+<span class="k">import</span> <span class="nn">scala.slick.session.Session</span>
+<span class="k">import</span> <span class="nn">play.api.libs.json._</span>
+
+<span class="k">import</span> <span class="nn">models.</span><span class="o">{</span><span class="nc">Bar</span><span class="o">,</span> <span class="nc">Bars</span><span class="o">}</span>
+<span class="k">import</span> <span class="nn">play.api.db._</span>
+<span class="k">import</span> <span class="nn">play.api.Play.current</span>
+
+<span class="c1">// Use H2Driver to connect to an H2 database</span>
+
+<span class="k">import</span> <span class="nn">scala.slick.driver.H2Driver.simple._</span>
+
+<span class="c1">// Use the implicit threadLocalSession</span>
+
+<span class="k">import</span> <span class="nn">Database.threadLocalSession</span>
+
+
+<span class="k">object</span> <span class="nc">Application</span> <span class="k">extends</span> <span class="nc">Controller</span> <span class="o">{</span>
+
+  <span class="k">lazy</span> <span class="k">val</span> <span class="nv">database</span> <span class="k">=</span> <span class="nv">Database</span><span class="o">.</span><span class="py">forDataSource</span><span class="o">(</span><span class="nv">DB</span><span class="o">.</span><span class="py">getDataSource</span><span class="o">())</span>
+
+
+  <span class="k">val</span> <span class="nv">barForm</span> <span class="k">=</span> <span class="nc">Form</span><span class="o">(</span>
+    <span class="nf">mapping</span><span class="o">(</span>
+      <span class="s">"name"</span> <span class="o">-&gt;</span> <span class="n">text</span>
+    <span class="o">)</span>
+      <span class="o">((</span><span class="n">name</span><span class="o">)</span> <span class="k">=&gt;</span> <span class="nc">Bar</span><span class="o">(</span><span class="nc">None</span><span class="o">,</span> <span class="n">name</span><span class="o">))</span>
+
+      <span class="o">((</span><span class="n">bar</span><span class="k">:</span> <span class="kt">Bar</span><span class="o">)</span> <span class="k">=&gt;</span> <span class="nc">Some</span><span class="o">(</span><span class="nv">bar</span><span class="o">.</span><span class="py">name</span><span class="o">))</span>
+
+  <span class="o">)</span>
+
+  <span class="k">def</span> <span class="nf">index</span> <span class="k">=</span> <span class="nc">Action</span> <span class="o">{</span>
+    <span class="nc">Ok</span><span class="o">(</span><span class="nv">views</span><span class="o">.</span><span class="py">html</span><span class="o">.</span><span class="py">index</span><span class="o">(</span><span class="n">barForm</span><span class="o">))</span>
+  <span class="o">}</span>
+
+  <span class="k">def</span> <span class="nf">addBar</span> <span class="k">=</span> <span class="nc">Action</span> <span class="o">{</span>
+    <span class="k">implicit</span> <span class="n">request</span> <span class="k">=&gt;</span>
+      <span class="nv">barForm</span><span class="o">.</span><span class="py">bindFromRequest</span><span class="o">.</span><span class="py">value</span> <span class="n">map</span> <span class="o">{</span>
+        <span class="n">bar</span> <span class="k">=&gt;</span>
+          <span class="n">database</span> <span class="n">withSession</span> <span class="o">{</span>
+            <span class="o">(</span><span class="nc">Bars</span> <span class="n">insert</span> <span class="n">bar</span><span class="o">)</span>
+          <span class="o">}</span>
+          <span class="nc">Redirect</span><span class="o">(</span><span class="nv">routes</span><span class="o">.</span><span class="py">Application</span><span class="o">.</span><span class="py">index</span><span class="o">())</span>
+      <span class="o">}</span> <span class="n">getOrElse</span> <span class="nc">BadRequest</span>
+  <span class="o">}</span>
+
+<span class="o">}</span>
+</code></pre></div></div>
+<p>The barForm provides a mapping from a request parameter named name to the name property on the Bar case class (via it’s constructor). The index method has been updated to pass an instance of the barForm into the index template. We will update that template next. The addBar method binds the request parameters into an object named bar then in a session the bar is inserted into the database.  Then the user is redirected back to the index page. If the request parameters could not be mapped to a Bar using the barForm then a BadRequest error is returned.</p>
+
+<p>Now we need to update the app/views/index.scala.html template to contain:</p>
+<div class="language-scala highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">@(</span><span class="n">form</span><span class="k">:</span> <span class="kt">play.api.data.Form</span><span class="o">[</span><span class="kt">Bar</span><span class="o">])</span>
+
+<span class="nd">@main</span><span class="o">(</span><span class="s">"Welcome to Play 2.0"</span><span class="o">)</span> <span class="o">{</span>
+
+    <span class="nd">@helper</span><span class="o">.</span><span class="py">form</span><span class="o">(</span><span class="n">action</span> <span class="k">=</span> <span class="nv">routes</span><span class="o">.</span><span class="py">Application</span><span class="o">.</span><span class="py">addBar</span><span class="o">)</span> <span class="o">{</span>
+        <span class="nd">@helper</span><span class="o">.</span><span class="py">inputText</span><span class="o">(</span><span class="nf">form</span><span class="o">(</span><span class="s">"name"</span><span class="o">))</span>
+        <span class="o">&lt;</span><span class="n">input</span> <span class="n">type</span><span class="o">=</span><span class="s">"submit"</span><span class="o">/&gt;</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</code></pre></div></div>
+<p>The template now takes a Form[Bar] parameter which is passed from the index method on the Application controller. Then in the body of the template a new HTML form is rendered using Play 2’s form helper. The form contains an HTML field for the name and a submit button. Notice that the action of the form points from the route to the Application controller’s addBar method.</p>
+
+<p>If you look in the console window at this point you will see the error “value addBar is not a member of controllers.ReverseApplication”. This is because the route file is compiled and the view is checked for a valid route. But we haven’t created a route yet, so edit the conf/routes file and add a new line with the following:</p>
+<blockquote>
+POST    /bars                       controllers.Application.addBar
+</blockquote>
+<p>This creates a HTTP route that maps POST requests for the /bars URL to the addBar method.</p>
+
+<p>Now refresh http://localhost:9000 in your browser and you should see the very basic form for adding new Bar objects. If successful, after adding a new Bar the browser should just redirect back to the index page.</p>
+
+<p>Now lets add a RESTful service to the application that will return all of the Bar objects as JSON-serialized data. Start by adding a new method to the app/controllers/Application.scala file:</p>
+<div class="language-scala highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">getBars</span> <span class="k">=</span> <span class="nc">Action</span> <span class="o">{</span>
+    <span class="k">val</span> <span class="nv">json</span> <span class="k">=</span> <span class="n">database</span> <span class="n">withSession</span> <span class="o">{</span>
+      <span class="k">val</span> <span class="nv">bars</span> <span class="k">=</span> <span class="nf">for</span> <span class="o">(</span><span class="n">b</span> <span class="k">&lt;-</span> <span class="nc">Bars</span><span class="o">)</span> <span class="k">yield</span> <span class="nv">b</span><span class="o">.</span><span class="py">name</span><span class="o">.</span><span class="py">toString</span>
+      <span class="nv">Json</span><span class="o">.</span><span class="py">toJson</span><span class="o">(</span><span class="nv">bars</span><span class="o">.</span><span class="py">list</span><span class="o">)</span>
+    <span class="o">}</span>
+    <span class="nc">Ok</span><span class="o">(</span><span class="n">json</span><span class="o">).</span><span class="py">as</span><span class="o">(</span><span class="nc">JSON</span><span class="o">)</span>
+  <span class="o">}</span>
+</code></pre></div></div>
+<p>The getBars method fetches the Bar objects from the database using Slick dsl and then creates a JSON representation of the list of Bar objects and returns the JSON data.</p>
+
+<p>Now add a new route to the conf/routes file:</p>
+<blockquote>
+GET     /bars                       controllers.Application.getBars
+</blockquote>
+<p>This maps GET requests for /bars to the getBars method.</p>
+
+<p>Try this out in your browser by loading: http://localhost:9000/bars</p>
+
+<p>You should see a list of the Bar objects you’ve created serialized as JSON.</p>
+
+<p>The syntax of the query demonstrates the power of Slick type-safe query language and the power of Scala to create DSLs.  The json val is then returned in an Ok (HTTP 200 status code response) with the content type set to application/json (the value of JSON).</p>
+
+<h2>References :</h2>
+<li>Slick : http://slick.typesafe.com </li>
+<li>Playframework :  http://www.playframework.org </li>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>                        https://github.com/playframework/Play20&lt;/li&gt;
+</code></pre></div></div>
+<li>Scala : http://www.scala-lang.org/downloads</li>
+<li>Squeryl + Playframework + Scala  : http://www.artima.com/articles/play2_scala_squeryl.html</li>
+
+      </article>
+
+      
+
+      
+
+      
+        <!-- Check if any share-links are active -->
+
+
+
+
+<section id = "social-share-section">
+  <span class="sr-only">Share: </span>
+
+  
+    <a href="https://twitter.com/intent/tweet?text=Play+2.1+%2C+Scala+2.10+and+Slick+0.11.1&url=%2Fblog%2F2012%2F10%2F09%2Fplay-2-dot-1%2F"
+      class="btn btn-social-icon btn-twitter" title="Share on Twitter">
+      <span class="fab fa-fw fa-twitter" aria-hidden="true"></span>
+      <span class="sr-only">Twitter</span>
+    </a>
+  
+
+  
+    <a href="https://www.facebook.com/sharer/sharer.php?u=%2Fblog%2F2012%2F10%2F09%2Fplay-2-dot-1%2F"
+      class="btn btn-social-icon btn-facebook" title="Share on Facebook">
+      <span class="fab fa-fw fa-facebook" aria-hidden="true"></span>
+      <span class="sr-only">Facebook</span>
+    </a>
+  
+
+  
+    <a href="https://www.linkedin.com/shareArticle?mini=true&url=%2Fblog%2F2012%2F10%2F09%2Fplay-2-dot-1%2F"
+      class="btn btn-social-icon btn-linkedin" title="Share on LinkedIn">
+      <span class="fab fa-fw fa-linkedin" aria-hidden="true"></span>
+      <span class="sr-only">LinkedIn</span>
+    </a>
+  
+
+  
+
+</section>
+
+
+
+      
+
+      <ul class="pagination blog-pager">
+        
+        <li class="page-item previous">
+          <a class="page-link" href="/blog/2012/09/26/xml-slash-rpc-driver-as-jca-scala-connector/" data-toggle="tooltip" data-placement="top" title="XML/RPC driver as JCA Scala connector">&larr; Previous Post</a>
+        </li>
+        
+        
+        <li class="page-item next">
+          <a class="page-link" href="/blog/2012/10/18/getting-started-with-play-2-dot-1/" data-toggle="tooltip" data-placement="top" title="Play 2.1 Scala 2.10 and String Interpolation">Next Post &rarr;</a>
+        </li>
+        
+      </ul>
+      
+  
+  
+  
+
+  
+
+
+
+
+    </div>
+  </div>
+</div>
+
+
+  <footer>
+  <div class="container-md beautiful-jekyll-footer">
+    <div class="row">
+      <div class="col-xl-8 offset-xl-2 col-lg-10 offset-lg-1">
+      <ul class="list-inline text-center footer-links"><li class="list-inline-item">
+    <a href="/feed.xml" title="RSS">
+      <span class="fa-stack fa-lg" aria-hidden="true">
+        <i class="fas fa-circle fa-stack-2x"></i>
+        <i class="fas fa-rss fa-stack-1x fa-inverse"></i>
+      </span>
+      <span class="sr-only">RSS</span>
+    </a>
+  </li><li class="list-inline-item">
+    <a href="mailto:ouertani@gmail.com" title="Email me">
+      <span class="fa-stack fa-lg" aria-hidden="true">
+        <i class="fas fa-circle fa-stack-2x"></i>
+        <i class="fas fa-envelope fa-stack-1x fa-inverse"></i>
+      </span>
+      <span class="sr-only">Email me</span>
+   </a>
+  </li><li class="list-inline-item">
+    <a href="https://github.com/ouertani" title="GitHub">
+      <span class="fa-stack fa-lg" aria-hidden="true">
+        <i class="fas fa-circle fa-stack-2x"></i>
+        <i class="fab fa-github fa-stack-1x fa-inverse"></i>
+      </span>
+      <span class="sr-only">GitHub</span>
+   </a>
+  </li><li class="list-inline-item">
+    <a href="https://twitter.com/ouertani" title="Twitter">
+      <span class="fa-stack fa-lg" aria-hidden="true">
+        <i class="fas fa-circle fa-stack-2x"></i>
+        <i class="fab fa-twitter fa-stack-1x fa-inverse"></i>
+      </span>
+      <span class="sr-only">Twitter</span>
+   </a>
+  </li></ul>
+
+      
+      <p class="copyright text-muted">
+      
+        Slim Ouertani
+        &nbsp;&bull;&nbsp;
+      
+      2021
+
+      
+
+      
+      </p>
+      <p class="theme-by text-muted">
+        Powered by
+        <a href="https://beautifuljekyll.com">Beautiful Jekyll</a>
+      </p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+
+  
+  
+    
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha256-4+XzXVhsDmqanXGHaHvgh1gMQKX40OUvDEBTu8JcmNs=" crossorigin="anonymous"></script>
+
+
+  
+    
+  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+
+
+  
+    
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+
+
+  
+
+
+
+  
+    <!-- doing something a bit funky here because I want to be careful not to include JQuery twice! -->
+    
+      <script src="/assets/js/beautifuljekyll.js"></script>
+    
+  
+
+
+
+
+
+
+
+
+
+</body>
+</html>

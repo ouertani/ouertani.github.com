@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="en">
+<!-- Beautiful Jekyll 5.0.0 | Copyright Dean Attali 2020 -->
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+  
+
+  
+
+  <title>WSDL integration problem : Two declarations cause a collision</title>
+
+  
+  <meta name="author" content="Slim Ouertani">
+  
+
+  <meta name="description" content="Integration always hides some surprises especially when it comes to old systems where quick solutions aren’t the first aid. In this post, we present a strange and rare situation when requesting WS using an old existing WSDL. To make things simple bellow the wsdl and xsd samples : OldExistingWsService.wsdl &amp;lt;!--?xml...">
+
+  
+
+  
+
+  <link rel="alternate" type="application/rss+xml" title="Ouertani Personal Blog" href="/feed.xml">
+
+  
+
+  
+
+  
+
+
+  
+    
+      
+  <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+
+
+    
+      
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css">
+
+
+    
+      
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic">
+
+
+    
+      
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800">
+
+
+    
+  
+
+  
+    
+      <link rel="stylesheet" href="/assets/css/bootstrap-social.css">
+    
+      <link rel="stylesheet" href="/assets/css/beautifuljekyll.css">
+    
+  
+
+  
+
+  
+  
+  
+
+  
+
+  
+  <meta property="og:site_name" content="Ouertani Personal Blog">
+  <meta property="og:title" content="WSDL integration problem : Two declarations cause a collision">
+  <meta property="og:description" content="Integration always hides some surprises especially when it comes to old systems where quick solutions aren’t the first aid. In this post, we present a strange and rare situation when requesting WS using an old existing WSDL. To make things simple bellow the wsdl and xsd samples : OldExistingWsService.wsdl &amp;lt;!--?xml...">
+
+  
+  <meta property="og:image" content="/assets/img/avatar-icon.png">
+  
+
+  
+  <meta property="og:type" content="article">
+  <meta property="og:article:author" content="Slim Ouertani">
+  <meta property="og:article:published_time" content="2011-06-30T04:10:00-04:00">
+  <meta property="og:url" content="/blog/2011/06/30/wsdl-integration-problem-two-declarations-cause-a-collision/">
+  <link rel="canonical" href="/blog/2011/06/30/wsdl-integration-problem-two-declarations-cause-a-collision/">
+  
+
+  
+  <meta name="twitter:card" content="summary">
+  
+  <meta name="twitter:site" content="@ouertani">
+  <meta name="twitter:creator" content="@ouertani">
+
+  <meta property="twitter:title" content="WSDL integration problem : Two declarations cause a collision">
+  <meta property="twitter:description" content="Integration always hides some surprises especially when it comes to old systems where quick solutions aren’t the first aid. In this post, we present a strange and rare situation when requesting WS using an old existing WSDL. To make things simple bellow the wsdl and xsd samples : OldExistingWsService.wsdl &amp;lt;!--?xml...">
+
+  
+  <meta name="twitter:image" content="/assets/img/avatar-icon.png">
+  
+
+  
+
+
+  
+
+  
+
+</head>
+
+
+<body>
+
+  
+
+
+  <nav class="navbar navbar-expand-xl navbar-light fixed-top navbar-custom top-nav-regular"><a class="navbar-brand" href="">Ouertani Personal Blog</a><button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#main-navbar" aria-controls="main-navbar" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+
+  <div class="collapse navbar-collapse" id="main-navbar">
+    <ul class="navbar-nav ml-auto">
+          <li class="nav-item">
+            <a class="nav-link" href="/aboutme">About Me</a>
+          </li></ul>
+  </div>
+
+  
+
+  
+    <div class="avatar-container">
+      <div class="avatar-img-border">
+        <a href="">
+          <img alt="Navigation bar avatar" class="avatar-img" src="/assets/img/avatar-icon.png" />
+        </a>
+      </div>
+    </div>
+  
+
+</nav>
+
+
+  <!-- TODO this file has become a mess, refactor it -->
+
+
+
+
+
+
+
+<header class="header-section ">
+
+<div class="intro-header no-img">
+  <div class="container-md">
+    <div class="row">
+      <div class="col-xl-8 offset-xl-2 col-lg-10 offset-lg-1">
+        <div class="post-heading">
+          <h1>WSDL integration problem : Two declarations cause a collision</h1>
+          
+
+          
+            <span class="post-meta">Posted on June 30, 2011</span>
+            
+            
+          
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</header>
+
+
+
+
+
+<div class=" container-md ">
+  <div class="row">
+    <div class=" col-xl-8 offset-xl-2 col-lg-10 offset-lg-1 ">
+
+      
+
+      
+
+      <article role="main" class="blog-post">
+        <p>Integration always hides some surprises especially when it comes to old systems where quick solutions aren’t the first aid.
+In this post, we present a strange and rare situation when requesting WS using an old existing WSDL.
+<!-- more -->
+To make things simple bellow the wsdl and xsd samples :</p>
+
+<p>OldExistingWsService.wsdl</p>
+<div class="language-xml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c">&lt;!--?xml version="1.0" encoding="UTF-8"?--&gt;</span>
+<span class="nt">&lt;definitions</span> <span class="na">xmlns=</span><span class="s">"http://schemas.xmlsoap.org/wsdl/"</span> <span class="na">xmlns:soap=</span><span class="s">"http://schemas.xmlsoap.org/wsdl/soap/"</span> <span class="na">xmlns:tns=</span><span class="s">"http://ws.jtunisie.com/"</span> <span class="na">xmlns:wsam=</span><span class="s">"http://www.w3.org/2007/05/addressing/metadata"</span> <span class="na">xmlns:wsp=</span><span class="s">"http://www.w3.org/ns/ws-policy"</span> <span class="na">xmlns:wsp1_2=</span><span class="s">"http://schemas.xmlsoap.org/ws/2004/09/policy"</span> <span class="na">xmlns:wsu=</span><span class="s">"http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd"</span> <span class="na">xmlns:xsd=</span><span class="s">"http://www.w3.org/2001/XMLSchema"</span> <span class="na">targetnamespace=</span><span class="s">"http://ws.jtunisie.com/"</span> <span class="na">name=</span><span class="s">"OldExistingWsService"</span><span class="nt">&gt;</span>
+   <span class="nt">&lt;types&gt;</span>
+      <span class="nt">&lt;xsd:schema&gt;</span>
+         <span class="nt">&lt;xsd:import</span> <span class="na">namespace=</span><span class="s">"http://ws.jtunisie.com/"</span> <span class="na">schemalocation=</span><span class="s">"./OldExistingWsService.xsd"</span> <span class="nt">/&gt;</span>
+      <span class="nt">&lt;/xsd:schema&gt;</span>
+   <span class="nt">&lt;/types&gt;</span>
+   <span class="nt">&lt;message</span> <span class="na">name=</span><span class="s">"oldOperation"</span><span class="nt">&gt;</span>
+      <span class="nt">&lt;part</span> <span class="na">name=</span><span class="s">"parameters"</span> <span class="na">element=</span><span class="s">"tns:oldOperation"</span> <span class="nt">/&gt;</span>
+   <span class="nt">&lt;/message&gt;</span>
+   <span class="nt">&lt;message</span> <span class="na">name=</span><span class="s">"oldOperationResponse"</span><span class="nt">&gt;</span>
+      <span class="nt">&lt;part</span> <span class="na">name=</span><span class="s">"parameters"</span> <span class="na">element=</span><span class="s">"tns:oldOperationResponse"</span> <span class="nt">/&gt;</span>
+   <span class="nt">&lt;/message&gt;</span>
+   <span class="nt">&lt;porttype</span> <span class="na">name=</span><span class="s">"OldExistingWs"</span><span class="nt">&gt;</span>
+      <span class="nt">&lt;operation</span> <span class="na">name=</span><span class="s">"oldOperation"</span><span class="nt">&gt;</span>
+         <span class="nt">&lt;input</span> <span class="na">wsam:action=</span><span class="s">"http://ws.jtunisie.com/OldExistingWs/oldOperationRequest"</span> <span class="na">message=</span><span class="s">"tns:oldOperation"</span> <span class="nt">/&gt;</span>
+         <span class="nt">&lt;output</span> <span class="na">wsam:action=</span><span class="s">"http://ws.jtunisie.com/OldExistingWs/oldOperationResponse"</span> <span class="na">message=</span><span class="s">"tns:oldOperationResponse"</span> <span class="nt">/&gt;</span>
+      <span class="nt">&lt;/operation&gt;</span>
+   <span class="nt">&lt;/porttype&gt;</span>
+   <span class="nt">&lt;binding</span> <span class="na">name=</span><span class="s">"OldExistingWsPortBinding"</span> <span class="na">type=</span><span class="s">"tns:OldExistingWs"</span><span class="nt">&gt;</span>
+      <span class="nt">&lt;soap:binding</span> <span class="na">transport=</span><span class="s">"http://schemas.xmlsoap.org/soap/http"</span> <span class="na">style=</span><span class="s">"document"</span><span class="nt">&gt;</span>
+         <span class="nt">&lt;operation</span> <span class="na">name=</span><span class="s">"oldOperation"</span><span class="nt">&gt;</span>
+            <span class="nt">&lt;soap:operation</span> <span class="na">soapaction=</span><span class="s">""</span><span class="nt">&gt;</span>
+               <span class="nt">&lt;input&gt;</span>
+                  <span class="nt">&lt;soap:body</span> <span class="na">use=</span><span class="s">"literal"</span> <span class="nt">/&gt;</span>
+               <span class="nt">&lt;/input&gt;</span>
+               <span class="nt">&lt;output&gt;</span>
+                  <span class="nt">&lt;soap:body</span> <span class="na">use=</span><span class="s">"literal"</span> <span class="nt">/&gt;</span>
+               <span class="nt">&lt;/output&gt;</span>
+            <span class="nt">&lt;/soap:operation&gt;</span>
+         <span class="nt">&lt;/operation&gt;</span>
+      <span class="nt">&lt;/soap:binding&gt;</span>
+   <span class="nt">&lt;/binding&gt;</span>
+   <span class="nt">&lt;service</span> <span class="na">name=</span><span class="s">"OldExistingWsService"</span><span class="nt">&gt;</span>
+      <span class="nt">&lt;port</span> <span class="na">name=</span><span class="s">"OldExistingWsPort"</span> <span class="na">binding=</span><span class="s">"tns:OldExistingWsPortBinding"</span><span class="nt">&gt;</span>
+         <span class="nt">&lt;soap:address</span> <span class="na">location=</span><span class="s">"http://ouertani:8080/Wsdlcustomisation/OldExistingWsService"</span> <span class="nt">/&gt;</span>
+      <span class="nt">&lt;/port&gt;</span>
+   <span class="nt">&lt;/service&gt;</span>
+<span class="nt">&lt;/definitions&gt;</span>
+</code></pre></div></div>
+<p>OldExistingWsService.xsd</p>
+<div class="language-xml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c">&lt;!--?xml version="1.0" encoding="UTF-8"?--&gt;</span>
+<span class="cp">&lt;?xml version="1.0" encoding="UTF-8"?&gt;</span>
+<span class="nt">&lt;xs:schema</span> <span class="na">xmlns:xs=</span><span class="s">"http://www.w3.org/2001/XMLSchema"</span> <span class="na">xmlns:tns=</span><span class="s">"http://ws.jtunisie.com/"</span> <span class="na">version=</span><span class="s">"1.0"</span> <span class="na">targetnamespace=</span><span class="s">"http://ws.jtunisie.com/"</span><span class="nt">&gt;</span>
+   <span class="nt">&lt;xs:element</span> <span class="na">name=</span><span class="s">"oldOperation"</span> <span class="na">type=</span><span class="s">"tns:oldOperation"</span><span class="nt">&gt;</span>
+      <span class="nt">&lt;xs:element</span> <span class="na">name=</span><span class="s">"oldOperationResponse"</span> <span class="na">type=</span><span class="s">"tns:oldOperationResponse"</span><span class="nt">&gt;</span>
+         <span class="nt">&lt;xs:complextype</span> <span class="na">name=</span><span class="s">"oldOperation"</span><span class="nt">&gt;</span>
+            <span class="nt">&lt;xs:sequence&gt;</span>
+               <span class="nt">&lt;xs:element</span> <span class="na">name=</span><span class="s">"parameter"</span> <span class="na">type=</span><span class="s">"tns:oldExsistingClass"</span> <span class="na">minoccurs=</span><span class="s">"0"</span> <span class="nt">/&gt;</span>
+            <span class="nt">&lt;/xs:sequence&gt;</span>
+         <span class="nt">&lt;/xs:complextype&gt;</span>
+         <span class="nt">&lt;xs:complextype</span> <span class="na">name=</span><span class="s">"oldExsistingClass"</span><span class="nt">&gt;</span>
+            <span class="nt">&lt;xs:sequence&gt;</span>
+               <span class="nt">&lt;xs:element</span> <span class="na">name=</span><span class="s">"a"</span> <span class="na">type=</span><span class="s">"xs:int"</span> <span class="nt">/&gt;</span>
+               <span class="nt">&lt;xs:element</span> <span class="na">name=</span><span class="s">"_a"</span> <span class="na">type=</span><span class="s">"xs:int"</span> <span class="nt">/&gt;</span>
+            <span class="nt">&lt;/xs:sequence&gt;</span>
+         <span class="nt">&lt;/xs:complextype&gt;</span>
+         <span class="nt">&lt;xs:complextype</span> <span class="na">name=</span><span class="s">"oldOperationResponse"</span><span class="nt">&gt;</span>
+            <span class="nt">&lt;xs:sequence&gt;</span>
+               <span class="nt">&lt;xs:element</span> <span class="na">name=</span><span class="s">"return"</span> <span class="na">type=</span><span class="s">"xs:int"</span> <span class="nt">/&gt;</span>
+            <span class="nt">&lt;/xs:sequence&gt;</span>
+         <span class="nt">&lt;/xs:complextype&gt;</span>
+      <span class="nt">&lt;/xs:element&gt;</span>
+   <span class="nt">&lt;/xs:element&gt;</span>
+<span class="nt">&lt;/xs:schema&gt;</span>
+</code></pre></div></div>
+<p>trying to generate java client code from this wsdl will causes : <b>(wsdl2java.sh -client -d . -verbose OldExistingWsService.wsdl)</b></p>
+<p style="color:red;">
+org.apache.cxf.tools.common.ToolException: Thrown by JAXB: Two declarations cause a collision in the ObjectFactory class. at line 17 column 1 of schema file:/OldExistingWsService.xsd
+</p>
+<p>The problem is where a and _a are generate the same property, getter and setter methods names which generate exception.</p>
+<ol>By quick solution, I means :
+<li>tell cxf to resolve name collision with : -autoNameResolution command line argument</li>
+<li>tell jaxb to not remove underscores with : <a href="http://stackoverflow.com/questions/2163719/tell-jaxb-to-not-remove-underscores">jaxb:globalBindings underscoreBinding="asCharInWord"</a></li>
+</ol>
+<p>As these tricks doesn’t work for the current case, hands on dirty jaxb binding customization :</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&lt;jxb:bindings version="2.0" xmlns:jxb="http://java.sun.com/xml/ns/jaxb" xmlns:xs="http://www.w3.org/2001/XMLSchema"&gt;
+  &lt;jxb:bindings schemalocation="file:OldExistingWsService.xsd" node="/xs:schema"&gt;
+ 	&lt;jxb:bindings node=".//xs:element[@name='_a']"&gt;
+     &lt;jxb:property name="oldA"&gt;&lt;/jxb:property&gt;
+    &lt;/jxb:bindings&gt;
+ &lt;/jxb:bindings&gt;
+&lt;/jxb:bindings&gt;
+</code></pre></div></div>
+<p>And tell :
+wsdl2java.sh -client -d . -verbose -b binding.xsd OldExistingWsService.wsdl</p>
+
+<p>Note : to deal with old wsdl I used this schema bindings :</p>
+<div class="language-xml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">&lt;?xml version="1.0" encoding="UTF-8"?&gt;</span>
+<span class="nt">&lt;jaxws:bindings</span> <span class="na">xmlns:jaxws=</span><span class="s">"http://java.sun.com/xm l/ns/jaxws"</span> <span class="na">xmlns=</span><span class="s">"http://java.sun.com/xml/ns/jaxws"</span> <span class="na">xmlns:jxb=</span><span class="s">"http://java.sun.com/xml/ns/jaxb"</span> <span class="na">xmlns:tns1=</span><span class="s">"VOLARISWS"</span> <span class="na">xmlns:wsdl=</span><span class="s">"http://schemas.xmlsoap.org/wsdl/"</span> <span class="na">xmlns:xs=</span><span class="s">"http://www.w3.org/2001/XMLSchema"</span> <span class="na">wsdllocation=</span><span class="s">"test.wsdl"</span><span class="nt">&gt;</span>
+   <span class="nt">&lt;jaxws:schemabindings&gt;</span>
+      <span class="nt">&lt;jaxws:bindings</span> <span class="na">node=</span><span class="s">"wsdl:definitions"</span><span class="nt">&gt;</span>
+         <span class="nt">&lt;jaxws:bindings</span> <span class="na">node=</span><span class="s">".//xs:element[@name='_a']"</span><span class="nt">&gt;</span>
+            <span class="nt">&lt;jxb:property</span> <span class="na">name=</span><span class="s">"oldA"</span> <span class="nt">/&gt;</span>
+         <span class="nt">&lt;/jaxws:bindings&gt;</span>
+      <span class="nt">&lt;/jaxws:bindings&gt;</span>
+   <span class="nt">&lt;/jaxws:schemabindings&gt;</span>
+<span class="nt">&lt;/jaxws:bindings&gt;</span>
+</code></pre></div></div>
+<p>Thanks for patience.</p>
+
+      </article>
+
+      
+
+      
+
+      
+        <!-- Check if any share-links are active -->
+
+
+
+
+<section id = "social-share-section">
+  <span class="sr-only">Share: </span>
+
+  
+    <a href="https://twitter.com/intent/tweet?text=WSDL+integration+problem+%3A+Two+declarations+cause+a+collision&url=%2Fblog%2F2011%2F06%2F30%2Fwsdl-integration-problem-two-declarations-cause-a-collision%2F"
+      class="btn btn-social-icon btn-twitter" title="Share on Twitter">
+      <span class="fab fa-fw fa-twitter" aria-hidden="true"></span>
+      <span class="sr-only">Twitter</span>
+    </a>
+  
+
+  
+    <a href="https://www.facebook.com/sharer/sharer.php?u=%2Fblog%2F2011%2F06%2F30%2Fwsdl-integration-problem-two-declarations-cause-a-collision%2F"
+      class="btn btn-social-icon btn-facebook" title="Share on Facebook">
+      <span class="fab fa-fw fa-facebook" aria-hidden="true"></span>
+      <span class="sr-only">Facebook</span>
+    </a>
+  
+
+  
+    <a href="https://www.linkedin.com/shareArticle?mini=true&url=%2Fblog%2F2011%2F06%2F30%2Fwsdl-integration-problem-two-declarations-cause-a-collision%2F"
+      class="btn btn-social-icon btn-linkedin" title="Share on LinkedIn">
+      <span class="fab fa-fw fa-linkedin" aria-hidden="true"></span>
+      <span class="sr-only">LinkedIn</span>
+    </a>
+  
+
+  
+
+</section>
+
+
+
+      
+
+      <ul class="pagination blog-pager">
+        
+        <li class="page-item previous">
+          <a class="page-link" href="/blog/2010/12/06/scala-try-with-resources/" data-toggle="tooltip" data-placement="top" title="Scala try-with-resources">&larr; Previous Post</a>
+        </li>
+        
+        
+        <li class="page-item next">
+          <a class="page-link" href="/blog/2011/09/10/basic-ws-with-scala/" data-toggle="tooltip" data-placement="top" title="Basic WS with Scala">Next Post &rarr;</a>
+        </li>
+        
+      </ul>
+      
+  
+  
+  
+
+  
+
+
+
+
+    </div>
+  </div>
+</div>
+
+
+  <footer>
+  <div class="container-md beautiful-jekyll-footer">
+    <div class="row">
+      <div class="col-xl-8 offset-xl-2 col-lg-10 offset-lg-1">
+      <ul class="list-inline text-center footer-links"><li class="list-inline-item">
+    <a href="/feed.xml" title="RSS">
+      <span class="fa-stack fa-lg" aria-hidden="true">
+        <i class="fas fa-circle fa-stack-2x"></i>
+        <i class="fas fa-rss fa-stack-1x fa-inverse"></i>
+      </span>
+      <span class="sr-only">RSS</span>
+    </a>
+  </li><li class="list-inline-item">
+    <a href="mailto:ouertani@gmail.com" title="Email me">
+      <span class="fa-stack fa-lg" aria-hidden="true">
+        <i class="fas fa-circle fa-stack-2x"></i>
+        <i class="fas fa-envelope fa-stack-1x fa-inverse"></i>
+      </span>
+      <span class="sr-only">Email me</span>
+   </a>
+  </li><li class="list-inline-item">
+    <a href="https://github.com/ouertani" title="GitHub">
+      <span class="fa-stack fa-lg" aria-hidden="true">
+        <i class="fas fa-circle fa-stack-2x"></i>
+        <i class="fab fa-github fa-stack-1x fa-inverse"></i>
+      </span>
+      <span class="sr-only">GitHub</span>
+   </a>
+  </li><li class="list-inline-item">
+    <a href="https://twitter.com/ouertani" title="Twitter">
+      <span class="fa-stack fa-lg" aria-hidden="true">
+        <i class="fas fa-circle fa-stack-2x"></i>
+        <i class="fab fa-twitter fa-stack-1x fa-inverse"></i>
+      </span>
+      <span class="sr-only">Twitter</span>
+   </a>
+  </li></ul>
+
+      
+      <p class="copyright text-muted">
+      
+        Slim Ouertani
+        &nbsp;&bull;&nbsp;
+      
+      2021
+
+      
+
+      
+      </p>
+      <p class="theme-by text-muted">
+        Powered by
+        <a href="https://beautifuljekyll.com">Beautiful Jekyll</a>
+      </p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+
+  
+  
+    
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha256-4+XzXVhsDmqanXGHaHvgh1gMQKX40OUvDEBTu8JcmNs=" crossorigin="anonymous"></script>
+
+
+  
+    
+  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+
+
+  
+    
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+
+
+  
+
+
+
+  
+    <!-- doing something a bit funky here because I want to be careful not to include JQuery twice! -->
+    
+      <script src="/assets/js/beautifuljekyll.js"></script>
+    
+  
+
+
+
+
+
+
+
+
+
+</body>
+</html>

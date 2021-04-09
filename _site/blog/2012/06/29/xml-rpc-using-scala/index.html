@@ -1,0 +1,554 @@
+<!DOCTYPE html>
+<html lang="en">
+<!-- Beautiful Jekyll 5.0.0 | Copyright Dean Attali 2020 -->
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+  
+
+  
+
+  <title>XML-RPC using scala</title>
+
+  
+  <meta name="author" content="Slim Ouertani">
+  
+
+  <meta name="description" content="Purpose Calling remote procedure using XML-RPC and Scala. Introduction On Telecom IT environment and specially middelware solution, we will rarely do all the work but rather delegate some of business process to other tiers. Web service communications is heavy used between solutions. However, many IT node continues to support older...">
+
+  
+
+  
+
+  <link rel="alternate" type="application/rss+xml" title="Ouertani Personal Blog" href="/feed.xml">
+
+  
+
+  
+
+  
+
+
+  
+    
+      
+  <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+
+
+    
+      
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css">
+
+
+    
+      
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic">
+
+
+    
+      
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800">
+
+
+    
+  
+
+  
+    
+      <link rel="stylesheet" href="/assets/css/bootstrap-social.css">
+    
+      <link rel="stylesheet" href="/assets/css/beautifuljekyll.css">
+    
+  
+
+  
+
+  
+  
+  
+
+  
+
+  
+  <meta property="og:site_name" content="Ouertani Personal Blog">
+  <meta property="og:title" content="XML-RPC using scala">
+  <meta property="og:description" content="Purpose Calling remote procedure using XML-RPC and Scala. Introduction On Telecom IT environment and specially middelware solution, we will rarely do all the work but rather delegate some of business process to other tiers. Web service communications is heavy used between solutions. However, many IT node continues to support older...">
+
+  
+  <meta property="og:image" content="/assets/img/avatar-icon.png">
+  
+
+  
+  <meta property="og:type" content="article">
+  <meta property="og:article:author" content="Slim Ouertani">
+  <meta property="og:article:published_time" content="2012-06-29T02:03:00-04:00">
+  <meta property="og:url" content="/blog/2012/06/29/xml-rpc-using-scala/">
+  <link rel="canonical" href="/blog/2012/06/29/xml-rpc-using-scala/">
+  
+
+  
+  <meta name="twitter:card" content="summary">
+  
+  <meta name="twitter:site" content="@ouertani">
+  <meta name="twitter:creator" content="@ouertani">
+
+  <meta property="twitter:title" content="XML-RPC using scala">
+  <meta property="twitter:description" content="Purpose Calling remote procedure using XML-RPC and Scala. Introduction On Telecom IT environment and specially middelware solution, we will rarely do all the work but rather delegate some of business process to other tiers. Web service communications is heavy used between solutions. However, many IT node continues to support older...">
+
+  
+  <meta name="twitter:image" content="/assets/img/avatar-icon.png">
+  
+
+  
+
+
+  
+
+  
+
+</head>
+
+
+<body>
+
+  
+
+
+  <nav class="navbar navbar-expand-xl navbar-light fixed-top navbar-custom top-nav-regular"><a class="navbar-brand" href="">Ouertani Personal Blog</a><button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#main-navbar" aria-controls="main-navbar" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+
+  <div class="collapse navbar-collapse" id="main-navbar">
+    <ul class="navbar-nav ml-auto">
+          <li class="nav-item">
+            <a class="nav-link" href="/aboutme">About Me</a>
+          </li></ul>
+  </div>
+
+  
+
+  
+    <div class="avatar-container">
+      <div class="avatar-img-border">
+        <a href="">
+          <img alt="Navigation bar avatar" class="avatar-img" src="/assets/img/avatar-icon.png" />
+        </a>
+      </div>
+    </div>
+  
+
+</nav>
+
+
+  <!-- TODO this file has become a mess, refactor it -->
+
+
+
+
+
+
+
+<header class="header-section ">
+
+<div class="intro-header no-img">
+  <div class="container-md">
+    <div class="row">
+      <div class="col-xl-8 offset-xl-2 col-lg-10 offset-lg-1">
+        <div class="post-heading">
+          <h1>XML-RPC using scala</h1>
+          
+
+          
+            <span class="post-meta">Posted on June 29, 2012</span>
+            
+            
+          
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</header>
+
+
+
+
+
+<div class=" container-md ">
+  <div class="row">
+    <div class=" col-xl-8 offset-xl-2 col-lg-10 offset-lg-1 ">
+
+      
+
+      
+
+      <article role="main" class="blog-post">
+        <h2>Purpose</h2>
+
+<p>Calling remote procedure using XML-RPC and Scala.</p>
+<h2>Introduction</h2>
+
+<p>On Telecom IT environment and specially middelware solution, we will rarely do all the work but rather delegate some of business process to other tiers. Web service communications is heavy used between solutions. However, many IT node continues to support older protocols like XML-RPC. Ericsson Intelligent Network (IN) and its subsystem uses AIR Integration Protocol user communication(UCIP) based on a variant of XM-RPC.
+<!-- more --></p>
+<h2>Why UCIP ?</h2>
+
+<p>UCIP is intended for user self services such as Adjustments, Account Refill, and Account Inquiries and to extract account details. UCIP is an IP-based protocol used for integration towards the AIR server from the external application.</p>
+<h2>Why Scala ?</h2>
+
+<p>UCIP is an XML over HTTP based protocol, which makes it easy to integrate with a central integration point within a network. In addition, Scala can be used to easily create, parse, and process XML documents. XML data can be represented in Scala either by using a generic data representation, or with a data-specific data representation.</p>
+<h2>Scala &amp; XML-RPC</h2>
+
+<p>Rather than using an precompiled version of XML-RPC library, we will do our home solution using httpclient library from apache :</p>
+<div class="language-xml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nt">&lt;dependency&gt;</span>
+ <span class="nt">&lt;groupId&gt;</span>org.apache.httpcomponents<span class="nt">&lt;/groupId&gt;</span>
+ <span class="nt">&lt;artifactId&gt;</span>httpclient<span class="nt">&lt;/artifactId&gt;</span>
+ <span class="nt">&lt;version&gt;</span>4.1<span class="nt">&lt;/version&gt;</span>
+<span class="nt">&lt;/dependency&gt;</span>
+</code></pre></div></div>
+<h3>UPDATEBALANCEANDDATE</h3>
+
+<p>The message UpdateBalanceAndDate is used to adjust balances and expiry dates on the main account and the dedicated accounts. The sample I chooses here is only to update main balance :</p>
+
+<p>Let’s start with some helpful class :</p>
+
+<p>1- InParameters class : contains In specific configuration like ip and port</p>
+<div class="language-scala highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">case</span> <span class="k">class</span> <span class="nc">InParameters</span><span class="o">(</span><span class="n">ip</span><span class="k">:</span><span class="kt">String</span><span class="o">,</span><span class="n">port</span><span class="k">:</span><span class="kt">Int</span><span class="o">,</span><span class="n">user</span><span class="k">:</span><span class="kt">String</span><span class="o">,</span><span class="n">pwd</span><span class="k">:</span><span class="kt">String</span><span class="o">,</span><span class="n">agent</span><span class="k">:</span><span class="kt">String</span><span class="o">,</span><span class="n">url</span><span class="k">:</span><span class="kt">String</span><span class="o">)</span>
+</code></pre></div></div>
+<p>2- XMLRPCVo abstract class : groups all XML request message like the transaction generated Id and date</p>
+<div class="language-scala highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">object</span> <span class="nc">XmlRpcVo</span> <span class="o">{</span>
+ <span class="k">val</span> <span class="nv">f</span> <span class="k">=</span> <span class="k">new</span> <span class="nc">SimpleDateFormat</span><span class="o">(</span><span class="s">"yyyyMMdd'T'HH:mm:ssZ"</span><span class="o">);</span>
+<span class="o">}</span>
+<span class="k">abstract</span> <span class="k">class</span> <span class="nc">XmlRpcVo</span> <span class="o">{</span>
+ <span class="k">def</span> <span class="nf">originTransactionID</span> <span class="k">=</span> <span class="nc">System</span> <span class="n">currentTimeMillis</span>
+ <span class="k">def</span> <span class="nf">dateTime</span><span class="k">:</span><span class="kt">String</span><span class="o">=</span> <span class="nv">XmlRpcVo</span><span class="o">.</span><span class="py">f</span><span class="o">.</span><span class="py">format</span><span class="o">(</span><span class="k">new</span> <span class="nc">Date</span><span class="o">())</span>
+<span class="o">}</span>
+</code></pre></div></div>
+<p>3- UpdateBalanceAndDateParameter class with extend our XMLRPCVo and contains all data needed by Update main balance operation like subscriber number</p>
+<div class="language-scala highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">case</span> <span class="k">class</span> <span class="nc">UpdateBalanceAndDateParameter</span><span class="o">(</span><span class="n">subscriberNumber</span><span class="k">:</span><span class="kt">String</span><span class="o">,</span>
+ <span class="n">originNodeType</span><span class="k">:</span><span class="kt">String</span><span class="o">,</span>
+ <span class="n">originHostName</span><span class="k">:</span><span class="kt">String</span><span class="o">,</span>
+ <span class="n">transactionCurrency</span><span class="k">:</span><span class="kt">String</span><span class="o">,</span>
+ <span class="n">amount</span><span class="k">:</span> <span class="kt">Int</span> <span class="o">)</span>
+<span class="k">extends</span> <span class="nc">XmlRpcVo</span>
+</code></pre></div></div>
+<p>4-UCIP suggests to add custom header on XML-RPC message. XmlRpcHttpClient class dialogue with IN nodes using generic execute method</p>
+<div class="language-scala highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">XmlRpcHttpClient</span><span class="o">(</span><span class="n">inp</span> <span class="k">:</span><span class="kt">InParameters</span><span class="o">)</span> <span class="k">extends</span> <span class="nc">LogHelper</span><span class="o">{</span>
+ 
+  <span class="k">private</span> <span class="k">val</span> <span class="nv">httpclient</span><span class="k">:</span><span class="kt">DefaultHttpClient</span> <span class="o">=</span> <span class="n">client</span> 
+ 
+  <span class="k">private</span> <span class="o">[</span><span class="kt">this</span><span class="o">]</span> <span class="k">def</span> <span class="nf">client</span><span class="o">()</span> <span class="k">=</span>
+  <span class="o">{</span>
+    <span class="k">val</span> <span class="nv">httpclient</span> <span class="k">=</span> <span class="k">new</span> <span class="nc">DefaultHttpClient</span><span class="o">();</span>
+       
+    <span class="nv">httpclient</span><span class="o">.</span><span class="py">getCredentialsProvider</span><span class="o">().</span><span class="py">setCredentials</span><span class="o">(</span>
+      <span class="k">new</span> <span class="nc">AuthScope</span><span class="o">(</span><span class="nv">inp</span><span class="o">.</span><span class="py">ip</span><span class="o">,</span> <span class="nv">inp</span><span class="o">.</span><span class="py">port</span><span class="o">),</span>
+      <span class="k">new</span> <span class="nc">UsernamePasswordCredentials</span><span class="o">(</span><span class="nv">inp</span><span class="o">.</span><span class="py">user</span><span class="o">,</span> <span class="nv">inp</span><span class="o">.</span><span class="py">pwd</span><span class="o">))</span> 
+ 
+ 
+    <span class="nv">httpclient</span><span class="o">.</span><span class="py">getParams</span><span class="o">().</span><span class="py">setParameter</span><span class="o">(</span><span class="nv">CoreProtocolPNames</span><span class="o">.</span><span class="py">USER_AGENT</span><span class="o">,</span> <span class="nv">inp</span><span class="o">.</span><span class="py">agent</span><span class="o">)</span> 
+    <span class="n">httpclient</span>
+  <span class="o">}</span>
+  <span class="k">private</span> <span class="o">[</span><span class="kt">this</span><span class="o">]</span> <span class="k">def</span> <span class="nf">poster</span><span class="o">(</span><span class="n">elem</span><span class="k">:</span><span class="kt">Elem</span><span class="o">)</span> <span class="o">={</span>
+    <span class="k">val</span> <span class="nv">httppost</span> <span class="k">=</span> <span class="k">new</span> <span class="nc">HttpPost</span><span class="o">(</span><span class="nv">inp</span><span class="o">.</span><span class="py">url</span><span class="o">)</span>
+    <span class="nv">httppost</span><span class="o">.</span><span class="py">addHeader</span><span class="o">(</span><span class="s">"Content-Type"</span><span class="o">,</span> <span class="s">"text/xml"</span><span class="o">)</span>
+    <span class="nv">httppost</span><span class="o">.</span><span class="py">addHeader</span><span class="o">(</span><span class="s">"Content-Disposition"</span><span class="o">,</span> <span class="s">"form-data; name=\"fname\"; filename=\"request.xml\""</span><span class="o">)</span>
+ 
+    <span class="k">val</span> <span class="nv">comment</span> <span class="k">=</span> <span class="k">new</span> <span class="nc">StringBody</span><span class="o">(</span><span class="s">""</span><span class="o">+</span><span class="n">elem</span><span class="o">)</span>
+ 
+    <span class="k">val</span> <span class="nv">reqEntity</span> <span class="k">=</span> <span class="k">new</span> <span class="nc">MultipartEntity</span><span class="o">()</span>
+    <span class="nv">reqEntity</span><span class="o">.</span><span class="py">addPart</span><span class="o">(</span><span class="s">"fname"</span><span class="o">,</span> <span class="n">comment</span><span class="o">)</span>
+    <span class="nv">httppost</span><span class="o">.</span><span class="py">setEntity</span><span class="o">(</span><span class="n">reqEntity</span><span class="o">)</span>
+    <span class="n">httppost</span>
+  <span class="o">}</span>
+ 
+  <span class="k">def</span> <span class="nf">execute</span><span class="o">(</span><span class="n">requestVo</span><span class="k">:</span><span class="kt">scala.xml.Elem</span><span class="o">)</span><span class="k">:</span><span class="kt">HttpResponse</span> <span class="o">=</span> <span class="o">{</span>
+    <span class="k">try</span>     <span class="o">{</span> <span class="nv">client</span><span class="o">.</span><span class="py">execute</span><span class="o">(</span><span class="nf">poster</span><span class="o">(</span><span class="n">requestVo</span><span class="o">))}</span>
+    <span class="k">catch</span>   <span class="o">{</span> <span class="k">case</span> <span class="n">e</span> <span class="k">=&gt;</span>  <span class="k">throw</span> <span class="k">new</span> <span class="nf">connectionExecption</span><span class="o">(</span><span class="n">e</span><span class="o">)</span> <span class="o">}</span>
+    <span class="k">finally</span> <span class="o">{</span>  <span class="nv">client</span><span class="o">.</span><span class="py">getConnectionManager</span><span class="o">().</span><span class="py">shutdown</span><span class="o">()</span> <span class="o">}</span>
+  <span class="o">}</span>
+<span class="o">}</span>
+</code></pre></div></div>
+<p>XML-RPC is a Remote Procedure Calling protocol and the body of an XML-RPC request is formatted using XML. A procedure executes on the AIR server and the value it returns is also formatted in XML. The interface to the AIR server interface uses XML-RPC over HTTP. Sending an XML to update the main balance will be using this class.</p>
+
+<p>5- UpdateBalanceAndDate class : generates an UpdateBalanceAndDate XML request message</p>
+<div class="language-scala highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">UpdateBalanceAndDate</span> <span class="o">(</span><span class="n">ubdp</span> <span class="k">:</span><span class="kt">UpdateBalanceAndDateParameter</span><span class="o">)</span>  <span class="o">{</span>
+    <span class="k">def</span> <span class="nf">request</span><span class="k">=</span>
+      <span class="o">&lt;</span><span class="n">methodCall</span><span class="o">&gt;</span>
+        <span class="o">&lt;</span><span class="n">methodName</span><span class="o">&gt;</span><span class="nc">UpdateBalanceAndDate</span><span class="o">&lt;/</span><span class="n">methodName</span><span class="o">&gt;</span>
+        <span class="o">&lt;</span><span class="n">params</span><span class="o">&gt;</span>
+          <span class="o">&lt;</span><span class="n">param</span><span class="o">&gt;</span>
+            <span class="o">&lt;</span><span class="n">value</span><span class="o">&gt;</span>
+              <span class="o">&lt;</span><span class="n">struct</span><span class="o">&gt;</span>
+                <span class="o">&lt;</span><span class="n">member</span><span class="o">&gt;</span>
+                  <span class="o">&lt;</span><span class="n">name</span><span class="o">&gt;</span><span class="n">originNodeType</span><span class="o">&lt;/</span><span class="n">name</span><span class="o">&gt;</span>
+                  <span class="o">&lt;</span><span class="n">value</span><span class="o">&gt;</span>
+                    <span class="o">&lt;</span><span class="n">string</span><span class="o">&gt;{</span><span class="nv">ubdp</span><span class="o">.</span><span class="py">originNodeType</span><span class="o">}&lt;/</span><span class="n">string</span><span class="o">&gt;</span>
+                  <span class="o">&lt;/</span><span class="n">value</span><span class="o">&gt;</span>
+                <span class="o">&lt;/</span><span class="n">member</span><span class="o">&gt;</span>
+                <span class="o">&lt;</span><span class="n">member</span><span class="o">&gt;</span>
+                  <span class="o">&lt;</span><span class="n">name</span><span class="o">&gt;</span><span class="n">originHostName</span><span class="o">&lt;/</span><span class="n">name</span><span class="o">&gt;</span>
+                  <span class="o">&lt;</span><span class="n">value</span><span class="o">&gt;</span>
+                    <span class="o">&lt;</span><span class="n">string</span><span class="o">&gt;{</span><span class="nv">ubdp</span><span class="o">.</span><span class="py">originHostName</span><span class="o">}&lt;/</span><span class="n">string</span><span class="o">&gt;</span>
+                  <span class="o">&lt;/</span><span class="n">value</span><span class="o">&gt;</span>
+                <span class="o">&lt;/</span><span class="n">member</span><span class="o">&gt;</span>
+                <span class="o">&lt;</span><span class="n">member</span><span class="o">&gt;</span>
+                  <span class="o">&lt;</span><span class="n">name</span><span class="o">&gt;</span><span class="n">originTransactionID</span><span class="o">&lt;/</span><span class="n">name</span><span class="o">&gt;</span>
+                  <span class="o">&lt;</span><span class="n">value</span><span class="o">&gt;</span>
+                    <span class="o">&lt;</span><span class="n">string</span><span class="o">&gt;{</span><span class="nv">ubdp</span><span class="o">.</span><span class="py">originTransactionID</span><span class="o">}&lt;/</span><span class="n">string</span><span class="o">&gt;</span>
+                  <span class="o">&lt;/</span><span class="n">value</span><span class="o">&gt;</span>
+                <span class="o">&lt;/</span><span class="n">member</span><span class="o">&gt;</span>
+                <span class="o">&lt;</span><span class="n">member</span><span class="o">&gt;</span>
+                  <span class="o">&lt;</span><span class="n">name</span><span class="o">&gt;</span><span class="n">originTimeStamp</span><span class="o">&lt;/</span><span class="n">name</span><span class="o">&gt;</span>
+                  <span class="o">&lt;</span><span class="n">value</span><span class="o">&gt;</span>
+                    <span class="o">&lt;</span><span class="nv">dateTime</span><span class="o">.</span><span class="py">iso8601</span><span class="o">&gt;{</span><span class="nv">ubdp</span><span class="o">.</span><span class="py">dateTime</span><span class="o">}&lt;/</span><span class="nv">dateTime</span><span class="o">.</span><span class="py">iso8601</span><span class="o">&gt;</span>
+                  <span class="o">&lt;/</span><span class="n">value</span><span class="o">&gt;</span>
+                <span class="o">&lt;/</span><span class="n">member</span><span class="o">&gt;</span>
+                <span class="o">&lt;</span><span class="n">member</span><span class="o">&gt;</span>
+                  <span class="o">&lt;</span><span class="n">name</span><span class="o">&gt;</span><span class="n">subscriberNumber</span><span class="o">&lt;/</span><span class="n">name</span><span class="o">&gt;</span>
+                  <span class="o">&lt;</span><span class="n">value</span><span class="o">&gt;</span>
+                    <span class="o">&lt;</span><span class="n">string</span><span class="o">&gt;{</span><span class="nv">ubdp</span><span class="o">.</span><span class="py">subscriberNumber</span><span class="o">}&lt;/</span><span class="n">string</span><span class="o">&gt;</span>
+                  <span class="o">&lt;/</span><span class="n">value</span><span class="o">&gt;</span>
+                <span class="o">&lt;/</span><span class="n">member</span><span class="o">&gt;</span>
+                <span class="o">&lt;</span><span class="n">member</span><span class="o">&gt;</span>
+                  <span class="o">&lt;</span><span class="n">name</span><span class="o">&gt;</span><span class="n">transactionCurrency</span><span class="o">&lt;/</span><span class="n">name</span><span class="o">&gt;</span>
+                  <span class="o">&lt;</span><span class="n">value</span><span class="o">&gt;</span>
+                    <span class="o">&lt;</span><span class="n">string</span><span class="o">&gt;{</span><span class="nv">ubdp</span><span class="o">.</span><span class="py">transactionCurrency</span><span class="o">}&lt;/</span><span class="n">string</span><span class="o">&gt;</span>
+                  <span class="o">&lt;/</span><span class="n">value</span><span class="o">&gt;</span>
+                <span class="o">&lt;/</span><span class="n">member</span><span class="o">&gt;</span>
+                <span class="o">&lt;</span><span class="n">member</span><span class="o">&gt;</span>
+                  <span class="o">&lt;</span><span class="n">name</span><span class="o">&gt;</span><span class="n">adjustmentAmountRelative</span><span class="o">&lt;/</span><span class="n">name</span><span class="o">&gt;</span>
+                  <span class="o">&lt;</span><span class="n">value</span><span class="o">&gt;</span>
+                    <span class="o">&lt;</span><span class="n">string</span><span class="o">&gt;{</span><span class="nv">ubdp</span><span class="o">.</span><span class="py">amount</span><span class="o">}&lt;/</span><span class="n">string</span><span class="o">&gt;</span>
+                  <span class="o">&lt;/</span><span class="n">value</span><span class="o">&gt;</span>
+                <span class="o">&lt;/</span><span class="n">member</span><span class="o">&gt;</span>                
+              <span class="o">&lt;/</span><span class="n">struct</span><span class="o">&gt;</span>
+            <span class="o">&lt;/</span><span class="n">value</span><span class="o">&gt;</span>
+          <span class="o">&lt;/</span><span class="n">param</span><span class="o">&gt;</span>
+        <span class="o">&lt;/</span><span class="n">params</span><span class="o">&gt;</span>
+      <span class="o">&lt;/</span><span class="n">methodCall</span><span class="o">&gt;</span>
+  <span class="o">}</span>
+</code></pre></div></div>
+<p>6- UpdateBalanceAndDate companion object is used to parse response and validate the transaction</p>
+<div class="language-scala highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">object</span> <span class="nc">UpdateBalanceAndDate</span> <span class="o">{</span>
+  
+  <span class="nd">@throws</span> <span class="o">(</span><span class="n">classOf</span><span class="o">[</span><span class="kt">ClientProtocolException</span><span class="o">])</span>
+  <span class="nd">@throws</span> <span class="o">(</span><span class="n">classOf</span><span class="o">[</span><span class="kt">IOException</span><span class="o">])</span>
+  <span class="k">def</span>  <span class="nf">getResponse</span><span class="o">(</span><span class="n">response</span><span class="k">:</span><span class="kt">HttpResponse</span> <span class="o">)</span><span class="k">:</span><span class="kt">Int</span><span class="o">=</span>  <span class="o">{</span>
+     
+    <span class="k">try</span> <span class="o">{</span>
+      <span class="k">val</span> <span class="nv">entity</span> <span class="k">=</span> <span class="nv">response</span><span class="o">.</span><span class="py">getEntity</span><span class="o">();</span>
+      <span class="nf">if</span> <span class="o">(</span><span class="n">entity</span> <span class="o">!=</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>      
+        <span class="k">val</span> <span class="nv">s</span> <span class="k">=</span> <span class="nv">EntityUtils</span><span class="o">.</span><span class="py">toString</span><span class="o">(</span><span class="n">entity</span><span class="o">)</span>
+        <span class="k">val</span> <span class="nv">elem</span> <span class="k">=</span>  <span class="nv">XML</span><span class="o">.</span><span class="py">loadString</span><span class="o">(</span><span class="n">s</span><span class="o">)</span>      
+     
+        <span class="k">val</span> <span class="nv">tuple</span><span class="k">=</span>   <span class="k">for</span> <span class="o">{</span>
+          <span class="n">x</span> <span class="k">&lt;-</span> <span class="o">(</span><span class="n">elem</span> <span class="o">\\</span> <span class="s">"member"</span><span class="o">)</span>
+          <span class="n">name</span> <span class="k">=</span> <span class="o">(</span><span class="n">x</span> <span class="o">\</span> <span class="s">"name"</span> <span class="o">)</span> <span class="o">.</span><span class="py">text</span>
+          <span class="n">code</span> <span class="k">=</span> <span class="o">(</span> <span class="n">x</span>  <span class="o">\</span> <span class="s">"value"</span>  <span class="o">\</span> <span class="s">"i4"</span> <span class="o">).</span><span class="py">text</span>  <span class="nf">if</span><span class="o">(</span><span class="n">name</span> <span class="o">==</span> <span class="s">"responseCode"</span><span class="o">)</span>
+            <span class="o">}</span> <span class="nf">yield</span> <span class="o">(</span><span class="n">code</span><span class="o">)</span>
+         
+          <span class="nf">if</span><span class="o">(</span><span class="nv">tuple</span><span class="o">.</span><span class="py">size</span> <span class="o">==</span> <span class="mi">1</span><span class="o">)</span>  <span class="o">{</span>
+            <span class="k">return</span> <span class="nf">tuple</span><span class="o">(</span><span class="mi">0</span><span class="o">).</span><span class="py">toInt</span> 
+          <span class="o">}</span>
+          <span class="k">return</span> <span class="nc">RESPONSE_PARSE_EXCEPTION</span>
+        <span class="o">}</span>
+        <span class="k">else</span> <span class="o">{</span> <span class="k">return</span> <span class="nc">NULL_RESPONSE</span>  <span class="o">}</span>
+      <span class="o">}</span>
+      <span class="k">catch</span> <span class="o">{</span>
+        <span class="k">case</span> <span class="k">_</span> <span class="k">=&gt;</span>  <span class="k">return</span>  <span class="nc">UNEXCEPTED_ERROR_WHILE_PARSE_RESPONSE</span>         
+      <span class="o">}</span>
+    <span class="o">}</span>
+  <span class="o">}</span>
+</code></pre></div></div>
+<p>7- UpdateBalanceAndDateController controlleur class orchestrate requests and utilities class</p>
+<div class="language-scala highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">UpdateBalanceAndDateController</span> <span class="o">{</span>
+ 
+  <span class="k">def</span> <span class="nf">update</span><span class="o">(</span><span class="n">inp</span><span class="k">:</span> <span class="kt">InParameters</span><span class="o">,</span> <span class="n">ubdp</span> <span class="k">:</span> <span class="kt">UpdateBalanceAndDateParameter</span> <span class="o">)</span><span class="k">:</span><span class="kt">Int</span><span class="o">={</span> 
+    <span class="k">try</span> <span class="o">{</span>
+      <span class="k">val</span> <span class="nv">c</span> <span class="k">=</span> <span class="k">new</span> <span class="nc">XmlRpcHttpClient</span><span class="o">(</span><span class="n">inp</span><span class="o">)</span>
+      <span class="k">val</span> <span class="nv">ubd</span> <span class="k">=</span> <span class="k">new</span>  <span class="nc">UpdateBalanceAndDate</span> <span class="o">(</span><span class="n">ubdp</span><span class="o">)</span>
+      <span class="k">val</span> <span class="nv">rep</span><span class="k">=</span>  <span class="n">c</span> <span class="nf">execute</span><span class="o">(</span><span class="nv">ubd</span><span class="o">.</span><span class="py">request</span><span class="o">)</span>
+      <span class="k">return</span> <span class="nv">UpdateBalanceAndDate</span><span class="o">.</span><span class="py">getResponse</span><span class="o">(</span><span class="n">rep</span> <span class="o">)</span> 
+    <span class="o">}</span><span class="k">catch</span> <span class="o">{</span>
+      <span class="k">case</span> <span class="n">e</span><span class="k">:</span><span class="kt">connectionExecption</span> <span class="o">=&gt;</span> <span class="k">return</span> <span class="nc">AIR_EXCEPTION</span>  
+      <span class="k">case</span> <span class="n">e</span> <span class="k">=&gt;</span>  <span class="k">return</span> <span class="nc">UNEXPECTED_CONNECTION__EXCEPTION</span> 
+    <span class="o">}</span>
+  <span class="o">}</span>
+<span class="o">}</span>
+</code></pre></div></div>
+<h2>Conclusion</h2>
+
+<p>Create XML message and parse it using scala is like a baby toy and makes using UCIP protocol easier and simpler. This sample can be generalized to the other UCIP messages like GetBalanceAndDate or GetAccountDetails and any other XML-RPC communication.</p>
+
+      </article>
+
+      
+
+      
+
+      
+        <!-- Check if any share-links are active -->
+
+
+
+
+<section id = "social-share-section">
+  <span class="sr-only">Share: </span>
+
+  
+    <a href="https://twitter.com/intent/tweet?text=XML-RPC+using+scala&url=%2Fblog%2F2012%2F06%2F29%2Fxml-rpc-using-scala%2F"
+      class="btn btn-social-icon btn-twitter" title="Share on Twitter">
+      <span class="fab fa-fw fa-twitter" aria-hidden="true"></span>
+      <span class="sr-only">Twitter</span>
+    </a>
+  
+
+  
+    <a href="https://www.facebook.com/sharer/sharer.php?u=%2Fblog%2F2012%2F06%2F29%2Fxml-rpc-using-scala%2F"
+      class="btn btn-social-icon btn-facebook" title="Share on Facebook">
+      <span class="fab fa-fw fa-facebook" aria-hidden="true"></span>
+      <span class="sr-only">Facebook</span>
+    </a>
+  
+
+  
+    <a href="https://www.linkedin.com/shareArticle?mini=true&url=%2Fblog%2F2012%2F06%2F29%2Fxml-rpc-using-scala%2F"
+      class="btn btn-social-icon btn-linkedin" title="Share on LinkedIn">
+      <span class="fab fa-fw fa-linkedin" aria-hidden="true"></span>
+      <span class="sr-only">LinkedIn</span>
+    </a>
+  
+
+  
+
+</section>
+
+
+
+      
+
+      <ul class="pagination blog-pager">
+        
+        <li class="page-item previous">
+          <a class="page-link" href="/blog/2012/06/28/jaxws-header-part-2-server-side/" data-toggle="tooltip" data-placement="top" title="Jaxws Header : Part 2 : Server Side">&larr; Previous Post</a>
+        </li>
+        
+        
+        <li class="page-item next">
+          <a class="page-link" href="/blog/2012/09/26/xml-slash-rpc-driver-as-jca-scala-connector/" data-toggle="tooltip" data-placement="top" title="XML/RPC driver as JCA Scala connector">Next Post &rarr;</a>
+        </li>
+        
+      </ul>
+      
+  
+  
+  
+
+  
+
+
+
+
+    </div>
+  </div>
+</div>
+
+
+  <footer>
+  <div class="container-md beautiful-jekyll-footer">
+    <div class="row">
+      <div class="col-xl-8 offset-xl-2 col-lg-10 offset-lg-1">
+      <ul class="list-inline text-center footer-links"><li class="list-inline-item">
+    <a href="/feed.xml" title="RSS">
+      <span class="fa-stack fa-lg" aria-hidden="true">
+        <i class="fas fa-circle fa-stack-2x"></i>
+        <i class="fas fa-rss fa-stack-1x fa-inverse"></i>
+      </span>
+      <span class="sr-only">RSS</span>
+    </a>
+  </li><li class="list-inline-item">
+    <a href="mailto:ouertani@gmail.com" title="Email me">
+      <span class="fa-stack fa-lg" aria-hidden="true">
+        <i class="fas fa-circle fa-stack-2x"></i>
+        <i class="fas fa-envelope fa-stack-1x fa-inverse"></i>
+      </span>
+      <span class="sr-only">Email me</span>
+   </a>
+  </li><li class="list-inline-item">
+    <a href="https://github.com/ouertani" title="GitHub">
+      <span class="fa-stack fa-lg" aria-hidden="true">
+        <i class="fas fa-circle fa-stack-2x"></i>
+        <i class="fab fa-github fa-stack-1x fa-inverse"></i>
+      </span>
+      <span class="sr-only">GitHub</span>
+   </a>
+  </li><li class="list-inline-item">
+    <a href="https://twitter.com/ouertani" title="Twitter">
+      <span class="fa-stack fa-lg" aria-hidden="true">
+        <i class="fas fa-circle fa-stack-2x"></i>
+        <i class="fab fa-twitter fa-stack-1x fa-inverse"></i>
+      </span>
+      <span class="sr-only">Twitter</span>
+   </a>
+  </li></ul>
+
+      
+      <p class="copyright text-muted">
+      
+        Slim Ouertani
+        &nbsp;&bull;&nbsp;
+      
+      2021
+
+      
+
+      
+      </p>
+      <p class="theme-by text-muted">
+        Powered by
+        <a href="https://beautifuljekyll.com">Beautiful Jekyll</a>
+      </p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+
+  
+  
+    
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha256-4+XzXVhsDmqanXGHaHvgh1gMQKX40OUvDEBTu8JcmNs=" crossorigin="anonymous"></script>
+
+
+  
+    
+  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+
+
+  
+    
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+
+
+  
+
+
+
+  
+    <!-- doing something a bit funky here because I want to be careful not to include JQuery twice! -->
+    
+      <script src="/assets/js/beautifuljekyll.js"></script>
+    
+  
+
+
+
+
+
+
+
+
+
+</body>
+</html>

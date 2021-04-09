@@ -1,0 +1,539 @@
+<!DOCTYPE html>
+<html lang="en">
+<!-- Beautiful Jekyll 5.0.0 | Copyright Dean Attali 2020 -->
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+  
+
+  
+
+  <title>Fun with Scala and Vert.x</title>
+
+  
+  <meta name="author" content="Slim Ouertani">
+  
+
+  <meta name="description" content="Vert.x is a polyglot event-driven application framework that runs on the Java Virtual Machine (JAVA 7 is the minimum supported version). Like Node.js, Vert.x is asynchronous and scalable, and lets developers build modern and effective web applications. Being polyglot, Vert.x can be used in many flavors, among which : JavaScript,CoffeeScript,...">
+
+  
+
+  
+
+  <link rel="alternate" type="application/rss+xml" title="Ouertani Personal Blog" href="/feed.xml">
+
+  
+
+  
+
+  
+
+
+  
+    
+      
+  <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+
+
+    
+      
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css">
+
+
+    
+      
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic">
+
+
+    
+      
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800">
+
+
+    
+  
+
+  
+    
+      <link rel="stylesheet" href="/assets/css/bootstrap-social.css">
+    
+      <link rel="stylesheet" href="/assets/css/beautifuljekyll.css">
+    
+  
+
+  
+
+  
+  
+  
+
+  
+
+  
+  <meta property="og:site_name" content="Ouertani Personal Blog">
+  <meta property="og:title" content="Fun with Scala and Vert.x">
+  <meta property="og:description" content="Vert.x is a polyglot event-driven application framework that runs on the Java Virtual Machine (JAVA 7 is the minimum supported version). Like Node.js, Vert.x is asynchronous and scalable, and lets developers build modern and effective web applications. Being polyglot, Vert.x can be used in many flavors, among which : JavaScript,CoffeeScript,...">
+
+  
+  <meta property="og:image" content="/assets/img/avatar-icon.png">
+  
+
+  
+  <meta property="og:type" content="article">
+  <meta property="og:article:author" content="Slim Ouertani">
+  <meta property="og:article:published_time" content="2013-02-12T18:43:00-05:00">
+  <meta property="og:url" content="/blog/2013/02/12/fun-with-scala-and-vert-dot-x/">
+  <link rel="canonical" href="/blog/2013/02/12/fun-with-scala-and-vert-dot-x/">
+  
+
+  
+  <meta name="twitter:card" content="summary">
+  
+  <meta name="twitter:site" content="@ouertani">
+  <meta name="twitter:creator" content="@ouertani">
+
+  <meta property="twitter:title" content="Fun with Scala and Vert.x">
+  <meta property="twitter:description" content="Vert.x is a polyglot event-driven application framework that runs on the Java Virtual Machine (JAVA 7 is the minimum supported version). Like Node.js, Vert.x is asynchronous and scalable, and lets developers build modern and effective web applications. Being polyglot, Vert.x can be used in many flavors, among which : JavaScript,CoffeeScript,...">
+
+  
+  <meta name="twitter:image" content="/assets/img/avatar-icon.png">
+  
+
+  
+
+
+  
+
+  
+
+</head>
+
+
+<body>
+
+  
+
+
+  <nav class="navbar navbar-expand-xl navbar-light fixed-top navbar-custom top-nav-regular"><a class="navbar-brand" href="">Ouertani Personal Blog</a><button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#main-navbar" aria-controls="main-navbar" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+
+  <div class="collapse navbar-collapse" id="main-navbar">
+    <ul class="navbar-nav ml-auto">
+          <li class="nav-item">
+            <a class="nav-link" href="/aboutme">About Me</a>
+          </li></ul>
+  </div>
+
+  
+
+  
+    <div class="avatar-container">
+      <div class="avatar-img-border">
+        <a href="">
+          <img alt="Navigation bar avatar" class="avatar-img" src="/assets/img/avatar-icon.png" />
+        </a>
+      </div>
+    </div>
+  
+
+</nav>
+
+
+  <!-- TODO this file has become a mess, refactor it -->
+
+
+
+
+
+
+
+<header class="header-section ">
+
+<div class="intro-header no-img">
+  <div class="container-md">
+    <div class="row">
+      <div class="col-xl-8 offset-xl-2 col-lg-10 offset-lg-1">
+        <div class="post-heading">
+          <h1>Fun with Scala and Vert.x</h1>
+          
+
+          
+            <span class="post-meta">Posted on February 12, 2013</span>
+            
+            
+          
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</header>
+
+
+
+
+
+<div class=" container-md ">
+  <div class="row">
+    <div class=" col-xl-8 offset-xl-2 col-lg-10 offset-lg-1 ">
+
+      
+
+      
+
+      <article role="main" class="blog-post">
+        <p><a href="http://vertx.io/">Vert.x</a> is a polyglot event-driven application framework that runs on the Java Virtual Machine (JAVA 7 is the minimum supported version). Like Node.js, Vert.x is asynchronous and scalable, and lets developers build modern and effective web applications.</p>
+
+<p>Being polyglot, Vert.x can be used in many flavors, among which : JavaScript,CoffeeScript, Ruby, Python,Groovy and Java. In order to enforce asynchronism and scalabity, Vert.x is built upon <a href="https://netty.io/">Netty</a>, leverage the <a href="http://en.wikipedia.org/wiki/Reactor_pattern">reactor pattern</a>, using a frightening number of handlers.</p>
+
+<p>This article aims at showing the powerful combination of Scala and Vert.x - the Java counterpart being provided as comparison.
+<!-- more -->
+Note : the source code are hosted on GitHub as part of lang-scala <a href="https://github.com/ouertani/vert.x/tree/master/vertx-lang/vertx-lang-scala">https://github.com/ouertani/vert.x/tree/master/vertx-lang/vertx-lang-scala</a></p>
+
+<p>Vert.x supports many components :</p>
+
+<li><a href="http://en.wikipedia.org/wiki/WebSocket">WebSocket</a></li>
+<li>HttpServer</li>
+<li>Distributed Event Bus</li>
+<li>TCP Server, SockJS ,... not presented here</li>
+<h2>I - WebSocket</h2>
+
+<p>Web Socket are HTML 5 feature providing full-duplex communications. For old browsers that do not support WebSocket, Vert.x provides <a href="https://github.com/sockjs/sockjs-client">SockJS</a> as out-of-the-box component.</p>
+
+<p>In order to run the following example check out : <a href="https://github.com/ouertani/vert.x/blob/master/vertx-examples/src/main/javascript/websockets/ws.html">https://github.com/ouertani/vert.x/blob/master/vertx-examples/src/main/javascript/websockets/ws.html</a> and save it into the compiled lib directory</p>
+
+<h4>Java</h4>
+<p>```	java SampleWebSocket.java
+import org.vertx.java.core.Handler;
+import org.vertx.java.core.buffer.Buffer;
+import org.vertx.java.core.http.HttpServerRequest;
+import org.vertx.java.core.http.ServerWebSocket;
+import org.vertx.java.deploy.Verticle;</p>
+
+<p>public class SampleWebSocket extends Verticle {</p>
+
+<p>public void start() {
+    vertx.createHttpServer().websocketHandler(new Handler<ServerWebSocket>() {
+      public void handle(final ServerWebSocket ws) {
+        if (ws.path.equals("/myapp")) {
+          ws.dataHandler(new Handler<Buffer>() {
+            public void handle(Buffer data) {
+              ws.writeTextFrame(data.toString()); // Echo it back
+            }
+          });
+        } else {
+          ws.reject();
+        }
+      }
+    }).requestHandler(new Handler<HttpServerRequest>() {
+      public void handle(HttpServerRequest req) {
+        if (req.path.equals("/")) req.response.sendFile("ws.html"); // Serve the html
+      }
+    }).listen(8080);
+  }
+}</HttpServerRequest></Buffer></ServerWebSocket></p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&lt;h4&gt;Scala&lt;/h4&gt;
+```	scala SampleWebSocket.scala
+import org.vertx.java.core.buffer.Buffer;
+import org.vertx.java.core.http.HttpServerRequest;
+import org.vertx.java.core.http.ServerWebSocket;
+import org.vertx.scala.deploy.Verticle
+import org.vertx.scala.core._
+ 
+class SampleWebSocket extends Verticle ( 
+  _.getVertx().createHttpServer().websocketHandler{ 
+     ws:ServerWebSocket =&gt; ws.path match {
+        case "/myapp" =&gt; ws.dataHandler{data : Buffer =&gt;   ws.writeTextFrame(data.toString())}
+        case _ =&gt; ws.reject();
+      }}
+      .requestHandler{req : HttpServerRequest =&gt; req.path match {case ("/") =&gt; req.response.sendFile("ws.html")}}
+      .listen(8080)
+)()
+</code></pre></div></div>
+<h2>II-HttpWebServer</h2>
+
+<p>Vert.x allows you to easily write full featured, highly performant and scalable HTTP and HTTPS servers.</p>
+
+<p>The following example starts up an Http server, listening on port 8080, and logging all received requests.</p>
+
+<h4>Java</h4>
+<p>```	java SampleHttpWebServer.java
+import org.vertx.java.core.Handler;
+import org.vertx.java.core.http.HttpServer;
+import org.vertx.java.core.http.HttpServerRequest;
+import org.vertx.java.core.logging.Logger;
+import org.vertx.java.deploy.Verticle;</p>
+
+<p>public class SampleHttpWebServer extends Verticle {</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>public void start() {
+    HttpServer server = vertx.createHttpServer();
+    final Logger log = getContainer().getLogger();
+    server.requestHandler(new Handler&lt;HttpServerRequest&gt;() {
+        public void handle(HttpServerRequest request) {
+            log.info("A request has arrived on the server!");
+        }
+    }).listen(8080, "localhost");
+} } ```
+</code></pre></div></div>
+<h4>Scala</h4>
+<p>```	scala SampleWebServer.scala
+import org.vertx.java.core.http. { HttpServerRequest =&gt; JHttpServerRequest}
+import org.vertx.scala.deploy.Verticle
+import org.vertx.scala.core._</p>
+
+<p>class SampleWebServer extends Verticle ( x =&gt; 
+  x.getVertx().createHttpServer().withRequestHandler{_ : JHttpServerRequest =&gt; 
+     x.info(“A request has arrived on the server!”)}
+.listen(8080, “localhost”)
+)()</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&lt;h2&gt;III-HttpClient&lt;/h2&gt;
+
+Vert.x also provides an HttpClient API, so as to interact with the server part. The following samples create and send a GET request, then log the server's response.
+
+&lt;h4&gt;Java&lt;/h4&gt;
+```	java SampleHttpClient.java
+import org.vertx.java.core.Handler;
+import org.vertx.java.core.http.HttpClient;
+import org.vertx.java.core.http.HttpClientRequest;
+import org.vertx.java.core.http.HttpClientResponse;
+import org.vertx.java.core.logging.Logger;
+import org.vertx.java.deploy.Verticle;
+ 
+ 
+public class SampleHttpClient extends Verticle {
+ 
+    @Override
+    public void start() throws Exception {
+        HttpClient client = vertx.createHttpClient().setHost("127.0.0.1");
+        final Logger log = getContainer().getLogger();
+ 
+        HttpClientRequest request = client.post("/some-path/", new Handler&lt;HttpClientResponse&gt;() {
+            public void handle(HttpClientResponse resp) {
+                log.info("Got a response: ");
+            }
+        });
+ 
+        request.end();
+    }
+}
+</code></pre></div></div>
+<h4>Scala</h4>
+<p>```	scala SampleWebClient.scala
+import org.vertx.scala.deploy.Verticle
+import org.vertx.scala.core._</p>
+
+<p>class SampleWebClient extends Verticle (v =&gt;
+   v.getVertx.createHttpClient().setHost(“127.0.0.1”).setPort(8080)
+   .andGetNow(“/”) {_ =&gt; v.info(“Got a response: “ )}
+  )()</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&lt;h2&gt;IV-EventBus&lt;/h2&gt;
+
+The event bus is like a vertebral spine, it can be used to connect distributed nodes, and to support interaction between different Verticles, even written in different languages.
+
+&lt;h4&gt;Java&lt;/h4&gt;
+```	java SampleEventBus.java
+import org.vertx.java.deploy.Verticle;
+import org.vertx.java.core.eventbus.EventBus;
+ 
+public class SampleEventBus extends Verticle {
+   @Override
+    public void start() throws Exception {
+       EventBus eb = vertx.eventBus();
+       eb.send("path", "ping1");
+       eb.send("path", "ping2");
+   }  
+}
+</code></pre></div></div>
+<h4>Scala</h4>
+<p><code class="language-plaintext highlighter-rouge">	scala SampleEventBus.scala
+import org.vertx.scala.deploy.Verticle
+import org.vertx.scala.core._
+class SampleEventBus extends Verticle ( x =&gt; { 
+ val  point = x ! ("path")
+ point &gt;&gt; ("ping 1") 
+ point &gt;&gt; ("ping 2") 
+} 
+)()
+</code></p>
+<h2>Conclusion</h2>
+
+<p>This article introduced the basic of Vert.x using scala language and short examples. Full Scala language support will soon, hopefully, become available.</p>
+
+<p>Stay tuned, a subsequent post will show you more about Vert.x with Scala.</p>
+
+<p>source : http://blog.zenika.com/index.php?post/2013/02/11/fun-with-scala-and-vert-x</p>
+
+      </article>
+
+      
+
+      
+
+      
+        <!-- Check if any share-links are active -->
+
+
+
+
+<section id = "social-share-section">
+  <span class="sr-only">Share: </span>
+
+  
+    <a href="https://twitter.com/intent/tweet?text=Fun+with+Scala+and+Vert.x&url=%2Fblog%2F2013%2F02%2F12%2Ffun-with-scala-and-vert-dot-x%2F"
+      class="btn btn-social-icon btn-twitter" title="Share on Twitter">
+      <span class="fab fa-fw fa-twitter" aria-hidden="true"></span>
+      <span class="sr-only">Twitter</span>
+    </a>
+  
+
+  
+    <a href="https://www.facebook.com/sharer/sharer.php?u=%2Fblog%2F2013%2F02%2F12%2Ffun-with-scala-and-vert-dot-x%2F"
+      class="btn btn-social-icon btn-facebook" title="Share on Facebook">
+      <span class="fab fa-fw fa-facebook" aria-hidden="true"></span>
+      <span class="sr-only">Facebook</span>
+    </a>
+  
+
+  
+    <a href="https://www.linkedin.com/shareArticle?mini=true&url=%2Fblog%2F2013%2F02%2F12%2Ffun-with-scala-and-vert-dot-x%2F"
+      class="btn btn-social-icon btn-linkedin" title="Share on LinkedIn">
+      <span class="fab fa-fw fa-linkedin" aria-hidden="true"></span>
+      <span class="sr-only">LinkedIn</span>
+    </a>
+  
+
+  
+
+</section>
+
+
+
+      
+
+      <ul class="pagination blog-pager">
+        
+        <li class="page-item previous">
+          <a class="page-link" href="/blog/2012/10/18/getting-started-with-play-2-dot-1/" data-toggle="tooltip" data-placement="top" title="Play 2.1 Scala 2.10 and String Interpolation">&larr; Previous Post</a>
+        </li>
+        
+        
+        <li class="page-item next">
+          <a class="page-link" href="/blog/2013/03/09/rest-with-scala-and-vert-dot-x/" data-toggle="tooltip" data-placement="top" title="Rest with Scala and Vert.x">Next Post &rarr;</a>
+        </li>
+        
+      </ul>
+      
+  
+  
+  
+
+  
+
+
+
+
+    </div>
+  </div>
+</div>
+
+
+  <footer>
+  <div class="container-md beautiful-jekyll-footer">
+    <div class="row">
+      <div class="col-xl-8 offset-xl-2 col-lg-10 offset-lg-1">
+      <ul class="list-inline text-center footer-links"><li class="list-inline-item">
+    <a href="/feed.xml" title="RSS">
+      <span class="fa-stack fa-lg" aria-hidden="true">
+        <i class="fas fa-circle fa-stack-2x"></i>
+        <i class="fas fa-rss fa-stack-1x fa-inverse"></i>
+      </span>
+      <span class="sr-only">RSS</span>
+    </a>
+  </li><li class="list-inline-item">
+    <a href="mailto:ouertani@gmail.com" title="Email me">
+      <span class="fa-stack fa-lg" aria-hidden="true">
+        <i class="fas fa-circle fa-stack-2x"></i>
+        <i class="fas fa-envelope fa-stack-1x fa-inverse"></i>
+      </span>
+      <span class="sr-only">Email me</span>
+   </a>
+  </li><li class="list-inline-item">
+    <a href="https://github.com/ouertani" title="GitHub">
+      <span class="fa-stack fa-lg" aria-hidden="true">
+        <i class="fas fa-circle fa-stack-2x"></i>
+        <i class="fab fa-github fa-stack-1x fa-inverse"></i>
+      </span>
+      <span class="sr-only">GitHub</span>
+   </a>
+  </li><li class="list-inline-item">
+    <a href="https://twitter.com/ouertani" title="Twitter">
+      <span class="fa-stack fa-lg" aria-hidden="true">
+        <i class="fas fa-circle fa-stack-2x"></i>
+        <i class="fab fa-twitter fa-stack-1x fa-inverse"></i>
+      </span>
+      <span class="sr-only">Twitter</span>
+   </a>
+  </li></ul>
+
+      
+      <p class="copyright text-muted">
+      
+        Slim Ouertani
+        &nbsp;&bull;&nbsp;
+      
+      2021
+
+      
+
+      
+      </p>
+      <p class="theme-by text-muted">
+        Powered by
+        <a href="https://beautifuljekyll.com">Beautiful Jekyll</a>
+      </p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+
+  
+  
+    
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha256-4+XzXVhsDmqanXGHaHvgh1gMQKX40OUvDEBTu8JcmNs=" crossorigin="anonymous"></script>
+
+
+  
+    
+  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+
+
+  
+    
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+
+
+  
+
+
+
+  
+    <!-- doing something a bit funky here because I want to be careful not to include JQuery twice! -->
+    
+      <script src="/assets/js/beautifuljekyll.js"></script>
+    
+  
+
+
+
+
+
+
+
+
+
+</body>
+</html>

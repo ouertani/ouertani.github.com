@@ -1,0 +1,542 @@
+<!DOCTYPE html>
+<html lang="en">
+<!-- Beautiful Jekyll 5.0.0 | Copyright Dean Attali 2020 -->
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+  
+
+  
+
+  <title>JAX-WS Header : Part 1 the Client Side</title>
+
+  
+  <meta name="author" content="Slim Ouertani">
+  
+
+  <meta name="description" content="Purpose Manipulating JAXWS header on the client Side like adding WSS username token or logging saop message. Introduction On Telecom IT environment and specially middelware solution, we will rarely do all the work but rather delegate some of business process to other tiers. Web service communications is heavy used between...">
+
+  
+
+  
+
+  <link rel="alternate" type="application/rss+xml" title="Ouertani Personal Blog" href="/feed.xml">
+
+  
+
+  
+
+  
+
+
+  
+    
+      
+  <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+
+
+    
+      
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css">
+
+
+    
+      
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic">
+
+
+    
+      
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800">
+
+
+    
+  
+
+  
+    
+      <link rel="stylesheet" href="/assets/css/bootstrap-social.css">
+    
+      <link rel="stylesheet" href="/assets/css/beautifuljekyll.css">
+    
+  
+
+  
+
+  
+  
+  
+
+  
+
+  
+  <meta property="og:site_name" content="Ouertani Personal Blog">
+  <meta property="og:title" content="JAX-WS Header : Part 1 the Client Side">
+  <meta property="og:description" content="Purpose Manipulating JAXWS header on the client Side like adding WSS username token or logging saop message. Introduction On Telecom IT environment and specially middelware solution, we will rarely do all the work but rather delegate some of business process to other tiers. Web service communications is heavy used between...">
+
+  
+  <meta property="og:image" content="/assets/img/avatar-icon.png">
+  
+
+  
+  <meta property="og:type" content="article">
+  <meta property="og:article:author" content="Slim Ouertani">
+  <meta property="og:article:published_time" content="2012-06-27T03:32:00-04:00">
+  <meta property="og:url" content="/blog/2012/06/27/jax-ws-header-part-1-the-client-side/">
+  <link rel="canonical" href="/blog/2012/06/27/jax-ws-header-part-1-the-client-side/">
+  
+
+  
+  <meta name="twitter:card" content="summary">
+  
+  <meta name="twitter:site" content="@ouertani">
+  <meta name="twitter:creator" content="@ouertani">
+
+  <meta property="twitter:title" content="JAX-WS Header : Part 1 the Client Side">
+  <meta property="twitter:description" content="Purpose Manipulating JAXWS header on the client Side like adding WSS username token or logging saop message. Introduction On Telecom IT environment and specially middelware solution, we will rarely do all the work but rather delegate some of business process to other tiers. Web service communications is heavy used between...">
+
+  
+  <meta name="twitter:image" content="/assets/img/avatar-icon.png">
+  
+
+  
+
+
+  
+
+  
+
+</head>
+
+
+<body>
+
+  
+
+
+  <nav class="navbar navbar-expand-xl navbar-light fixed-top navbar-custom top-nav-regular"><a class="navbar-brand" href="">Ouertani Personal Blog</a><button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#main-navbar" aria-controls="main-navbar" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+
+  <div class="collapse navbar-collapse" id="main-navbar">
+    <ul class="navbar-nav ml-auto">
+          <li class="nav-item">
+            <a class="nav-link" href="/aboutme">About Me</a>
+          </li></ul>
+  </div>
+
+  
+
+  
+    <div class="avatar-container">
+      <div class="avatar-img-border">
+        <a href="">
+          <img alt="Navigation bar avatar" class="avatar-img" src="/assets/img/avatar-icon.png" />
+        </a>
+      </div>
+    </div>
+  
+
+</nav>
+
+
+  <!-- TODO this file has become a mess, refactor it -->
+
+
+
+
+
+
+
+<header class="header-section ">
+
+<div class="intro-header no-img">
+  <div class="container-md">
+    <div class="row">
+      <div class="col-xl-8 offset-xl-2 col-lg-10 offset-lg-1">
+        <div class="post-heading">
+          <h1>JAX-WS Header : Part 1 the Client Side</h1>
+          
+
+          
+            <span class="post-meta">Posted on June 27, 2012</span>
+            
+            
+          
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</header>
+
+
+
+
+
+<div class=" container-md ">
+  <div class="row">
+    <div class=" col-xl-8 offset-xl-2 col-lg-10 offset-lg-1 ">
+
+      
+
+      
+
+      <article role="main" class="blog-post">
+        <h2>Purpose</h2>
+
+<p>Manipulating JAXWS header on the client Side like adding WSS username token or logging saop message.</p>
+<h2>Introduction</h2>
+
+<p>On Telecom IT environment and specially middelware solution, we will rarely do all the work but rather delegate some of business process to other tiers. Web service communications is heavy used between solutions. This tutorial aims to introduce using handler on client side by adding WSS UserToken or logging the soap message on console.
+<!-- more --></p>
+<h2>Adding undeclared custom header</h2>
+
+<p>Some Ws client needs to add a custom header which are not declared on WSDL. Adding WSS Username Token is like adding this XML snippet on header element:</p>
+<div class="language-xml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nt">&lt;soapenv:Header&gt;</span>
+      <span class="nt">&lt;wsse:Security</span>  <span class="na">xmlns:wsse=</span><span class="s">"http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd"</span> <span class="na">xmlns:wsu=</span><span class="s">"http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd"</span><span class="nt">&gt;</span>
+         <span class="nt">&lt;wsse:UsernameToken</span> <span class="na">wsu:Id=</span><span class="s">"UsernameToken-1"</span><span class="nt">&gt;</span>
+            <span class="nt">&lt;wsse:Username&gt;</span>login<span class="nt">&lt;/wsse:Username&gt;</span>
+            <span class="nt">&lt;wsse:Password</span> <span class="na">Type=</span><span class="s">"http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-username-token-profile-1.0#PasswordText"</span><span class="nt">&gt;</span>XXXX<span class="nt">&lt;/wsse:Password&gt;</span>        
+         <span class="nt">&lt;/wsse:UsernameToken&gt;</span>
+      <span class="nt">&lt;/wsse:Security&gt;</span>
+ <span class="nt">&lt;/soapenv:Header&gt;</span>
+</code></pre></div></div>
+<p>Unlike <a href="http://docs.oracle.com/javaee/5/api/javax/xml/ws/handler/LogicalHandler.html">LogicalHandler</a> SOAPHandler have access to the entire Soap Message. Let’s create an WSSUsernameTokenSecurityHandler Local Stateless Bean extending SOAPHandler to produce the previous header.
+Below the WSSUsernameTokenSecurityHandler class
+``` java WSSUsernameTokenSecurityHandler.java
+package me.slim.ouertani;</p>
+
+<p>import java.util.Set;
+import java.util.TreeSet;
+import javax.annotation.Resource;
+import javax.ejb.LocalBean;
+import javax.ejb.Stateless;
+import javax.xml.namespace.QName;
+import javax.xml.soap.*;
+import javax.xml.ws.handler.MessageContext;
+import javax.xml.ws.handler.soap.SOAPHandler;
+import javax.xml.ws.handler.soap.SOAPMessageContext;</p>
+
+<p>@Stateless
+@LocalBean
+public class WSSUsernameTokenSecurityHandler implements SOAPHandler<SOAPMessageContext> {</SOAPMessageContext></p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>@Resource(lookup = "login")
+private String login;
+@Resource(lookup = "pwd")
+private String pwd;
+ 
+public WSSUsernameTokenSecurityHandler() {
+}
+ 
+@Override
+public boolean handleMessage(SOAPMessageContext context) {
+ 
+    Boolean outboundProperty =
+            (Boolean) context.get(MessageContext.MESSAGE_OUTBOUND_PROPERTY);
+    if (outboundProperty.booleanValue()) {
+ 
+        try {
+            SOAPEnvelope envelope = context.getMessage().getSOAPPart().getEnvelope();
+            SOAPFactory factory = SOAPFactory.newInstance();
+            String prefix = "wsse";
+            String uri = "http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd";
+            SOAPElement securityElem =
+                    factory.createElement("Security", prefix, uri);
+            SOAPElement tokenElem =
+                    factory.createElement("UsernameToken", prefix, uri);
+            tokenElem.addAttribute(QName.valueOf("wsu:Id"), "UsernameToken-2");
+            tokenElem.addAttribute(QName.valueOf("xmlns:wsu"), "http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd");
+            SOAPElement userElem =
+                    factory.createElement("Username", prefix, uri);
+            userElem.addTextNode(login);
+            SOAPElement pwdElem =
+                    factory.createElement("Password", prefix, uri);
+            pwdElem.addTextNode(pwd);
+            pwdElem.addAttribute(QName.valueOf("Type"), "http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-username-token-profile-1.0#PasswordText");
+            tokenElem.addChildElement(userElem);
+            tokenElem.addChildElement(pwdElem);
+            securityElem.addChildElement(tokenElem);
+            SOAPHeader header = envelope.addHeader();
+            header.addChildElement(securityElem);
+ 
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    } else {
+        // inbound
+    }
+    return true;
+}
+ 
+@Override
+public Set&lt;QName&gt; getHeaders() {
+    return new TreeSet();
+}
+ 
+@Override
+public boolean handleFault(SOAPMessageContext context) {
+    return false;
+}
+ 
+@Override
+public void close(MessageContext context) {
+    //
+} } ``` Next, declare the StatelessBean and inject both Webservice via @WebServiceRef and WSSUsernameTokenSecurityHandler via @EJB. A callback init method will add a HandlerResolver to the service. Below the full implementation ``` java WebServiceClientBean.java @Stateless @LocalBean public class WebServiceClientBean {
+ 
+@WebServiceRef()
+private WsService service;
+@EJB
+private WSSUsernameTokenSecurityHandler wSSUsernameTokenSecurityHandler;
+ 
+@PostConstruct
+private void init() {
+    service.setHandlerResolver( new HandlerResolver() {
+ 
+        @Override
+        public List&lt;Handler&gt; getHandlerChain(PortInfo portInfo) {
+            List&lt;Handler&gt; handlerList = new ArrayList&lt;Handler&gt;();
+            handlerList.add(wSSUsernameTokenSecurityHandler);
+            return handlerList;
+        }
+    });
+}
+</code></pre></div></div>
+
+<p>public WsResponse getService(WsRequest wsRequest) {    <br />
+        WsPort port = service.getPort();
+        return port.invoqueService(wsRequest);
+    }</p>
+
+<p>}</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&lt;h2&gt;Logging SOAP messages&lt;/h2&gt;
+
+Logging exchange xml message can be also using handlers, below the scala snippet handler used to log both in and out messages:
+``` scala RequestResponsePrinter.scala
+class RequestResponsePrinter  extends SOAPHandler[SOAPMessageContext] with LogHelper {
+ 
+override def getHeaders(): Set[QName] = {
+    return new TreeSet();
+  }
+ 
+  override def handleMessage(context: SOAPMessageContext): Boolean = {
+    val sb = new ToStringBuilder(this).append("Call operation", "handleMessage");
+ 
+    L.debug(sb);
+    val outboundProperty = context.get(MessageContext.MESSAGE_OUTBOUND_PROPERTY).asInstanceOf[Boolean]
+  
+ 
+      try {
+            val msg = context.getMessage()
+            val out = new ByteArrayOutputStream();
+            msg.writeTo(out);
+            val strMsg = new String(out.toByteArray());
+            L.debug("outbound  : "+outboundProperty.booleanValue()+" [" + strMsg + "]");
+ 
+      } catch {
+        case e: Exception =&gt;
+          L.error(sb.append("EXCEPTION", e.getMessage()), e);
+      }
+   
+    return true;
+  }
+ 
+  override def handleFault(context: SOAPMessageContext): Boolean = {
+    return false;
+  }
+ 
+  override def close(context: MessageContext) {
+    //
+  }
+}
+</code></pre></div></div>
+
+<p>``` scala scala version of Handler resolver HandlerResolver.scala
+new HandlerResolver() {</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  override def getHandlerChain(portInfo: PortInfo): java.util.List[javax.xml.ws.handler.Handler[_ &lt;: javax.xml.ws.handler.MessageContext]] = {
+    import scala.collection.mutable.ArrayBuffer
+    val handlerList = ArrayBuffer[Handler[_ &lt;: javax.xml.ws.handler.MessageContext]]()       
+    handlerList += new RequestResponsePrinter()
+    return handlerList
+ 
+  }
+}; ```
+</code></pre></div></div>
+<h2>Conclusion</h2>
+
+<p>We have heavily used handler on client side. On the server side things can change a bit, to be continued …</p>
+
+      </article>
+
+      
+
+      
+
+      
+        <!-- Check if any share-links are active -->
+
+
+
+
+<section id = "social-share-section">
+  <span class="sr-only">Share: </span>
+
+  
+    <a href="https://twitter.com/intent/tweet?text=JAX-WS+Header+%3A+Part+1+the+Client+Side&url=%2Fblog%2F2012%2F06%2F27%2Fjax-ws-header-part-1-the-client-side%2F"
+      class="btn btn-social-icon btn-twitter" title="Share on Twitter">
+      <span class="fab fa-fw fa-twitter" aria-hidden="true"></span>
+      <span class="sr-only">Twitter</span>
+    </a>
+  
+
+  
+    <a href="https://www.facebook.com/sharer/sharer.php?u=%2Fblog%2F2012%2F06%2F27%2Fjax-ws-header-part-1-the-client-side%2F"
+      class="btn btn-social-icon btn-facebook" title="Share on Facebook">
+      <span class="fab fa-fw fa-facebook" aria-hidden="true"></span>
+      <span class="sr-only">Facebook</span>
+    </a>
+  
+
+  
+    <a href="https://www.linkedin.com/shareArticle?mini=true&url=%2Fblog%2F2012%2F06%2F27%2Fjax-ws-header-part-1-the-client-side%2F"
+      class="btn btn-social-icon btn-linkedin" title="Share on LinkedIn">
+      <span class="fab fa-fw fa-linkedin" aria-hidden="true"></span>
+      <span class="sr-only">LinkedIn</span>
+    </a>
+  
+
+  
+
+</section>
+
+
+
+      
+
+      <ul class="pagination blog-pager">
+        
+        <li class="page-item previous">
+          <a class="page-link" href="/blog/2012/06/24/ee-6-environmental-enterprise-entries-and-glassfish/" data-toggle="tooltip" data-placement="top" title="EE 6 Environmental Enterprise Entries and Glassfish">&larr; Previous Post</a>
+        </li>
+        
+        
+        <li class="page-item next">
+          <a class="page-link" href="/blog/2012/06/28/sending-an-email-using-the-javamail-session-and-glassfish/" data-toggle="tooltip" data-placement="top" title="Sending an Email using the JavaMail Session and Glassfish">Next Post &rarr;</a>
+        </li>
+        
+      </ul>
+      
+  
+  
+  
+
+  
+
+
+
+
+    </div>
+  </div>
+</div>
+
+
+  <footer>
+  <div class="container-md beautiful-jekyll-footer">
+    <div class="row">
+      <div class="col-xl-8 offset-xl-2 col-lg-10 offset-lg-1">
+      <ul class="list-inline text-center footer-links"><li class="list-inline-item">
+    <a href="/feed.xml" title="RSS">
+      <span class="fa-stack fa-lg" aria-hidden="true">
+        <i class="fas fa-circle fa-stack-2x"></i>
+        <i class="fas fa-rss fa-stack-1x fa-inverse"></i>
+      </span>
+      <span class="sr-only">RSS</span>
+    </a>
+  </li><li class="list-inline-item">
+    <a href="mailto:ouertani@gmail.com" title="Email me">
+      <span class="fa-stack fa-lg" aria-hidden="true">
+        <i class="fas fa-circle fa-stack-2x"></i>
+        <i class="fas fa-envelope fa-stack-1x fa-inverse"></i>
+      </span>
+      <span class="sr-only">Email me</span>
+   </a>
+  </li><li class="list-inline-item">
+    <a href="https://github.com/ouertani" title="GitHub">
+      <span class="fa-stack fa-lg" aria-hidden="true">
+        <i class="fas fa-circle fa-stack-2x"></i>
+        <i class="fab fa-github fa-stack-1x fa-inverse"></i>
+      </span>
+      <span class="sr-only">GitHub</span>
+   </a>
+  </li><li class="list-inline-item">
+    <a href="https://twitter.com/ouertani" title="Twitter">
+      <span class="fa-stack fa-lg" aria-hidden="true">
+        <i class="fas fa-circle fa-stack-2x"></i>
+        <i class="fab fa-twitter fa-stack-1x fa-inverse"></i>
+      </span>
+      <span class="sr-only">Twitter</span>
+   </a>
+  </li></ul>
+
+      
+      <p class="copyright text-muted">
+      
+        Slim Ouertani
+        &nbsp;&bull;&nbsp;
+      
+      2021
+
+      
+
+      
+      </p>
+      <p class="theme-by text-muted">
+        Powered by
+        <a href="https://beautifuljekyll.com">Beautiful Jekyll</a>
+      </p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+
+  
+  
+    
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha256-4+XzXVhsDmqanXGHaHvgh1gMQKX40OUvDEBTu8JcmNs=" crossorigin="anonymous"></script>
+
+
+  
+    
+  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+
+
+  
+    
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+
+
+  
+
+
+
+  
+    <!-- doing something a bit funky here because I want to be careful not to include JQuery twice! -->
+    
+      <script src="/assets/js/beautifuljekyll.js"></script>
+    
+  
+
+
+
+
+
+
+
+
+
+</body>
+</html>
