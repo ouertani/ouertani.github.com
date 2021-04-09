@@ -206,51 +206,51 @@ Note : the source code are hosted on GitHub as part of lang-scala <a href="https
 
 <h4 id="java">Java</h4>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>import org.vertx.java.core.Handler;
-import org.vertx.java.core.buffer.Buffer;
-import org.vertx.java.core.http.HttpServerRequest;
-import org.vertx.java.core.http.ServerWebSocket;
-import org.vertx.java.deploy.Verticle;
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">org.vertx.java.core.Handler</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">org.vertx.java.core.buffer.Buffer</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">org.vertx.java.core.http.HttpServerRequest</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">org.vertx.java.core.http.ServerWebSocket</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">org.vertx.java.deploy.Verticle</span><span class="o">;</span>
 
-public class SampleWebSocket extends Verticle {
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">SampleWebSocket</span> <span class="kd">extends</span> <span class="nc">Verticle</span> <span class="o">{</span>
 
-  public void start() {
-    vertx.createHttpServer().websocketHandler(new Handler&lt;ServerWebSocket&gt;() {
-      public void handle(final ServerWebSocket ws) {
-        if (ws.path.equals("/myapp")) {
-          ws.dataHandler(new Handler&lt;Buffer&gt;() {
-            public void handle(Buffer data) {
-              ws.writeTextFrame(data.toString()); // Echo it back
-            }
-          });
-        } else {
-          ws.reject();
-        }
-      }
-    }).requestHandler(new Handler&lt;HttpServerRequest&gt;() {
-      public void handle(HttpServerRequest req) {
-        if (req.path.equals("/")) req.response.sendFile("ws.html"); // Serve the html
-      }
-    }).listen(8080);
-  }
-}
+  <span class="kd">public</span> <span class="kt">void</span> <span class="nf">start</span><span class="o">()</span> <span class="o">{</span>
+    <span class="n">vertx</span><span class="o">.</span><span class="na">createHttpServer</span><span class="o">().</span><span class="na">websocketHandler</span><span class="o">(</span><span class="k">new</span> <span class="nc">Handler</span><span class="o">&lt;</span><span class="nc">ServerWebSocket</span><span class="o">&gt;()</span> <span class="o">{</span>
+      <span class="kd">public</span> <span class="kt">void</span> <span class="nf">handle</span><span class="o">(</span><span class="kd">final</span> <span class="nc">ServerWebSocket</span> <span class="n">ws</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">if</span> <span class="o">(</span><span class="n">ws</span><span class="o">.</span><span class="na">path</span><span class="o">.</span><span class="na">equals</span><span class="o">(</span><span class="s">"/myapp"</span><span class="o">))</span> <span class="o">{</span>
+          <span class="n">ws</span><span class="o">.</span><span class="na">dataHandler</span><span class="o">(</span><span class="k">new</span> <span class="nc">Handler</span><span class="o">&lt;</span><span class="nc">Buffer</span><span class="o">&gt;()</span> <span class="o">{</span>
+            <span class="kd">public</span> <span class="kt">void</span> <span class="nf">handle</span><span class="o">(</span><span class="nc">Buffer</span> <span class="n">data</span><span class="o">)</span> <span class="o">{</span>
+              <span class="n">ws</span><span class="o">.</span><span class="na">writeTextFrame</span><span class="o">(</span><span class="n">data</span><span class="o">.</span><span class="na">toString</span><span class="o">());</span> <span class="c1">// Echo it back</span>
+            <span class="o">}</span>
+          <span class="o">});</span>
+        <span class="o">}</span> <span class="k">else</span> <span class="o">{</span>
+          <span class="n">ws</span><span class="o">.</span><span class="na">reject</span><span class="o">();</span>
+        <span class="o">}</span>
+      <span class="o">}</span>
+    <span class="o">}).</span><span class="na">requestHandler</span><span class="o">(</span><span class="k">new</span> <span class="nc">Handler</span><span class="o">&lt;</span><span class="nc">HttpServerRequest</span><span class="o">&gt;()</span> <span class="o">{</span>
+      <span class="kd">public</span> <span class="kt">void</span> <span class="nf">handle</span><span class="o">(</span><span class="nc">HttpServerRequest</span> <span class="n">req</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">if</span> <span class="o">(</span><span class="n">req</span><span class="o">.</span><span class="na">path</span><span class="o">.</span><span class="na">equals</span><span class="o">(</span><span class="s">"/"</span><span class="o">))</span> <span class="n">req</span><span class="o">.</span><span class="na">response</span><span class="o">.</span><span class="na">sendFile</span><span class="o">(</span><span class="s">"ws.html"</span><span class="o">);</span> <span class="c1">// Serve the html</span>
+      <span class="o">}</span>
+    <span class="o">}).</span><span class="na">listen</span><span class="o">(</span><span class="mi">8080</span><span class="o">);</span>
+  <span class="o">}</span>
+<span class="o">}</span>
 </code></pre></div></div>
 <h4>Scala</h4>
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>import org.vertx.java.core.buffer.Buffer;
-import org.vertx.java.core.http.HttpServerRequest;
-import org.vertx.java.core.http.ServerWebSocket;
-import org.vertx.scala.deploy.Verticle
-import org.vertx.scala.core._
+<div class="language-scala highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">import</span> <span class="nn">org.vertx.java.core.buffer.Buffer</span><span class="o">;</span>
+<span class="k">import</span> <span class="nn">org.vertx.java.core.http.HttpServerRequest</span><span class="o">;</span>
+<span class="k">import</span> <span class="nn">org.vertx.java.core.http.ServerWebSocket</span><span class="o">;</span>
+<span class="k">import</span> <span class="nn">org.vertx.scala.deploy.Verticle</span>
+<span class="k">import</span> <span class="nn">org.vertx.scala.core._</span>
 
-class SampleWebSocket extends Verticle (
-  _.getVertx().createHttpServer().websocketHandler{
-     ws:ServerWebSocket =&gt; ws.path match {
-        case "/myapp" =&gt; ws.dataHandler{data : Buffer =&gt;   ws.writeTextFrame(data.toString())}
-        case _ =&gt; ws.reject();
-      }}
-      .requestHandler{req : HttpServerRequest =&gt; req.path match {case ("/") =&gt; req.response.sendFile("ws.html")}}
-      .listen(8080)
-)()
+<span class="k">class</span> <span class="nc">SampleWebSocket</span> <span class="k">extends</span> <span class="nc">Verticle</span> <span class="o">(</span>
+  <span class="nv">_</span><span class="o">.</span><span class="py">getVertx</span><span class="o">().</span><span class="py">createHttpServer</span><span class="o">().</span><span class="py">websocketHandler</span><span class="o">{</span>
+     <span class="n">ws</span><span class="k">:</span><span class="kt">ServerWebSocket</span> <span class="o">=&gt;</span> <span class="nv">ws</span><span class="o">.</span><span class="py">path</span> <span class="k">match</span> <span class="o">{</span>
+        <span class="k">case</span> <span class="s">"/myapp"</span> <span class="k">=&gt;</span> <span class="nv">ws</span><span class="o">.</span><span class="py">dataHandler</span><span class="o">{</span><span class="n">data</span> <span class="k">:</span> <span class="kt">Buffer</span> <span class="o">=&gt;</span>   <span class="nv">ws</span><span class="o">.</span><span class="py">writeTextFrame</span><span class="o">(</span><span class="nv">data</span><span class="o">.</span><span class="py">toString</span><span class="o">())}</span>
+        <span class="k">case</span> <span class="k">_</span> <span class="k">=&gt;</span> <span class="nv">ws</span><span class="o">.</span><span class="py">reject</span><span class="o">();</span>
+      <span class="o">}}</span>
+      <span class="o">.</span><span class="py">requestHandler</span><span class="o">{</span><span class="n">req</span> <span class="k">:</span> <span class="kt">HttpServerRequest</span> <span class="o">=&gt;</span> <span class="nv">req</span><span class="o">.</span><span class="py">path</span> <span class="k">match</span> <span class="o">{</span><span class="nf">case</span> <span class="o">(</span><span class="s">"/"</span><span class="o">)</span> <span class="k">=&gt;</span> <span class="nv">req</span><span class="o">.</span><span class="py">response</span><span class="o">.</span><span class="py">sendFile</span><span class="o">(</span><span class="s">"ws.html"</span><span class="o">)}}</span>
+      <span class="o">.</span><span class="py">listen</span><span class="o">(</span><span class="mi">8080</span><span class="o">)</span>
+<span class="o">)()</span>
 </code></pre></div></div>
 <h2>II-HttpWebServer</h2>
 
@@ -259,36 +259,36 @@ class SampleWebSocket extends Verticle (
 <p>The following example starts up an Http server, listening on port 8080, and logging all received requests.</p>
 
 <h4>Java</h4>
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>import org.vertx.java.core.Handler;
-import org.vertx.java.core.http.HttpServer;
-import org.vertx.java.core.http.HttpServerRequest;
-import org.vertx.java.core.logging.Logger;
-import org.vertx.java.deploy.Verticle;
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">org.vertx.java.core.Handler</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">org.vertx.java.core.http.HttpServer</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">org.vertx.java.core.http.HttpServerRequest</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">org.vertx.java.core.logging.Logger</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">org.vertx.java.deploy.Verticle</span><span class="o">;</span>
 
 
-public class SampleHttpWebServer extends Verticle {
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">SampleHttpWebServer</span> <span class="kd">extends</span> <span class="nc">Verticle</span> <span class="o">{</span>
 
-    public void start() {
-        HttpServer server = vertx.createHttpServer();
-        final Logger log = getContainer().getLogger();
-        server.requestHandler(new Handler&lt;HttpServerRequest&gt;() {
-            public void handle(HttpServerRequest request) {
-                log.info("A request has arrived on the server!");
-            }
-        }).listen(8080, "localhost");
-    }
-}
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">start</span><span class="o">()</span> <span class="o">{</span>
+        <span class="nc">HttpServer</span> <span class="n">server</span> <span class="o">=</span> <span class="n">vertx</span><span class="o">.</span><span class="na">createHttpServer</span><span class="o">();</span>
+        <span class="kd">final</span> <span class="nc">Logger</span> <span class="n">log</span> <span class="o">=</span> <span class="n">getContainer</span><span class="o">().</span><span class="na">getLogger</span><span class="o">();</span>
+        <span class="n">server</span><span class="o">.</span><span class="na">requestHandler</span><span class="o">(</span><span class="k">new</span> <span class="nc">Handler</span><span class="o">&lt;</span><span class="nc">HttpServerRequest</span><span class="o">&gt;()</span> <span class="o">{</span>
+            <span class="kd">public</span> <span class="kt">void</span> <span class="nf">handle</span><span class="o">(</span><span class="nc">HttpServerRequest</span> <span class="n">request</span><span class="o">)</span> <span class="o">{</span>
+                <span class="n">log</span><span class="o">.</span><span class="na">info</span><span class="o">(</span><span class="s">"A request has arrived on the server!"</span><span class="o">);</span>
+            <span class="o">}</span>
+        <span class="o">}).</span><span class="na">listen</span><span class="o">(</span><span class="mi">8080</span><span class="o">,</span> <span class="s">"localhost"</span><span class="o">);</span>
+    <span class="o">}</span>
+<span class="o">}</span>
 </code></pre></div></div>
 <h4>Scala</h4>
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>import org.vertx.java.core.http. { HttpServerRequest =&gt; JHttpServerRequest}
-import org.vertx.scala.deploy.Verticle
-import org.vertx.scala.core._
+<div class="language-scala highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">import</span> <span class="nn">org.vertx.java.core.http.</span> <span class="o">{</span> <span class="nc">HttpServerRequest</span> <span class="k">=&gt;</span> <span class="nc">JHttpServerRequest</span><span class="o">}</span>
+<span class="k">import</span> <span class="nn">org.vertx.scala.deploy.Verticle</span>
+<span class="k">import</span> <span class="nn">org.vertx.scala.core._</span>
 
-class SampleWebServer extends Verticle ( x =&gt;
-  x.getVertx().createHttpServer().withRequestHandler{_ : JHttpServerRequest =&gt;
-     x.info("A request has arrived on the server!")}
-.listen(8080, "localhost")
-)()
+<span class="k">class</span> <span class="nc">SampleWebServer</span> <span class="k">extends</span> <span class="nc">Verticle</span> <span class="o">(</span> <span class="n">x</span> <span class="k">=&gt;</span>
+  <span class="nv">x</span><span class="o">.</span><span class="py">getVertx</span><span class="o">().</span><span class="py">createHttpServer</span><span class="o">().</span><span class="py">withRequestHandler</span><span class="o">{</span><span class="k">_</span> <span class="k">:</span> <span class="kt">JHttpServerRequest</span> <span class="o">=&gt;</span>
+     <span class="nv">x</span><span class="o">.</span><span class="py">info</span><span class="o">(</span><span class="s">"A request has arrived on the server!"</span><span class="o">)}</span>
+<span class="o">.</span><span class="py">listen</span><span class="o">(</span><span class="mi">8080</span><span class="o">,</span> <span class="s">"localhost"</span><span class="o">)</span>
+<span class="o">)()</span>
 </code></pre></div></div>
 <h2 id="iii-httpclient">III-HttpClient</h2>
 
@@ -296,55 +296,55 @@ class SampleWebServer extends Verticle ( x =&gt;
 
 <h4 id="java-1">Java</h4>
 
-<div class="language-scala highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">import</span> <span class="nn">org.vertx.java.core.Handler</span><span class="o">;</span>
-<span class="k">import</span> <span class="nn">org.vertx.java.core.http.HttpClient</span><span class="o">;</span>
-<span class="k">import</span> <span class="nn">org.vertx.java.core.http.HttpClientRequest</span><span class="o">;</span>
-<span class="k">import</span> <span class="nn">org.vertx.java.core.http.HttpClientResponse</span><span class="o">;</span>
-<span class="k">import</span> <span class="nn">org.vertx.java.core.logging.Logger</span><span class="o">;</span>
-<span class="k">import</span> <span class="nn">org.vertx.java.deploy.Verticle</span><span class="o">;</span>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">org.vertx.java.core.Handler</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">org.vertx.java.core.http.HttpClient</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">org.vertx.java.core.http.HttpClientRequest</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">org.vertx.java.core.http.HttpClientResponse</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">org.vertx.java.core.logging.Logger</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">org.vertx.java.deploy.Verticle</span><span class="o">;</span>
 
-<span class="n">public</span> <span class="k">class</span> <span class="nc">SampleHttpClient</span> <span class="k">extends</span> <span class="nc">Verticle</span> <span class="o">{</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">SampleHttpClient</span> <span class="kd">extends</span> <span class="nc">Verticle</span> <span class="o">{</span>
 
     <span class="nd">@Override</span>
-    <span class="n">public</span> <span class="n">void</span> <span class="nf">start</span><span class="o">()</span> <span class="n">throws</span> <span class="nc">Exception</span> <span class="o">{</span>
-        <span class="nc">HttpClient</span> <span class="n">client</span> <span class="k">=</span> <span class="nv">vertx</span><span class="o">.</span><span class="py">createHttpClient</span><span class="o">().</span><span class="py">setHost</span><span class="o">(</span><span class="s">"127.0.0.1"</span><span class="o">);</span>
-        <span class="k">final</span> <span class="nc">Logger</span> <span class="n">log</span> <span class="k">=</span> <span class="nf">getContainer</span><span class="o">().</span><span class="py">getLogger</span><span class="o">();</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">start</span><span class="o">()</span> <span class="kd">throws</span> <span class="nc">Exception</span> <span class="o">{</span>
+        <span class="nc">HttpClient</span> <span class="n">client</span> <span class="o">=</span> <span class="n">vertx</span><span class="o">.</span><span class="na">createHttpClient</span><span class="o">().</span><span class="na">setHost</span><span class="o">(</span><span class="s">"127.0.0.1"</span><span class="o">);</span>
+        <span class="kd">final</span> <span class="nc">Logger</span> <span class="n">log</span> <span class="o">=</span> <span class="n">getContainer</span><span class="o">().</span><span class="na">getLogger</span><span class="o">();</span>
 
-        <span class="nc">HttpClientRequest</span> <span class="n">request</span> <span class="k">=</span> <span class="nv">client</span><span class="o">.</span><span class="py">post</span><span class="o">(</span><span class="s">"/some-path/"</span><span class="o">,</span> <span class="k">new</span> <span class="nc">Handler</span><span class="o">&lt;</span><span class="nc">HttpClientResponse</span><span class="o">&gt;()</span> <span class="o">{</span>
-            <span class="n">public</span> <span class="n">void</span> <span class="nf">handle</span><span class="o">(</span><span class="nc">HttpClientResponse</span> <span class="n">resp</span><span class="o">)</span> <span class="o">{</span>
-                <span class="nv">log</span><span class="o">.</span><span class="py">info</span><span class="o">(</span><span class="s">"Got a response: "</span><span class="o">);</span>
+        <span class="nc">HttpClientRequest</span> <span class="n">request</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="na">post</span><span class="o">(</span><span class="s">"/some-path/"</span><span class="o">,</span> <span class="k">new</span> <span class="nc">Handler</span><span class="o">&lt;</span><span class="nc">HttpClientResponse</span><span class="o">&gt;()</span> <span class="o">{</span>
+            <span class="kd">public</span> <span class="kt">void</span> <span class="nf">handle</span><span class="o">(</span><span class="nc">HttpClientResponse</span> <span class="n">resp</span><span class="o">)</span> <span class="o">{</span>
+                <span class="n">log</span><span class="o">.</span><span class="na">info</span><span class="o">(</span><span class="s">"Got a response: "</span><span class="o">);</span>
             <span class="o">}</span>
         <span class="o">});</span>
 
-        <span class="nv">request</span><span class="o">.</span><span class="py">end</span><span class="o">();</span>
+        <span class="n">request</span><span class="o">.</span><span class="na">end</span><span class="o">();</span>
     <span class="o">}</span>
 <span class="o">}</span>
 </code></pre></div></div>
 <h4>Scala</h4>
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>import org.vertx.scala.deploy.Verticle
-import org.vertx.scala.core._
+<div class="language-scala highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">import</span> <span class="nn">org.vertx.scala.deploy.Verticle</span>
+<span class="k">import</span> <span class="nn">org.vertx.scala.core._</span>
 
-class SampleWebClient extends Verticle (v =&gt;
-   v.getVertx.createHttpClient().setHost("127.0.0.1").setPort(8080)
-   .andGetNow("/") {_ =&gt; v.info("Got a response: " )}
-  )()
+<span class="k">class</span> <span class="nc">SampleWebClient</span> <span class="k">extends</span> <span class="nc">Verticle</span> <span class="o">(</span><span class="n">v</span> <span class="k">=&gt;</span>
+   <span class="nv">v</span><span class="o">.</span><span class="py">getVertx</span><span class="o">.</span><span class="py">createHttpClient</span><span class="o">().</span><span class="py">setHost</span><span class="o">(</span><span class="s">"127.0.0.1"</span><span class="o">).</span><span class="py">setPort</span><span class="o">(</span><span class="mi">8080</span><span class="o">)</span>
+   <span class="o">.</span><span class="py">andGetNow</span><span class="o">(</span><span class="s">"/"</span><span class="o">)</span> <span class="o">{</span><span class="k">_</span> <span class="k">=&gt;</span> <span class="nv">v</span><span class="o">.</span><span class="py">info</span><span class="o">(</span><span class="s">"Got a response: "</span> <span class="o">)}</span>
+  <span class="o">)()</span>
 </code></pre></div></div>
 <h2>IV-EventBus</h2>
 
 <p>The event bus is like a vertebral spine, it can be used to connect distributed nodes, and to support interaction between different Verticles, even written in different languages.</p>
 
 <h4>Java</h4>
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>import org.vertx.java.deploy.Verticle;
-import org.vertx.java.core.eventbus.EventBus;
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">org.vertx.java.deploy.Verticle</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">org.vertx.java.core.eventbus.EventBus</span><span class="o">;</span>
 
-public class SampleEventBus extends Verticle {
-   @Override
-    public void start() throws Exception {
-       EventBus eb = vertx.eventBus();
-       eb.send("path", "ping1");
-       eb.send("path", "ping2");
-   }  
-}
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">SampleEventBus</span> <span class="kd">extends</span> <span class="nc">Verticle</span> <span class="o">{</span>
+   <span class="nd">@Override</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">start</span><span class="o">()</span> <span class="kd">throws</span> <span class="nc">Exception</span> <span class="o">{</span>
+       <span class="nc">EventBus</span> <span class="n">eb</span> <span class="o">=</span> <span class="n">vertx</span><span class="o">.</span><span class="na">eventBus</span><span class="o">();</span>
+       <span class="n">eb</span><span class="o">.</span><span class="na">send</span><span class="o">(</span><span class="s">"path"</span><span class="o">,</span> <span class="s">"ping1"</span><span class="o">);</span>
+       <span class="n">eb</span><span class="o">.</span><span class="na">send</span><span class="o">(</span><span class="s">"path"</span><span class="o">,</span> <span class="s">"ping2"</span><span class="o">);</span>
+   <span class="o">}</span>  
+<span class="o">}</span>
 </code></pre></div></div>
 <h4>Scala</h4>
 <div class="language-scala highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">import</span> <span class="nn">org.vertx.scala.deploy.Verticle</span>

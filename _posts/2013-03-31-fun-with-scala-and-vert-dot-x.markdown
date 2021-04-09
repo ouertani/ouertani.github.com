@@ -31,7 +31,7 @@ In order to run the following example check out : <a href="https://github.com/ou
 
 #### Java
 
-```
+```java
 import org.vertx.java.core.Handler;
 import org.vertx.java.core.buffer.Buffer;
 import org.vertx.java.core.http.HttpServerRequest;
@@ -62,7 +62,7 @@ public class SampleWebSocket extends Verticle {
 }
 ```
 <h4>Scala</h4>
-```
+```scala
 import org.vertx.java.core.buffer.Buffer;
 import org.vertx.java.core.http.HttpServerRequest;
 import org.vertx.java.core.http.ServerWebSocket;
@@ -86,7 +86,7 @@ Vert.x allows you to easily write full featured, highly performant and scalable 
 The following example starts up an Http server, listening on port 8080, and logging all received requests.
 
 <h4>Java</h4>
-```
+```java
 import org.vertx.java.core.Handler;
 import org.vertx.java.core.http.HttpServer;
 import org.vertx.java.core.http.HttpServerRequest;
@@ -108,7 +108,7 @@ public class SampleHttpWebServer extends Verticle {
 }
 ```
 <h4>Scala</h4>
-```
+```scala
 import org.vertx.java.core.http. { HttpServerRequest => JHttpServerRequest}
 import org.vertx.scala.deploy.Verticle
 import org.vertx.scala.core._
@@ -125,7 +125,7 @@ Vert.x also provides an HttpClient API, so as to interact with the server part. 
 
 #### Java
 
-```scala
+```java
 import org.vertx.java.core.Handler;
 import org.vertx.java.core.http.HttpClient;
 import org.vertx.java.core.http.HttpClientRequest;
@@ -151,7 +151,7 @@ public class SampleHttpClient extends Verticle {
 }
 ```
 <h4>Scala</h4>
-```
+```scala
 import org.vertx.scala.deploy.Verticle
 import org.vertx.scala.core._
 
@@ -165,7 +165,7 @@ class SampleWebClient extends Verticle (v =>
 The event bus is like a vertebral spine, it can be used to connect distributed nodes, and to support interaction between different Verticles, even written in different languages.
 
 <h4>Java</h4>
-```
+```java
 import org.vertx.java.deploy.Verticle;
 import org.vertx.java.core.eventbus.EventBus;
 
