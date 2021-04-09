@@ -320,9 +320,8 @@ You should see a list of the Bar objects you've created serialized as JSON.
 The syntax of the query demonstrates the power of Slick type-safe query language and the power of Scala to create DSLs.  The json val is then returned in an Ok (HTTP 200 status code response) with the content type set to application/json (the value of JSON).
 
 
-<h2>References :</h2>
-<li>Slick : http://slick.typesafe.com </li>
-<li>Playframework :  http://www.playframework.org </li>
-                            https://github.com/playframework/Play20</li>
-<li>Scala : http://www.scala-lang.org/downloads</li>
-<li>Squeryl + Playframework + Scala  : http://www.artima.com/articles/play2_scala_squeryl.html</li>
+## References:
+<li>Slick: [http://slick.typesafe.com](http://slick.typesafe.com) </li>
+<li>Playframework:  [http://www.playframework.org](http://www.playframework.org) , [https://github.com/playframework/Play20](https://github.com/playframework/Play20) </li>
+<li>Scala: [http://www.scala-lang.org/downloads](http://www.scala-lang.org/downloads)</li>
+<li>Squeryl + Playframework + Scala: [http://www.artima.com/articles/play2_scala_squeryl.html](http://www.artima.com/articles/play2_scala_squeryl.html)</li>
