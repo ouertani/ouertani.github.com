@@ -13,16 +13,16 @@ Interoperability and reusability are key features of SOA architecture.
 The <a href="http://en.wikipedia.org/wiki/Java_EE_Connector_Architecture">Java EE Connector architecture</a> defines a standard architecture for connecting the Java EE platform to heterogeneous EISs. This article presents an XML/RPC  adapter using a Scala JCA outbound connector to an IN/AIR legacy system.
 <!-- more -->
 <h2>JCA and integration</h2>
+<blockquote>
+JCA 1.6 p 35
+ "For enterprise application integration, bi-directional connectivity between enterprise applications and EIS is essential. The Java EE Connector architecture defines standard contracts that allow bi-directional connectivity between enterprise applications and EISs. It also formalizes the relationships, interactions, and the packaging of the integration layer, thus enabling enterprise application integration."
 
-{% blockquote JCA 1.6 p 35 %}
- "For enterprise application integration, bi-directional connectivity between enterprise applications and EIS is essential. The Java EE Connector architecture defines standard contracts that allow bi-directional connectivity between enterprise applications and EISs. It also formalizes the relationships, interactions, and the packaging of the integration layer, thus enabling enterprise application integration." 
-
-{% endblockquote %}
+</blockquote>
 
 The connector architecture defines a set of scalable, secure, and transactional mechanisms that enable the integration of EISs with application servers and enterprise application.
 
-{% img center /images/jca.jpg 350 350 'JCA' 'images' %}
- 
+![JCA](/images/jca.jpg)
+
 Using a UCIP JCA connector rather than using an <a href="http://java.dzone.com/articles/xml-rpc-using-scala">XML/RPC raw driver</a> lets you:
 <ol>
 <li>Hide connection complexity.</li>
@@ -51,6 +51,6 @@ var airConnectorFactory : AirConnectorFactory = _
 
 val output = airConnectorFactory().fire(input)
 ```
-{% blockquote %}
+<blockquote>
 Source code is based on JCA 1.6 specification and hosted on <a href="https://github.com/ouertani/TelcoCX">github</a>.
-{% endblockquote %}
+</blockquote>

@@ -11,7 +11,7 @@ description: JEE Java Mail Api Configuration
 
 <h2>Purpose</h2>
 
-This tutorial is a supplement to the article of oracle published <a href="http://www.oracle.com/webfolder/technetwork/tutorials/obe/java/javamail/javamail.html">here</a>. 
+This tutorial is a supplement to the article of oracle published <a href="http://www.oracle.com/webfolder/technetwork/tutorials/obe/java/javamail/javamail.html">here</a>.
 After reading this later, I decided to share some tips about this EE environment JavaMail api configuration.
 <h2>Introduction</h2>
 
@@ -35,7 +35,7 @@ To create and JavaMail Session :
 <li>Go to Resources -> JavaMail Sessions -> click new to add new javaMail resource</li>
 <li>make sure the following field are filled in :</li>
 </ol>
-Jndi name : EMailME for example, will be used later on lookup resource : 
+Jndi name : EMailME for example, will be used later on lookup resource :
 ```java
 @Resource(lookup = "EMailME")
 Mail host
@@ -54,7 +54,7 @@ Mail host
 </ol>
 This screenshot summarizes all these parameters :
 
-{% img center /images/mailee.jpg 640 424 'Mail EE' 'images' %}
+![Mail EE](/images/mailee.jpg)
 
 <h2>II - Using email Service</h2>
 
@@ -69,21 +69,21 @@ This tutorial is a supplement to oracle one. We will use CDI with the same examp
 @Named
 @RequestScoped
 public class EmailSessionBean {
- 
+
     @Resource(lookup = "EMailME")
     private Session mailSession;
- 
+
     public void sendEmail(String to, String subject, String body) {
         MimeMessage message = new MimeMessage(mailSession);
         try {
- 
+
             message.setFrom(new InternetAddress(mailSession.getProperty("mail.from")));
             InternetAddress[] address = {new InternetAddress(to)};
             message.setRecipients(Message.RecipientType.TO, address);
             message.setSubject(subject);
             message.setSentDate(new Date());
             message.setText(body);
- 
+
             Transport.send(message);
         } catch (MessagingException ex) {
             ex.printStackTrace();
@@ -97,10 +97,10 @@ Look short !
 ```java
 @WebServlet(name = "EmailServlet", urlPatterns = {"/EmailServlet"})
 public class EmailServlet extends HttpServlet {
- 
+
     @Inject
     private EmailSessionBean emailBean;
- 
+
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
  .........

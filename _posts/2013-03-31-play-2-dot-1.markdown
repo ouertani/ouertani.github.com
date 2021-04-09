@@ -18,9 +18,9 @@ This post follow this <a href="http://www.artima.com/articles/play2_scala_squery
 Setup <a href="http://slick.typesafe.com/">Slick</a> in Play 2
 
 If you don't already have a Play 2 project, then create a new one after installing Play 2:
-{% blockquote %}
+<blockquote>
 play new mySlickApp
-{% endblockquote %}
+</blockquote>
 Choose Scala as the language for the project.
 
 The Slick library needs to be added to the Play project.  
@@ -32,28 +32,28 @@ val appDependencies = Seq(
 )
 ```
 Then if you are using an Eclipse or IntelliJ Play can automatically create the project for you using either:
-{% blockquote %}
+<blockquote>
 play idea
 
 or
 
 play eclipse
-{% endblockquote %}
+</blockquote>
 
 Note that we created the project files after updating the dependencies, so the projects would be configured with the required libraries. If the dependencies change in the future, just re-run the commands to create the projects.
 
 You can now start the application from within your project's root directory:
-{% blockquote %}
+<blockquote>
 play ~run
-{% endblockquote %}
+</blockquote>
 
 Verify that the server is running by opening the following URL in your browser: http://localhost:9000
 
 For local testing we will use an in-memory "h2" database. To setup Play to use that database, edit the conf/application.conf file and uncomment or add the following lines:
-{% blockquote %}
+<blockquote>
 db.default.driver=org.h2.Driver
 db.default.url="jdbc:h2:mem:play"
-{% endblockquote %}
+</blockquote>
 
 The final setup step is to provide Squeryl a database connection, but we still want to use the standard Play configuration system to get the database connection information. This is easily done by adding a Global class that can hook into the startup phase of the Play application lifecycle. Create a new file named app/Global.scala containing:
 ```	scala
@@ -61,47 +61,47 @@ import play.api.db.DB
 import play.api.GlobalSettings
 // Use H2Driver to connect to an H2 database
 import scala.slick.driver.H2Driver.simple._
- 
+
 // Use the implicit threadLocalSession
 import Database.threadLocalSession
- 
+
 import play.api.Application
 import play.api.Play.current
- 
- 
+
+
 object Global extends GlobalSettings {
- 
+
   override def onStart(app: Application) {
- 
+
     lazy val database = Database.forDataSource(DB.getDataSource())
- 
+
   }
 }
 ```
-On application startup the  configuration parameter will be used to determine which driver to use to setup the database connection. 
+On application startup the  configuration parameter will be used to determine which driver to use to setup the database connection.
 
 If you reload the http://localhost:9000 webpage in your browser, everything should still be working and you should see the following message in the Play STDOUT log:
-{% blockquote %}
+<blockquote>
 [info] play - database [default] connected at jdbc:h2:mem:play
-{% endblockquote %}
+</blockquote>
 
 Create an Entity
 
 Now lets create a simple entity object that will be used to persist data into the database. Create a new file named app/models/Bar.scala containing:
 ```	scala
 package models
- 
+
 import scala.slick.driver.H2Driver.simple._
- 
- 
+
+
 case class Bar(id: Option[Int] = None, name: String)
- 
+
 object Bars extends Table[Bar]("bar") {
   def id = column[Int]("id", O.PrimaryKey, O.AutoInc)
- 
+
   // This is the primary key column
   def name = column[String]("name")
- 
+
   // Every table needs a * projection with the same type as the table's type parameter
   def * = id.? ~ name <>(Bar, Bar.unapply _)
 }
@@ -114,20 +114,20 @@ import play.api.db.DB
 import play.api.GlobalSettings
 // Use H2Driver to connect to an H2 database
 import scala.slick.driver.H2Driver.simple._
- 
+
 // Use the implicit threadLocalSession
 import Database.threadLocalSession
- 
+
 import play.api.Application
 import play.api.Play.current
 import models.Bars
- 
+
 object Global extends GlobalSettings {
- 
+
   override def onStart(app: Application) {
- 
+
     lazy val database = Database.forDataSource(DB.getDataSource())
- 
+
     database .withSession {
      Bars.ddl.create
     }
@@ -145,7 +145,7 @@ val appDependencies = Seq(
       "org.scala-lang" % "scala-actors" % "2.10.0-M7"    % "test",
       "com.typesafe" % "slick_2.10.0-M7" % "0.11.1"
 )
- 
+
 val main = PlayProject(appName, appVersion, appDependencies, mainLang = SCALA).settings(
   testOptions in Test := Nil
   // Add your own project settings here
@@ -154,23 +154,23 @@ val main = PlayProject(appName, appVersion, appDependencies, mainLang = SCALA).s
 Now create a new file named test/BarSpec.scala containing.
 ```	scala
 import models.{Bars, Bar}
- 
+
 import org.scalatest.FlatSpec
 import org.scalatest.matchers.ShouldMatchers
 // Use H2Driver to connect to an H2 database
 import scala.slick.driver.H2Driver.simple._
- 
+
 // Use the implicit threadLocalSession
 import Database.threadLocalSession
- 
+
 import play.api.test._
 import play.api.test.Helpers._
- 
+
 class BarSpec extends FlatSpec with ShouldMatchers {
- 
+
   "A Bar" should "be creatable" in {
     Database.forURL("jdbc:h2:mem:test1", driver = "org.h2.Driver") withSession {
- 
+
       Bars.ddl.create
       Bars.insert(Bar(None, "foo"))
       val b = for(b <- Bars) yield b
@@ -184,19 +184,19 @@ This test uses a  an in-memory database to run the test.  The body of the test s
 play test
 
 If the tests worked, then you should see the following message in the Play STDOUT log:
-{% blockquote %}
+<blockquote>
 [mySlickApp] $ test
 [info] BarSpec:
 [info] A Bar
 [info] - should be creatable
 [info] Passed: : Total 1, Failed 0, Errors 0, Passed 1, Skipped 0
 [success] Total time: 2 s, completed Oct 9, 2012 12:28:28 PM
-{% endblockquote %}
+</blockquote>
 
 If you'd like to have the tests run whenever the source changes then run:
-{% blockquote %}
+<blockquote>
 play ~test
-{% endblockquote %}
+</blockquote>
 You can keep both the ~run and ~test commands running in the background. This allows you to quickly test the application from both programmatic unit / functional tests and from manual browser tests.
 Creating Bars From a Web Form
 
@@ -205,58 +205,58 @@ Now lets add a basic web UI for creating new Bar objects. Note that this code wi
 First update the app/controllers/Application.scala file to contain:
 ```	scala
 package controllers
- 
+
 import play.api._
 import play.api.mvc._
- 
- 
+
+
 import play.api.data.Form
- 
+
 import play.api.data._
 import play.api.data.Forms._
- 
+
 // Use H2Driver to connect to an H2 database
- 
+
 import scala.slick.driver.H2Driver.simple._
- 
+
 // Use the implicit threadLocalSession
 //import Database.threadLocalSession
- 
+
 import scala.slick.session.Session
 import play.api.libs.json._
- 
+
 import models.{Bar, Bars}
 import play.api.db._
 import play.api.Play.current
- 
+
 // Use H2Driver to connect to an H2 database
- 
+
 import scala.slick.driver.H2Driver.simple._
- 
+
 // Use the implicit threadLocalSession
- 
+
 import Database.threadLocalSession
- 
- 
+
+
 object Application extends Controller {
- 
+
   lazy val database = Database.forDataSource(DB.getDataSource())
- 
- 
+
+
   val barForm = Form(
     mapping(
       "name" -> text
     )
       ((name) => Bar(None, name))
- 
+
       ((bar: Bar) => Some(bar.name))
- 
+
   )
- 
+
   def index = Action {
     Ok(views.html.index(barForm))
   }
- 
+
   def addBar = Action {
     implicit request =>
       barForm.bindFromRequest.value map {
@@ -267,7 +267,7 @@ object Application extends Controller {
           Redirect(routes.Application.index())
       } getOrElse BadRequest
   }
- 
+
 }
 ```
 The barForm provides a mapping from a request parameter named name to the name property on the Bar case class (via it's constructor). The index method has been updated to pass an instance of the barForm into the index template. We will update that template next. The addBar method binds the request parameters into an object named bar then in a session the bar is inserted into the database.  Then the user is redirected back to the index page. If the request parameters could not be mapped to a Bar using the barForm then a BadRequest error is returned.
@@ -275,9 +275,9 @@ The barForm provides a mapping from a request parameter named name to the name p
 Now we need to update the app/views/index.scala.html template to contain:
 ```	scala
 @(form: play.api.data.Form[Bar])
- 
+
 @main("Welcome to Play 2.0") {
- 
+
     @helper.form(action = routes.Application.addBar) {
         @helper.inputText(form("name"))
         <input type="submit"/>
@@ -287,9 +287,9 @@ Now we need to update the app/views/index.scala.html template to contain:
 The template now takes a Form[Bar] parameter which is passed from the index method on the Application controller. Then in the body of the template a new HTML form is rendered using Play 2's form helper. The form contains an HTML field for the name and a submit button. Notice that the action of the form points from the route to the Application controller's addBar method.
 
 If you look in the console window at this point you will see the error "value addBar is not a member of controllers.ReverseApplication". This is because the route file is compiled and the view is checked for a valid route. But we haven't created a route yet, so edit the conf/routes file and add a new line with the following:
-{% blockquote %}
+<blockquote>
 POST    /bars                       controllers.Application.addBar
-{% endblockquote %}
+</blockquote>
 This creates a HTTP route that maps POST requests for the /bars URL to the addBar method.
 
 Now refresh http://localhost:9000 in your browser and you should see the very basic form for adding new Bar objects. If successful, after adding a new Bar the browser should just redirect back to the index page.
@@ -307,9 +307,9 @@ def getBars = Action {
 The getBars method fetches the Bar objects from the database using Slick dsl and then creates a JSON representation of the list of Bar objects and returns the JSON data.
 
 Now add a new route to the conf/routes file:
-{% blockquote %}
+<blockquote>
 GET     /bars                       controllers.Application.getBars
-{% endblockquote %}
+</blockquote>
 This maps GET requests for /bars to the getBars method.
 
 Try this out in your browser by loading: http://localhost:9000/bars
