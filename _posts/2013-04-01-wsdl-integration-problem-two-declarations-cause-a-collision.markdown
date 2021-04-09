@@ -1,0 +1,121 @@
+---
+layout: post
+title: "WSDL integration problem : Two declarations cause a collision"
+date: 2011-06-30 04:10
+comments: true
+categories: [JEE, JAXB, XML]
+
+keywords: JEE, JAX-WS, XML
+description: custom XSD to resolv collision on JAXB
+---
+Integration always hides some surprises especially when it comes to old systems where quick solutions aren't the first aid.
+In this post, we present a strange and rare situation when requesting WS using an old existing WSDL.
+<!-- more -->
+To make things simple bellow the wsdl and xsd samples :
+
+OldExistingWsService.wsdl
+```xml
+<!--?xml version="1.0" encoding="UTF-8"?-->
+<definitions xmlns="http://schemas.xmlsoap.org/wsdl/" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:tns="http://ws.jtunisie.com/" xmlns:wsam="http://www.w3.org/2007/05/addressing/metadata" xmlns:wsp="http://www.w3.org/ns/ws-policy" xmlns:wsp1_2="http://schemas.xmlsoap.org/ws/2004/09/policy" xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd" xmlns:xsd="http://www.w3.org/2001/XMLSchema" targetnamespace="http://ws.jtunisie.com/" name="OldExistingWsService">
+   <types>
+      <xsd:schema>
+         <xsd:import namespace="http://ws.jtunisie.com/" schemalocation="./OldExistingWsService.xsd" />
+      </xsd:schema>
+   </types>
+   <message name="oldOperation">
+      <part name="parameters" element="tns:oldOperation" />
+   </message>
+   <message name="oldOperationResponse">
+      <part name="parameters" element="tns:oldOperationResponse" />
+   </message>
+   <porttype name="OldExistingWs">
+      <operation name="oldOperation">
+         <input wsam:action="http://ws.jtunisie.com/OldExistingWs/oldOperationRequest" message="tns:oldOperation" />
+         <output wsam:action="http://ws.jtunisie.com/OldExistingWs/oldOperationResponse" message="tns:oldOperationResponse" />
+      </operation>
+   </porttype>
+   <binding name="OldExistingWsPortBinding" type="tns:OldExistingWs">
+      <soap:binding transport="http://schemas.xmlsoap.org/soap/http" style="document">
+         <operation name="oldOperation">
+            <soap:operation soapaction="">
+               <input>
+                  <soap:body use="literal" />
+               </input>
+               <output>
+                  <soap:body use="literal" />
+               </output>
+            </soap:operation>
+         </operation>
+      </soap:binding>
+   </binding>
+   <service name="OldExistingWsService">
+      <port name="OldExistingWsPort" binding="tns:OldExistingWsPortBinding">
+         <soap:address location="http://ouertani:8080/Wsdlcustomisation/OldExistingWsService" />
+      </port>
+   </service>
+</definitions>
+```
+OldExistingWsService.xsd
+```xml
+<!--?xml version="1.0" encoding="UTF-8"?-->
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://ws.jtunisie.com/" version="1.0" targetnamespace="http://ws.jtunisie.com/">
+   <xs:element name="oldOperation" type="tns:oldOperation">
+      <xs:element name="oldOperationResponse" type="tns:oldOperationResponse">
+         <xs:complextype name="oldOperation">
+            <xs:sequence>
+               <xs:element name="parameter" type="tns:oldExsistingClass" minoccurs="0" />
+            </xs:sequence>
+         </xs:complextype>
+         <xs:complextype name="oldExsistingClass">
+            <xs:sequence>
+               <xs:element name="a" type="xs:int" />
+               <xs:element name="_a" type="xs:int" />
+            </xs:sequence>
+         </xs:complextype>
+         <xs:complextype name="oldOperationResponse">
+            <xs:sequence>
+               <xs:element name="return" type="xs:int" />
+            </xs:sequence>
+         </xs:complextype>
+      </xs:element>
+   </xs:element>
+</xs:schema>
+```
+trying to generate java client code from this wsdl will causes : <b>(wsdl2java.sh -client -d . -verbose OldExistingWsService.wsdl)</b>
+<p style="color:red;">
+org.apache.cxf.tools.common.ToolException: Thrown by JAXB: Two declarations cause a collision in the ObjectFactory class. at line 17 column 1 of schema file:/OldExistingWsService.xsd
+</p>
+The problem is where a and _a are generate the same property, getter and setter methods names which generate exception.
+<ol>By quick solution, I means :
+<li>tell cxf to resolve name collision with : -autoNameResolution command line argument</li>
+<li>tell jaxb to not remove underscores with : <a href="http://stackoverflow.com/questions/2163719/tell-jaxb-to-not-remove-underscores">jaxb:globalBindings underscoreBinding="asCharInWord"</a></li>
+</ol>
+As these tricks doesn't work for the current case, hands on dirty jaxb binding customization :
+```
+<jxb:bindings version="2.0" xmlns:jxb="http://java.sun.com/xml/ns/jaxb" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <jxb:bindings schemalocation="file:OldExistingWsService.xsd" node="/xs:schema">
+ 	<jxb:bindings node=".//xs:element[@name='_a']">
+     <jxb:property name="oldA"></jxb:property>
+    </jxb:bindings>
+ </jxb:bindings>
+</jxb:bindings>
+```
+And tell :
+wsdl2java.sh -client -d . -verbose -b binding.xsd OldExistingWsService.wsdl
+
+
+Note : to deal with old wsdl I used this schema bindings :
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<jaxws:bindings xmlns:jaxws="http://java.sun.com/xm l/ns/jaxws" xmlns="http://java.sun.com/xml/ns/jaxws" xmlns:jxb="http://java.sun.com/xml/ns/jaxb" xmlns:tns1="VOLARISWS" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:xs="http://www.w3.org/2001/XMLSchema" wsdllocation="test.wsdl">
+   <jaxws:schemabindings>
+      <jaxws:bindings node="wsdl:definitions">
+         <jaxws:bindings node=".//xs:element[@name='_a']">
+            <jxb:property name="oldA" />
+         </jaxws:bindings>
+      </jaxws:bindings>
+   </jaxws:schemabindings>
+</jaxws:bindings>
+```
+Thanks for patience.
