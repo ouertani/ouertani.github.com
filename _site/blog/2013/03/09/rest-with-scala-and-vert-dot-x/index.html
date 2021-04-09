@@ -189,7 +189,7 @@
 <p>As in the previous post, Examples in Java and Scala are presented, source code been hosted on GitHub as part of lang-scala <a href="https://github.com/ouertani/vert.x/tree/master/vertx-lang/vertx-lang-scala">https://github.com/ouertani/vert.x/tree/master/vertx-lang/vertx-lang-scala</a>
 <!-- more --></p>
 
-<h2>I- Resticle</h2>
+<h2 id="i--resticle">I- Resticle</h2>
 
 <p>Resticle is a unit of deployment dedicated to Rest. It provides a new method (“handles”) which can be used by Vert.x to start Rest services. “handles” returns a sequence of rest handlers :</p>
 
@@ -208,7 +208,7 @@
 </ul>
 <p>In this tutorial we will be working with the SampleResticle class, for both scala and java.</p>
 
-<h2>II - Hello World</h2>
+<h2 id="ii---hello-world">II - Hello World</h2>
 
 <p>Vert.x provides a powerful routing and <a href="http://vertx.io/core_manual_java.html#routing-http-requests-with-pattern-matching">route matching</a> mechanism, which simplifies the routing of HTTP requests to different handlers based on pattern matching on the request path.</p>
 
@@ -225,7 +225,7 @@
 }
 </code></pre></div></div>
 <h4 id="java">Java</h4>
-<p>SampleResticle.java</p>
+
 <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>public class SampleResticle extends Verticle {
 
     public void start() {
@@ -241,7 +241,7 @@
     }
 }
 </code></pre></div></div>
-<h2>III- Chaining Handlers</h2>
+<h2 id="iii--chaining-handlers">III- Chaining Handlers</h2>
 
 <p>Using Resticle we can chain handlers quit easily. The following snippets create static GET and DELETE services :</p>
 

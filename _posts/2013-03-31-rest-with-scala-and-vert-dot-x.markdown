@@ -14,7 +14,7 @@ A previous post introduced some features of using Scala with <a href="http://ver
 As in the previous post, Examples in Java and Scala are presented, source code been hosted on GitHub as part of lang-scala <a href="https://github.com/ouertani/vert.x/tree/master/vertx-lang/vertx-lang-scala">https://github.com/ouertani/vert.x/tree/master/vertx-lang/vertx-lang-scala</a>
 <!-- more -->
 
-<h2>I- Resticle</h2>
+## I- Resticle
 
 Resticle is a unit of deployment dedicated to Rest. It provides a new method (“handles”) which can be used by Vert.x to start Rest services. “handles” returns a sequence of rest handlers :
 
@@ -33,7 +33,7 @@ Resticle is a unit of deployment dedicated to Rest. It provides a new method (�
 </ul>
 In this tutorial we will be working with the SampleResticle class, for both scala and java.
 
-<h2>II - Hello World</h2>
+## II - Hello World
 
 Vert.x provides a powerful routing and <a href="http://vertx.io/core_manual_java.html#routing-http-requests-with-pattern-matching">route matching</a> mechanism, which simplifies the routing of HTTP requests to different handlers based on pattern matching on the request path.
 
@@ -51,7 +51,7 @@ class SampleResticle extends Resticle
 }
 ```
 #### Java
-SampleResticle.java		
+
 ```		
 public class SampleResticle extends Verticle {
 
@@ -68,7 +68,7 @@ public class SampleResticle extends Verticle {
     }
 }
 ```
-<h2>III- Chaining Handlers</h2>
+## III- Chaining Handlers
 
 Using Resticle we can chain handlers quit easily. The following snippets create static GET and DELETE services :
 
