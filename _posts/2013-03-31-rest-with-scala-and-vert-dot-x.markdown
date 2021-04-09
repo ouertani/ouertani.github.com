@@ -51,7 +51,8 @@ class SampleResticle extends Resticle
 }
 ```
 #### Java
-```	java	SampleResticle.java			
+SampleResticle.java		
+```		
 public class SampleResticle extends Verticle {
 
     public void start() {
@@ -73,9 +74,9 @@ Using Resticle we can chain handlers quit easily. The following snippets create 
 
 <li>GET : /hello → code : 200 , body : world</li>
 <li>DELETE : /posts → code : 401 , body : Not allowed user</li>
-<h4>Scala</h4>
+#### Scala
 
-```	scala	SampleResticle.scala				
+```			
 class SampleResticle extends Resticle
 {
   override def handles =
@@ -85,7 +86,7 @@ class SampleResticle extends Resticle
 ```
 #### Java
 
-```	java	SampleResticle.java				
+```				
 public class SampleResticle extends Verticle {
 
     public void start() {
@@ -129,7 +130,7 @@ class SampleResticle extends Resticle
 ```
 #### Java
 
-```	java	SampleResticle.java				
+```
 public class SampleResticle extends Verticle {
 
     public void start() {
@@ -160,7 +161,7 @@ public class SampleResticle extends Verticle {
     }
 }
 ```
-<h2>V- Json</h2>
+## V- Json
 
 Let’s assume we have a Blog class with two String fields title and content :
 
@@ -170,15 +171,15 @@ The java equivalent has been relocated to the end of the document due to its ver
 
 Publishing an object using Resticle is simple and transparent due to implicit convertor : T => Buffer.
 
-<h4>Scala ( Type Class)</h4>
-```	scala	Blog.scala
+#### Scala ( Type Class)
+```
 object Blog {
   implicit def toBuffer(blog : Blog):Buffer = JsonObject.withString("title" -> blog.title).withString("content" -> blog.content)
 }
 ```
 #### Java ( with explicit convertor )
 
-```	java	Convertor.java				
+```		
 public class Convertor {
     public static  JsonObject toJson(Blog blog) {
        return new JsonObject().putString("title", blog.getTitle()).putString("content", blog.getContent());
@@ -189,9 +190,8 @@ public class Convertor {
 <li>DELETE : /posts → code : 401 , body : Not allowed user</li>
 <li>POST : /:blogname → code : 200 , body : post {blogname} received !</li>
 <li>GET : /:id → code : 200 , body : {"title":"rest","content":"scala & vertx"}</li>
-<h4>Scala</h4>
-
-```	scala	SampleResticle.scala				
+#### Scala
+```			
 class SampleResticle extends Resticle
 {
   override def handles =
@@ -203,7 +203,7 @@ class SampleResticle extends Resticle
 ```
 #### Java
 
-```	java	SampleResticle.java				
+``` 		
 public class SampleResticle extends Verticle {
 
     public void start() {
@@ -243,9 +243,9 @@ public class SampleResticle extends Verticle {
     }
 }
 ```
-Java Blog
+####Java Blog
 
-```	java	Blog.java				
+``` 		
 public class Blog {
 
     private final  String title;
@@ -265,6 +265,6 @@ public class Blog {
     }
   }
 ```
-## Conclusion 
+## Conclusion
 
 Despite the fact that Resticle is in first development step, Rest support is by far simpler and elegant in scala than in java. As described in first tutorial Vert.x java version is burdened with a frightening number of handlers. Will Vert.x 2.0 address this point using <a href="https://github.com/vert-x/vert.x/wiki/Vert.x-2.0-plan">Promises/Deferred APIs </a>?
