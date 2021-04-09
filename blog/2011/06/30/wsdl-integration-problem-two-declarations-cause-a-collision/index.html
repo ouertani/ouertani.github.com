@@ -1,0 +1,403 @@
+
+<!DOCTYPE HTML>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>WSDL integration problem : Two declarations cause a collision - Ouertani Blog</title>
+    <meta name="author" content="Ouertani">
+    
+	<meta name="description" content="custom XSD to resolv collision on JAXB">
+	<meta name="keywords" content="JEE, JAX-WS, XML">
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+	<link href="/atom.xml" rel="alternate" title="Ouertani Blog" type="application/atom+xml">
+	<link rel="canonical" href="">
+	<link href="/favicon.ico" rel="shortcut icon">
+    <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+
+    <link href='http://fonts.googleapis.com/css?family=Slackey' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Fjalla+One' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Amethysta' rel='stylesheet' type='text/css'>
+	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+    <!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+
+    <script type="text/javascript" src="/javascripts/jquery-tapir.js"></script>
+
+    <!-- remove or comment it to disable ajaxification -->   
+    <script src="/javascripts/ajaxify.js"></script>
+   
+    
+    
+	<script type="text/javascript">
+		var _gaq = _gaq || [];
+		_gaq.push(['_setAccount', 'UA-39743923-1']);
+		_gaq.push(['_trackPageview']);
+
+		(function() {
+			var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+			ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+			var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+		})();
+	</script>
+
+
+</head>
+
+
+<body>
+    <div id="wrapper">
+    <header id="header" class="inner"><!-- for more effects see _animate.scss -->
+<h1 class="animated bounceInDown">
+    <div id="headerbg">
+        Ouertani
+    </div>
+</h1>
+<br>
+
+<ul id="social-links" style="text-align:center">
+  
+  <!-- GitHub -->
+  <li>
+  <a href="https://github.com/ouertani" class="github" title="Github"></a>
+  </li>
+  
+  
+  <!-- Google Plus -->
+  <li>
+  <a href="http://plus.google.com/109645607918628014051?rel=author" class="google" title="Google+"></a>
+  </li>
+  
+  
+  
+  <!-- Twitter -->
+  <li>
+  <a href="http://www.twitter.com/ouertani" class="twitter" title="Twitter"></a>
+  </li>
+  
+  
+  
+  
+  
+</ul>
+
+
+<!-- use full url including 'index.html' for navigation bar if you are using ajax -->
+<ul id="nav">
+	<li id="ajax"><a href="/index.html">Home</a></li>
+	<li id="ajax"><a href="/blog/archives/index.html">Archives</a></li>
+    <li><a href="/atom.xml">RSS</a></li>
+    
+    <li>
+    <div id="dark">
+        <form method="get" action="/search.html" id="search">
+            <input name="query" type="text" placeholder="Search..." x-webkit-speech />
+        </form>
+    </div>
+    </li>
+        
+</ul>
+
+
+
+
+</header>
+
+<div id="toload">
+<!-- begin toload --> 
+    <div id="content" class="inner">
+        <article class="post">
+	<h2 class="title">WSDL Integration Problem : Two Declarations Cause a Collision</h2>
+	<div class="entry-content"><p>Integration always hides some surprises especially when it comes to old systems where quick solutions aren&rsquo;t the first aid.
+In this post, we present a strange and rare situation when requesting WS using an old existing WSDL.</p>
+
+<!-- more -->
+
+
+<p>To make things simple bellow the wsdl and xsd samples :</p>
+
+<p>OldExistingWsService.wsdl</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+<span class='line-number'>38</span>
+<span class='line-number'>39</span>
+</pre></td><td class='code'><pre><code class='xml'><span class='line'><span class="c">&lt;!--?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?--&gt;</span>
+</span><span class='line'><span class="c">&lt;!-- Published by JAX-WS RI at http://jax-ws.dev.java.net. RI&#39;s version is Metro/2.1-b25 (trunk-6664; 2010-12-31T11:31:15+0000) JAXWS-RI/2.2.3-promoted-b06 JAXWS/2.2. --&gt;</span>
+</span><span class='line'><span class="c">&lt;!-- Generated by JAX-WS RI at http://jax-ws.dev.java.net. RI&#39;s version is Metro/2.1-b25 (trunk-6664; 2010-12-31T11:31:15+0000) JAXWS-RI/2.2.3-promoted-b06 JAXWS/2.2. --&gt;</span>
+</span><span class='line'><span class="nt">&lt;definitions</span> <span class="na">xmlns:wsu=</span><span class="s">&quot;http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd&quot;</span> <span class="na">xmlns:wsp=</span><span class="s">&quot;http://www.w3.org/ns/ws-policy&quot;</span> <span class="na">xmlns:wsp1_2=</span><span class="s">&quot;http://schemas.xmlsoap.org/ws/2004/09/policy&quot;</span> <span class="na">xmlns:wsam=</span><span class="s">&quot;http://www.w3.org/2007/05/addressing/metadata&quot;</span> <span class="na">xmlns:soap=</span><span class="s">&quot;http://schemas.xmlsoap.org/wsdl/soap/&quot;</span> <span class="na">xmlns:tns=</span><span class="s">&quot;http://ws.jtunisie.com/&quot;</span> <span class="na">xmlns:xsd=</span><span class="s">&quot;http://www.w3.org/2001/XMLSchema&quot;</span> <span class="na">xmlns=</span><span class="s">&quot;http://schemas.xmlsoap.org/wsdl/&quot;</span> <span class="na">targetnamespace=</span><span class="s">&quot;http://ws.jtunisie.com/&quot;</span> <span class="na">name=</span><span class="s">&quot;OldExistingWsService&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;types&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;xsd:schema&gt;</span>
+</span><span class='line'>            <span class="nt">&lt;xsd:import</span> <span class="na">namespace=</span><span class="s">&quot;http://ws.jtunisie.com/&quot;</span> <span class="na">schemalocation=</span><span class="s">&quot;./OldExistingWsService.xsd&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;/xsd:import&gt;&lt;/xsd:schema&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;/types&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;message</span> <span class="na">name=</span><span class="s">&quot;oldOperation&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;part</span> <span class="na">name=</span><span class="s">&quot;parameters&quot;</span> <span class="na">element=</span><span class="s">&quot;tns:oldOperation&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;/part&gt;&lt;/message&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;message</span> <span class="na">name=</span><span class="s">&quot;oldOperationResponse&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;part</span> <span class="na">name=</span><span class="s">&quot;parameters&quot;</span> <span class="na">element=</span><span class="s">&quot;tns:oldOperationResponse&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;/part&gt;&lt;/message&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;porttype</span> <span class="na">name=</span><span class="s">&quot;OldExistingWs&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;operation</span> <span class="na">name=</span><span class="s">&quot;oldOperation&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'>            <span class="nt">&lt;input</span> <span class="na">wsam:action=</span><span class="s">&quot;http://ws.jtunisie.com/OldExistingWs/oldOperationRequest&quot;</span> <span class="na">message=</span><span class="s">&quot;tns:oldOperation&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'>            <span class="nt">&lt;output</span> <span class="na">wsam:action=</span><span class="s">&quot;http://ws.jtunisie.com/OldExistingWs/oldOperationResponse&quot;</span> <span class="na">message=</span><span class="s">&quot;tns:oldOperationResponse&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;/output&gt;&lt;/operation&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;/porttype&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;binding</span> <span class="na">name=</span><span class="s">&quot;OldExistingWsPortBinding&quot;</span> <span class="na">type=</span><span class="s">&quot;tns:OldExistingWs&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;soap:binding</span> <span class="na">transport=</span><span class="s">&quot;http://schemas.xmlsoap.org/soap/http&quot;</span> <span class="na">style=</span><span class="s">&quot;document&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;operation</span> <span class="na">name=</span><span class="s">&quot;oldOperation&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'>            <span class="nt">&lt;soap:operation</span> <span class="na">soapaction=</span><span class="s">&quot;&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'>            <span class="nt">&lt;input&gt;</span>
+</span><span class='line'>                <span class="nt">&lt;soap:body</span> <span class="na">use=</span><span class="s">&quot;literal&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'>
+</span><span class='line'>            <span class="nt">&lt;output&gt;</span>
+</span><span class='line'>                <span class="nt">&lt;soap:body</span> <span class="na">use=</span><span class="s">&quot;literal&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'>            <span class="nt">&lt;/soap:body&gt;&lt;/output&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;/soap:body&gt;&lt;/soap:operation&gt;&lt;/operation&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;/soap:binding&gt;&lt;/binding&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;service</span> <span class="na">name=</span><span class="s">&quot;OldExistingWsService&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;port</span> <span class="na">name=</span><span class="s">&quot;OldExistingWsPort&quot;</span> <span class="na">binding=</span><span class="s">&quot;tns:OldExistingWsPortBinding&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'>            <span class="nt">&lt;soap:address</span> <span class="na">location=</span><span class="s">&quot;http://ouertani:8080/Wsdlcustomisation/OldExistingWsService&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;/soap:address&gt;&lt;/port&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;/service&gt;</span>
+</span><span class='line'><span class="nt">&lt;/definitions&gt;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>OldExistingWsService.xsd</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+</pre></td><td class='code'><pre><code class='xml'><span class='line'><span class="c">&lt;!--?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?--&gt;</span>
+</span><span class='line'><span class="c">&lt;!-- Published by JAX-WS RI at http://jax-ws.dev.java.net. RI&#39;s version is Metro/2.1-b25 (trunk-6664; 2010-12-31T11:31:15+0000) JAXWS-RI/2.2.3-promoted-b06 JAXWS/2.2. --&gt;</span>
+</span><span class='line'><span class="nt">&lt;xs:schema</span> <span class="na">xmlns:tns=</span><span class="s">&quot;http://ws.jtunisie.com/&quot;</span> <span class="na">xmlns:xs=</span><span class="s">&quot;http://www.w3.org/2001/XMLSchema&quot;</span> <span class="na">version=</span><span class="s">&quot;1.0&quot;</span> <span class="na">targetnamespace=</span><span class="s">&quot;http://ws.jtunisie.com/&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="nt">&lt;xs:element</span> <span class="na">name=</span><span class="s">&quot;oldOperation&quot;</span> <span class="na">type=</span><span class="s">&quot;tns:oldOperation&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="nt">&lt;xs:element</span> <span class="na">name=</span><span class="s">&quot;oldOperationResponse&quot;</span> <span class="na">type=</span><span class="s">&quot;tns:oldOperationResponse&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="nt">&lt;xs:complextype</span> <span class="na">name=</span><span class="s">&quot;oldOperation&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;xs:sequence&gt;</span>
+</span><span class='line'>            <span class="nt">&lt;xs:element</span> <span class="na">name=</span><span class="s">&quot;parameter&quot;</span> <span class="na">type=</span><span class="s">&quot;tns:oldExsistingClass&quot;</span> <span class="na">minoccurs=</span><span class="s">&quot;0&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;/xs:element&gt;&lt;/xs:sequence&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;/xs:complextype&gt;</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="nt">&lt;xs:complextype</span> <span class="na">name=</span><span class="s">&quot;oldExsistingClass&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;xs:sequence&gt;</span>
+</span><span class='line'>            <span class="nt">&lt;xs:element</span> <span class="na">name=</span><span class="s">&quot;a&quot;</span> <span class="na">type=</span><span class="s">&quot;xs:int&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'>            <span class="nt">&lt;xs:element</span> <span class="na">name=</span><span class="s">&quot;_a&quot;</span> <span class="na">type=</span><span class="s">&quot;xs:int&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;/xs:element&gt;&lt;/xs:element&gt;&lt;/xs:sequence&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;/xs:complextype&gt;</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="nt">&lt;xs:complextype</span> <span class="na">name=</span><span class="s">&quot;oldOperationResponse&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;xs:sequence&gt;</span>
+</span><span class='line'>            <span class="nt">&lt;xs:element</span> <span class="na">name=</span><span class="s">&quot;return&quot;</span> <span class="na">type=</span><span class="s">&quot;xs:int&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;/xs:element&gt;&lt;/xs:sequence&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;/xs:complextype&gt;</span>
+</span><span class='line'><span class="nt">&lt;/xs:element&gt;&lt;/xs:element&gt;&lt;/xs:schema&gt;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>trying to generate java client code from this wsdl will causes : <b>(wsdl2java.sh -client -d . -verbose OldExistingWsService.wsdl)</b></p>
+
+<p style="color:red;">
+ <blockquote><p>org.apache.cxf.tools.common.ToolException: Thrown by JAXB: Two declarations cause a collision in the ObjectFactory class. at line 17 column 1 of schema file:/OldExistingWsService.xsd</p></blockquote>
+</p>
+
+
+<p>The problem is where a and _a are generate the same property, getter and setter methods names which generate exception.</p>
+
+<ol>By quick solution, I means :
+<li>tell cxf to resolve name collision with : -autoNameResolution command line argument</li>
+<li>tell jaxb to not remove underscores with : <a href="http://stackoverflow.com/questions/2163719/tell-jaxb-to-not-remove-underscores">jaxb:globalBindings underscoreBinding=&#8221;asCharInWord&#8221;</a></li>
+</ol>
+
+
+<p>As these tricks doesn&rsquo;t work for the current case, hands on dirty jaxb binding customization :</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class='xml'><span class='line'><span class="nt">&lt;jxb:bindings</span> <span class="na">version=</span><span class="s">&quot;2.0&quot;</span> <span class="na">xmlns:jxb=</span><span class="s">&quot;http://java.sun.com/xml/ns/jaxb&quot;</span> <span class="na">xmlns:xs=</span><span class="s">&quot;http://www.w3.org/2001/XMLSchema&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;jxb:bindings</span> <span class="na">schemalocation=</span><span class="s">&quot;file:OldExistingWsService.xsd&quot;</span> <span class="na">node=</span><span class="s">&quot;/xs:schema&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;jxb:bindings</span> <span class="na">node=</span><span class="s">&quot;.//xs:element[@name=&#39;_a&#39;]&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'>     <span class="nt">&lt;jxb:property</span> <span class="na">name=</span><span class="s">&quot;oldA&quot;</span><span class="nt">&gt;&lt;/jxb:property&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;/jxb:bindings&gt;</span>
+</span><span class='line'> <span class="nt">&lt;/jxb:bindings&gt;</span>
+</span><span class='line'><span class="nt">&lt;/jxb:bindings&gt;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>And tell :
+ <blockquote><p>wsdl2java.sh -client -d . -verbose -b binding.xsd OldExistingWsService.wsdl</p></blockquote></p>
+
+<p>Note : to deal with old wsdl I used this schema bindings :</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+</pre></td><td class='code'><pre><code class='xml'><span class='line'><span class="nt">&lt;jaxws:bindings</span> <span class="na">xmlns:jxb=</span><span class="s">&quot;http://java.sun.com/xml/ns/jaxb&quot;</span> <span class="na">xmlns=</span><span class="s">&quot;http://java.sun.com/xml/ns/jaxws&quot;</span> <span class="na">xmlns:xs=</span><span class="s">&quot;http://www.w3.org/2001/XMLSchema&quot;</span> <span class="na">xmlns:jaxws=</span><span class="s">&quot;http://java.sun.com/xm</span>
+</span><span class='line'><span class="s">l/ns/jaxws&quot;</span> <span class="na">wsdllocation=</span><span class="s">&quot;test.wsdl&quot;</span> <span class="na">xmlns:wsdl=</span><span class="s">&quot;http://schemas.xmlsoap.org/wsdl/&quot;</span> <span class="na">xmlns:tns1=</span><span class="s">&quot;VOLARISWS&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;jaxws:schemabindings&gt;</span>
+</span><span class='line'>      <span class="nt">&lt;jaxws:bindings</span> <span class="na">node=</span><span class="s">&quot;wsdl:definitions&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'>              <span class="nt">&lt;jaxws:bindings</span> <span class="na">node=</span><span class="s">&quot;.//xs:element[@name=&#39;_a&#39;]&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'>              <span class="nt">&lt;jxb:property</span> <span class="na">name=</span><span class="s">&quot;oldA&quot;</span><span class="nt">&gt;&lt;/jxb:property&gt;</span>
+</span><span class='line'>              <span class="nt">&lt;/jaxws:bindings&gt;</span>
+</span><span class='line'>          <span class="nt">&lt;/jaxws:bindings&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;/jaxws:schemabindings&gt;</span>
+</span><span class='line'><span class="nt">&lt;/jaxws:bindings&gt;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>thanks for patience.</p>
+</div>
+
+<div class="meta">
+	
+</div>
+</article>
+
+	<div class="share">
+	<div class="addthis_toolbox addthis_default_style ">
+	
+	
+	<a class="addthis_button_tweet"></a>
+	
+	
+	<a class="addthis_button_google_plusone" g:plusone:size="medium"></a>
+	
+	<a class="addthis_counter addthis_pill_style"></a>
+	</div>
+  <script type="text/javascript" src="http://s7.addthis.com/js/250/addthis_widget.js#pubid="></script>
+</div>
+
+
+
+<section id="comment">
+    <h2 class="title">Comments</h2>
+    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+</section>
+
+    </div>
+    <footer id="footer">
+    <div style="display:inline">
+    Copyright &copy; 2013
+
+    Ouertani
+. Powered by <a href="http://octopress.org">Octopress</a> | 
+    Theme <a href="http://github.com/panks/fabric">fabric</a> by <a href="http://panks.me">Pankaj Kumar</a>
+</div>
+
+
+    </footer>
+    <script src="/javascripts/fabric.js"></script>
+<script src="/javascripts/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+(function($){
+	$('.fancybox').fancybox();
+})(jQuery);
+</script> <!-- Delete or comment this line to disable Fancybox -->
+
+
+<script type="text/javascript">
+      var disqus_shortname = 'ouertani';
+      
+        
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://ouertani.github.io/blog/2011/06/30/wsdl-integration-problem-two-declarations-cause-a-collision/';
+        var disqus_url = 'http://ouertani.github.io/blog/2011/06/30/wsdl-integration-problem-two-declarations-cause-a-collision/';
+        var disqus_script = 'embed.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+
+
+
+<!-- end toload --> 
+</div>
+</div>
+<script src="/javascripts/jquery.ui.totop.js" type="text/javascript"></script>
+<script type="text/javascript">
+/*<![CDATA[*/
+;(function($){$().UItoTop({easingType:'easeOutCirc'});})(jQuery); 
+/*]]>*/
+</script><!-- remove it to remove the scroll to top button -->
+</body>
+</html>

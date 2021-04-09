@@ -1,0 +1,885 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: JEE | Ouertani Blog]]></title>
+  <link href="http://ouertani.github.io/blog/categories/jee/atom.xml" rel="self"/>
+  <link href="http://ouertani.github.io/"/>
+  <updated>2013-08-09T16:30:13+02:00</updated>
+  <id>http://ouertani.github.io/</id>
+  <author>
+    <name><![CDATA[Ouertani]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[XML/RPC driver as JCA Scala connector]]></title>
+    <link href="http://ouertani.github.io/blog/2012/09/26/xml-slash-rpc-driver-as-jca-scala-connector/"/>
+    <updated>2012-09-26T19:41:00+02:00</updated>
+    <id>http://ouertani.github.io/blog/2012/09/26/xml-slash-rpc-driver-as-jca-scala-connector</id>
+    <content type="html"><![CDATA[<p>Interoperability and reusability are key features of SOA architecture.</p>
+
+<p>The <a href="http://en.wikipedia.org/wiki/Java_EE_Connector_Architecture">Java EE Connector architecture</a> defines a standard architecture for connecting the Java EE platform to heterogeneous EISs. This article presents an XML/RPC  adapter using a Scala JCA outbound connector to an IN/AIR legacy system.</p>
+
+<!-- more -->
+
+
+<h2>JCA and integration</h2>
+
+
+<p><blockquote><p>&ldquo;For enterprise application integration, bi-directional connectivity between enterprise applications and EIS is essential. The Java EE Connector architecture defines standard contracts that allow bi-directional connectivity between enterprise applications and EISs. It also formalizes the relationships, interactions, and the packaging of the integration layer, thus enabling enterprise application integration.&rdquo;</p></p><p><p></p><footer><strong>JCA 1.6 p 35</strong></footer></blockquote></p>
+
+<p>The connector architecture defines a set of scalable, secure, and transactional mechanisms that enable the integration of EISs with application servers and enterprise application.</p>
+
+<p><img class="center" src="/images/jca.jpg" width="350" height="350" title="&lsquo;JCA&rsquo; &lsquo;images&rsquo;" ></p>
+
+<p>Using a UCIP JCA connector rather than using an <a href="http://java.dzone.com/articles/xml-rpc-using-scala">XML/RPC raw driver</a> lets you:</p>
+
+<ol>
+<li>Hide connection complexity.</li>
+<li>Use connection pooling and scalability.</li>
+<li>Use a standard adapter that can be deployed with any JEE 6 server from an m x n integration problem to an m + n solution</li>
+</ol>
+
+
+<h2>How?</h2>
+
+
+<p>The use of a <a href="http://www.jcp.org/en/jsr/detail?id=322">JCA</a> resource adapter inside a JEE solution is the same as interacting with a database or queue: protocol communication and wire negotiation&hellip; are hidden to the final user.</p>
+
+<p>Two interfaces are presented to a customer:</p>
+
+<h3>1) A factory trait:</h3>
+
+
+<p><code>scala
+trait AirConnectorFactory extends Referenceable with Function0[AirConnector]
+</code></p>
+
+<h3>2) The connector trait:</h3>
+
+
+<p><code>scala
+trait AirConnector {
+def fire(elem : Elem) : Option[Elem]
+}
+</code>
+As an outbound communication where the resource adapter allows an ESB or EE application server to connect to an IN/AIR node and perform work. All communication is initiated by the application. The Air connector factory should be injected as any resource and used like the following.
+``` scala
+@Resource(name=&ldquo;AIR&rdquo;)
+var airConnectorFactory : AirConnectorFactory = _</p>
+
+<p>val output = airConnectorFactory().fire(input)
+```
+<blockquote><p>Source code is based on JCA 1.6 specification and hosted on <a href="https://github.com/ouertani/TelcoCX">github</a>.</p></blockquote></p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Jaxws Header : Part 2 : Server Side]]></title>
+    <link href="http://ouertani.github.io/blog/2012/06/28/jaxws-header-part-2-server-side/"/>
+    <updated>2012-06-28T03:19:00+02:00</updated>
+    <id>http://ouertani.github.io/blog/2012/06/28/jaxws-header-part-2-server-side</id>
+    <content type="html"><![CDATA[<h2>Purpose</h2>
+
+
+<p>Manipulating JAXWS header on the server Side like reading WSS username token, logging saop message and publish a specific header.</p>
+
+<h2>Introduction</h2>
+
+
+<p>On Telecom IT environment and specially middelware solution web service communications are heavy used between solutions. This tutorial aims to introduce using handler on server side by publishing specific header, reading WSS UserToken or logging the soap message on console.</p>
+
+<!-- more -->
+
+
+<p>This tutorial is Scala based, Java version can be easy translated.</p>
+
+<h2>Parse undeclared custom header</h2>
+
+
+<p>Let&rsquo;s consider We need to read WSS UserToken non published in our WSDL :
+```xml
+&lt;soapenv:Header></p>
+
+<pre><code>  &lt;wsse:Security  xmlns:wsse="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd" xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd"&gt;
+     &lt;wsse:UsernameToken wsu:Id="UsernameToken-1"&gt;
+        &lt;wsse:Username&gt;login&lt;/wsse:Username&gt;
+        &lt;wsse:Password Type="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-username-token-profile-1.0#PasswordText"&gt;XXXX&lt;/wsse:Password&gt;        
+     &lt;/wsse:UsernameToken&gt;
+  &lt;/wsse:Security&gt;
+</code></pre>
+
+<p> &lt;/soapenv:Header>
+<code>
+To parse this header we need to extend a SoapHandler, ovveride handle message class on put header and password on context, below a constant and full class
+</code>scala
+object AuthenticationHandlerConstants {</p>
+
+<p>  val REQUEST_USERID: String = &ldquo;authn_userid&rdquo;;
+  val REQUEST_PASSWORD: String = &ldquo;authn_password&rdquo;;
+  val AUTHN_PREFIX: String = &ldquo;wsse&rdquo;;
+  val AUTHN_LNAME: String = &ldquo;Security&rdquo;;
+  val AUTHN_URI: String = &ldquo;<a href="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd">http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd</a>&rdquo;;
+  val AUTHN_STAUTS: String = &ldquo;authnStatus&rdquo;;</p>
+
+<p>  val LOGIN: String = &ldquo;login&rdquo;
+  val PWD: String = &ldquo;passwd&rdquo;
+}
+<code>
+</code>scala
+import java.io.PrintStream;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Set;
+import javax.xml.namespace.QName;
+import javax.xml.soap.SOAPElement;</p>
+
+<p>import javax.xml.soap.SOAPHeader;
+import javax.xml.ws.handler.MessageContext;
+import javax.xml.ws.handler.soap.SOAPHandler;
+import javax.xml.ws.handler.soap.SOAPMessageContext;
+import org.apache.log4j.Logger;</p>
+
+<p>/<em>*
+ * @author Slim Ouertani
+ </em>/
+class SecuritySOAPHandler extends SOAPHandler[SOAPMessageContext] {</p>
+
+<p>  private val L = Logger.getLogger(classOf[SecuritySOAPHandler]);</p>
+
+<p>  override def getHeaders(): Set[QName] = {</p>
+
+<pre><code>val securityHeader = new QName("http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd", "Security", "wsse");
+val headers = new HashSet[QName]();
+headers.add(securityHeader);
+return headers;
+</code></pre>
+
+<p>  }</p>
+
+<p>  override def handleMessage(soapMessageContext: SOAPMessageContext): Boolean = {</p>
+
+<pre><code>try {
+  val outMessageIndicator = soapMessageContext.get(MessageContext.MESSAGE_OUTBOUND_PROPERTY).asInstanceOf[Boolean];
+  if (!outMessageIndicator) {
+    val envelope = soapMessageContext.getMessage().getSOAPPart().getEnvelope()
+    val header = envelope.getHeader()
+
+    if (header == null) {
+      L.warn("No headers found in the input SOAP request")
+    } else {
+      processSOAPHeader(header) match {
+        case Some(_processSOAPHeader) =&gt; {
+          soapMessageContext.put(AuthenticationHandlerConstants.AUTHN_STAUTS, java.lang.Boolean.TRUE);
+          soapMessageContext.put(AuthenticationHandlerConstants.LOGIN, _processSOAPHeader._1);
+          soapMessageContext.put(AuthenticationHandlerConstants.PWD, _processSOAPHeader._2);
+        }
+        case None =&gt; {
+          soapMessageContext.put(AuthenticationHandlerConstants.AUTHN_STAUTS, java.lang.Boolean.FALSE);
+          soapMessageContext.put(AuthenticationHandlerConstants.LOGIN, "");
+          soapMessageContext.put(AuthenticationHandlerConstants.PWD, "");
+        }
+      }
+    }
+  }
+} catch {
+  case ex: Exception =&gt; L.error(ex.getMessage(), ex);
+}
+soapMessageContext.setScope(AuthenticationHandlerConstants.AUTHN_STAUTS, MessageContext.Scope.APPLICATION);
+soapMessageContext.setScope(AuthenticationHandlerConstants.LOGIN, MessageContext.Scope.APPLICATION);
+soapMessageContext.setScope(AuthenticationHandlerConstants.PWD, MessageContext.Scope.APPLICATION);
+return true;
+</code></pre>
+
+<p>  }</p>
+
+<p>  private def processSOAPHeaderInfo(e: SOAPElement): (String,String) = {</p>
+
+<pre><code>var _id: String = null
+var _password: String = null
+
+val childElements = e.getChildElements(new QName(AuthenticationHandlerConstants.AUTHN_URI, "UsernameToken"));
+while (childElements.hasNext()) {
+  val usernameToken = childElements.next();
+  // loop through child elements
+
+  usernameToken match {
+
+    case child: SOAPElement =&gt; {
+
+      val childElements1 = child.getChildElements(new QName(AuthenticationHandlerConstants.AUTHN_URI, "Username"));
+      val childElements2 = child.getChildElements(new QName(AuthenticationHandlerConstants.AUTHN_URI, "Password"));
+
+      while (childElements1.hasNext()) {
+        val next = childElements1.next();
+        next match {
+          case l: SOAPElement =&gt; {
+            val value = l.getValue();
+
+            _id = value;
+          }
+        }
+      }
+      while (childElements2.hasNext()) {
+        val next = childElements2.next();
+        next match {
+          case l: SOAPElement =&gt; {
+            val value = l.getValue()
+
+            _password = value;
+          }
+        }
+      }
+    }
+  }
+}
+return (_id, _password);
+</code></pre>
+
+<p>  }</p>
+
+<p>  private def processSOAPHeader(sh: SOAPHeader): Option[(String,String)] = {</p>
+
+<pre><code>var authenticated: Option[(String,String)] = None
+
+val childElems = sh.getChildElements(new QName(
+  AuthenticationHandlerConstants.AUTHN_URI,
+  AuthenticationHandlerConstants.AUTHN_LNAME));
+
+// iterate through child elements
+while (childElems.hasNext()) {
+
+  val child = childElems.next().asInstanceOf[SOAPElement]
+  authenticated = Some(processSOAPHeaderInfo(child))
+}
+return authenticated
+</code></pre>
+
+<p>  }</p>
+
+<p>  override def handleFault(soapMessageContext: SOAPMessageContext): Boolean = false
+}
+```
+Unlike client side we need to add an xml file handler.xml to enable the previous handler</p>
+
+<h3>on web service declaration: </h3>
+
+
+<ol>
+    <li>Chain this handler : @HandlerChain(file = "handler.xml")</li>
+    <li>Inject WebServiceContext : @Resource private var wsContext: WebServiceContext = _</li>
+    <li>Retrieve a messageContext : val msgContext = wsContext.getMessageContext()</li>
+    <li>Check stored valued : val authnStatus = msgContext.get(AuthenticationHandlerConstants.AUTHN_STAUTS)</li>
+</ol>
+
+
+<p>``` scala
+@WebService(serviceName = &ldquo;WsService&rdquo;, targetNamespace = &ldquo;<a href="http://slim.ouertani.me">http://slim.ouertani.me</a>)
+@HandlerChain(file = "handler.xml&rdquo;)
+@Stateless()
+@Interceptors(Array(classOf[TracingInterceptor]))
+class WsService extends LogHelper{</p>
+
+<p>  @Resource private var wsContext: WebServiceContext = _</p>
+
+<p>  def authenticate() {</p>
+
+<pre><code>val msgContext = wsContext.getMessageContext()
+val authnStatus = msgContext.get(AuthenticationHandlerConstants.AUTHN_STAUTS)
+if (authnStatus == null || !authnStatus.asInstanceOf[Boolean]) {
+   L.warn("header authentification not found");
+  throw AuthenticationHeaderNotFound.toFaultResponse
+}
+
+try {
+  val login = msgContext.get("login").asInstanceOf[String]
+  val passwd = msgContext.get("passwd").asInstanceOf[String]
+  L.info("user " + login + "pwd" + passwd + "try this service")
+} catch {
+  case ex: Exception =&gt;
+    L.warn(" exception to parse header authentification", ex);
+    throw AuthenticationHeaderNotFound.toFaultResponse
+}
+</code></pre>
+
+<p>  }
+}
+```</p>
+
+<h2>Adding custom header</h2>
+
+
+
+
+<ol>Publishing a custom header is easier than using the previous handler :
+
+<li>First lets add a custom header class</li> 
+``` scala
+import scala.reflect.BeanProperty
+import javax.xml.bind.annotation.{XmlType , XmlAccessType, XmlElement, XmlAccessorType};
+/**
+ * @author Slim Ouertani
+ */
+@XmlAccessorType(XmlAccessType.FIELD)
+@XmlType(name = "Header", propOrder = Array(
+    "username",
+    "password"
+  ))
+class UsernameToken {
+   @BeanProperty  @XmlElement(required = true, nillable = false ) var username : String= ""
+   @BeanProperty  @XmlElement(required = true, nillable = false ) var password : String= ""
+}
+```
+
+<li>publish this header using @WebParam (name = "usernameToken",header = true)</li>
+``` scala
+def execute (@WebParam(name = "request" ) request : Request, @WebParam (name = "usernameToken",header = true) header) {
+  ....
+ }
+```
+<li>retrieving user and password field are the same as accessing class properties :</li>
+``` scala
+val username = ""+header.getUsername()
+val password = ""+header.getPassword()
+```
+<li>note that the preceding header is declared on WSDL method and produce this output on soapUI interface </li></ol>
+
+
+<p>``` xml
+&lt;soapenv:Header></p>
+
+<pre><code>  &lt;ws:usernameToken&gt;
+     &lt;username&gt;login&lt;/username&gt;
+     &lt;password&gt;XXXXX&lt;/password&gt;
+  &lt;/ws:usernameToken&gt;
+</code></pre>
+
+<p>&lt;/soapenv:Header>
+```</p>
+
+<h2>Conclusion</h2>
+
+
+<p>Publishing specific header using JAX-WS is easier than using handler. Otherwise, handlers on server side are helpful for other purpose like logging I/O message.</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Sending an Email using the JavaMail Session and Glassfish]]></title>
+    <link href="http://ouertani.github.io/blog/2012/06/28/sending-an-email-using-the-javamail-session-and-glassfish/"/>
+    <updated>2012-06-28T02:18:00+02:00</updated>
+    <id>http://ouertani.github.io/blog/2012/06/28/sending-an-email-using-the-javamail-session-and-glassfish</id>
+    <content type="html"><![CDATA[<h2>Purpose</h2>
+
+
+<p>This tutorial is a supplement to the article of oracle published <a href="http://www.oracle.com/webfolder/technetwork/tutorials/obe/java/javamail/javamail.html">here</a>.
+After reading this later, I decided to share some tips about this EE environment JavaMail api configuration.</p>
+
+<h2>Introduction</h2>
+
+
+<p>Two years ago, we decided to move to JEE 6 for our enterprise solutions and take a lot of fun with new EJB 3.1 features and annotations. Glassfish has made our lives easier, it was very easy to declare variables using it&rsquo;s administration console.
+Less complicated than using global resource environment for properties It is also the continuation to this <a href="http://www.jroller.com/articles/jee-6-environmental-enterprise">tricks</a> this tutorial delegate to Glassfish EE server managing mail session.</p>
+
+<!-- more -->
+
+
+<h2>Prerequisites</h2>
+
+
+
+
+<ol>Before starting this tutorial, you should:
+<li>Fully understand of <a href="http://www.oracle.com/webfolder/technetwork/tutorials/obe/java/javamail/javamail.html">http://www.oracle.com/webfolder/technetwork/tutorials/obe/java/javamail/javamail.html</a></li>
+<li>Have access to an SMTP server. You must know the host name, port number, and security settings for your SMTP server. Web mail providers may offer SMTP access, view your email account settings or help to find further information. Be aware that your user name is often your full email address and not just the name that comes before the @ symbol.</li>
+<li>Have basic familiarity with Servlets and CDIs (helpful but not required)</li>
+</ol>
+
+
+
+
+<h2>Create a Java mail session resource :</h2>
+
+
+
+
+<ol>
+To create and JavaMail Session :
+<li>start galssfish server</li>
+<li>open admin console ( default localhost:4848)</li>
+<li>Go to Resources -> JavaMail Sessions -> click new to add new javaMail resource</li>
+<li>make sure the following field are filled in :</li>
+</ol>
+
+
+<p>Jndi name : EMailME for example, will be used later on lookup resource :
+<code>java
+@Resource(lookup = "EMailME")
+Mail host
+</code></p>
+
+<ol start="5">
+<li>Default user</li>
+<li>Default sender will be used later on mailSession.getProperty("mail.from")</li>
+<li>For secure Mail add this advanced setting :
+
+<ul>
+<li>mail.smtp.password : email password</li>
+<li>mail.smtp.port : email port</li>
+<li>mail.smtp.auth : true </li>
+</ul>
+</li>
+</ol>
+
+
+<p>This screenshot summarizes all these parameters :</p>
+
+<p><img class="center" src="/images/mailee.jpg" width="640" height="424" title="&lsquo;Mail EE&rsquo; &lsquo;images&rsquo;" ></p>
+
+<h2>II - Using email Service</h2>
+
+
+<p>This tutorial is a supplement to oracle one. We will use CDI with the same example.</p>
+
+<ol>
+    <li>MailSessionBean Will be a CDI bean with RequestScope</li>
+    <li>Inject the full JavaMail Session as resource rather than create it</li>
+</ol>
+
+
+<p>```java
+@Named
+@RequestScoped
+public class EmailSessionBean {</p>
+
+<pre><code>@Resource(lookup = "EMailME")
+private Session mailSession;
+
+public void sendEmail(String to, String subject, String body) {
+    MimeMessage message = new MimeMessage(mailSession);
+    try {
+
+        message.setFrom(new InternetAddress(mailSession.getProperty("mail.from")));
+        InternetAddress[] address = {new InternetAddress(to)};
+        message.setRecipients(Message.RecipientType.TO, address);
+        message.setSubject(subject);
+        message.setSentDate(new Date());
+        message.setText(body);
+
+        Transport.send(message);
+    } catch (MessagingException ex) {
+        ex.printStackTrace();
+    }
+}
+</code></pre>
+
+<p>}
+```
+Look short !</p>
+
+<ol start="3"><li>EmailServlet remind the same except using @Inject rather than @EJB</li></ol>
+
+
+<p>```java
+@WebServlet(name = &ldquo;EmailServlet&rdquo;, urlPatterns = {&ldquo;/EmailServlet&rdquo;})
+public class EmailServlet extends HttpServlet {</p>
+
+<pre><code>@Inject
+private EmailSessionBean emailBean;
+
+protected void processRequest(HttpServletRequest request, HttpServletResponse response)
+        throws ServletException, IOException {
+</code></pre>
+
+<p> &hellip;&hellip;&hellip;
+   }
+ &hellip;&hellip;
+}
+```</p>
+
+<h2>Conclusion :</h2>
+
+
+<p>Let&rsquo;s EE Server manager MailSession for us, keep configuration on server and thanks to Glassfish administration console managing JavaMail Session became easier.</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[JAX-WS Header : Part 1 the Client Side]]></title>
+    <link href="http://ouertani.github.io/blog/2012/06/27/jax-ws-header-part-1-the-client-side/"/>
+    <updated>2012-06-27T03:32:00+02:00</updated>
+    <id>http://ouertani.github.io/blog/2012/06/27/jax-ws-header-part-1-the-client-side</id>
+    <content type="html"><![CDATA[<h2>Purpose</h2>
+
+
+<p>Manipulating JAXWS header on the client Side like adding WSS username token or logging saop message.</p>
+
+<h2>Introduction</h2>
+
+
+<p>On Telecom IT environment and specially middelware solution, we will rarely do all the work but rather delegate some of business process to other tiers. Web service communications is heavy used between solutions. This tutorial aims to introduce using handler on client side by adding WSS UserToken or logging the soap message on console.</p>
+
+<!-- more -->
+
+
+<h2>Adding undeclared custom header</h2>
+
+
+<p>Some Ws client needs to add a custom header which are not declared on WSDL. Adding WSS Username Token is like adding this XML snippet on header element:
+```xml
+&lt;soapenv:Header></p>
+
+<pre><code>  &lt;wsse:Security  xmlns:wsse="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd" xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd"&gt;
+     &lt;wsse:UsernameToken wsu:Id="UsernameToken-1"&gt;
+        &lt;wsse:Username&gt;login&lt;/wsse:Username&gt;
+        &lt;wsse:Password Type="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-username-token-profile-1.0#PasswordText"&gt;XXXX&lt;/wsse:Password&gt;        
+     &lt;/wsse:UsernameToken&gt;
+  &lt;/wsse:Security&gt;
+</code></pre>
+
+<p> &lt;/soapenv:Header>
+<code>
+Unlike &lt;a href="http://docs.oracle.com/javaee/5/api/javax/xml/ws/handler/LogicalHandler.html"&gt;LogicalHandler&lt;/a&gt; SOAPHandler have access to the entire Soap Message. Let's create an WSSUsernameTokenSecurityHandler Local Stateless Bean extending SOAPHandler to produce the previous header.
+Below the WSSUsernameTokenSecurityHandler class
+</code> java WSSUsernameTokenSecurityHandler.java
+package me.slim.ouertani;</p>
+
+<p>import java.util.Set;
+import java.util.TreeSet;
+import javax.annotation.Resource;
+import javax.ejb.LocalBean;
+import javax.ejb.Stateless;
+import javax.xml.namespace.QName;
+import javax.xml.soap.*;
+import javax.xml.ws.handler.MessageContext;
+import javax.xml.ws.handler.soap.SOAPHandler;
+import javax.xml.ws.handler.soap.SOAPMessageContext;</p>
+
+<p>@Stateless
+@LocalBean
+public class WSSUsernameTokenSecurityHandler implements SOAPHandler<SOAPMessageContext> {</p>
+
+<pre><code>@Resource(lookup = "login")
+private String login;
+@Resource(lookup = "pwd")
+private String pwd;
+
+public WSSUsernameTokenSecurityHandler() {
+}
+
+@Override
+public boolean handleMessage(SOAPMessageContext context) {
+
+    Boolean outboundProperty =
+            (Boolean) context.get(MessageContext.MESSAGE_OUTBOUND_PROPERTY);
+    if (outboundProperty.booleanValue()) {
+
+        try {
+            SOAPEnvelope envelope = context.getMessage().getSOAPPart().getEnvelope();
+            SOAPFactory factory = SOAPFactory.newInstance();
+            String prefix = "wsse";
+            String uri = "http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd";
+            SOAPElement securityElem =
+                    factory.createElement("Security", prefix, uri);
+            SOAPElement tokenElem =
+                    factory.createElement("UsernameToken", prefix, uri);
+            tokenElem.addAttribute(QName.valueOf("wsu:Id"), "UsernameToken-2");
+            tokenElem.addAttribute(QName.valueOf("xmlns:wsu"), "http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd");
+            SOAPElement userElem =
+                    factory.createElement("Username", prefix, uri);
+            userElem.addTextNode(login);
+            SOAPElement pwdElem =
+                    factory.createElement("Password", prefix, uri);
+            pwdElem.addTextNode(pwd);
+            pwdElem.addAttribute(QName.valueOf("Type"), "http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-username-token-profile-1.0#PasswordText");
+            tokenElem.addChildElement(userElem);
+            tokenElem.addChildElement(pwdElem);
+            securityElem.addChildElement(tokenElem);
+            SOAPHeader header = envelope.addHeader();
+            header.addChildElement(securityElem);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    } else {
+        // inbound
+    }
+    return true;
+}
+
+@Override
+public Set&lt;QName&gt; getHeaders() {
+    return new TreeSet();
+}
+
+@Override
+public boolean handleFault(SOAPMessageContext context) {
+    return false;
+}
+
+@Override
+public void close(MessageContext context) {
+    //
+}
+</code></pre>
+
+<p>}
+<code>
+Next, declare the StatelessBean and inject both Webservice via @WebServiceRef and WSSUsernameTokenSecurityHandler via @EJB. A callback init method will add a HandlerResolver to the service. Below the full implementation
+</code> java WebServiceClientBean.java
+@Stateless
+@LocalBean
+public class WebServiceClientBean {</p>
+
+<pre><code>@WebServiceRef()
+private WsService service;
+@EJB
+private WSSUsernameTokenSecurityHandler wSSUsernameTokenSecurityHandler;
+
+@PostConstruct
+private void init() {
+    service.setHandlerResolver( new HandlerResolver() {
+
+        @Override
+        public List&lt;Handler&gt; getHandlerChain(PortInfo portInfo) {
+            List&lt;Handler&gt; handlerList = new ArrayList&lt;Handler&gt;();
+            handlerList.add(wSSUsernameTokenSecurityHandler);
+            return handlerList;
+        }
+    });
+}
+</code></pre>
+
+<p>  public WsResponse getService(WsRequest wsRequest) {</p>
+
+<pre><code>    WsPort port = service.getPort();
+    return port.invoqueService(wsRequest);
+}
+</code></pre>
+
+<p>}
+```</p>
+
+<h2>Logging SOAP messages</h2>
+
+
+<p>Logging exchange xml message can be also using handlers, below the scala snippet handler used to log both in and out messages:
+``` scala RequestResponsePrinter.scala
+class RequestResponsePrinter  extends SOAPHandler[SOAPMessageContext] with LogHelper {</p>
+
+<p>override def getHeaders(): Set[QName] = {</p>
+
+<pre><code>return new TreeSet();
+</code></pre>
+
+<p>  }</p>
+
+<p>  override def handleMessage(context: SOAPMessageContext): Boolean = {</p>
+
+<pre><code>val sb = new ToStringBuilder(this).append("Call operation", "handleMessage");
+
+L.debug(sb);
+val outboundProperty = context.get(MessageContext.MESSAGE_OUTBOUND_PROPERTY).asInstanceOf[Boolean]
+
+
+  try {
+        val msg = context.getMessage()
+        val out = new ByteArrayOutputStream();
+        msg.writeTo(out);
+        val strMsg = new String(out.toByteArray());
+        L.debug("outbound  : "+outboundProperty.booleanValue()+" [" + strMsg + "]");
+
+  } catch {
+    case e: Exception =&gt;
+      L.error(sb.append("EXCEPTION", e.getMessage()), e);
+  }
+
+return true;
+</code></pre>
+
+<p>  }</p>
+
+<p>  override def handleFault(context: SOAPMessageContext): Boolean = {</p>
+
+<pre><code>return false;
+</code></pre>
+
+<p>  }</p>
+
+<p>  override def close(context: MessageContext) {</p>
+
+<pre><code>//
+</code></pre>
+
+<p>  }
+}
+```</p>
+
+<p>``` scala scala version of Handler resolver HandlerResolver.scala
+new HandlerResolver() {</p>
+
+<pre><code>  override def getHandlerChain(portInfo: PortInfo): java.util.List[javax.xml.ws.handler.Handler[_ &lt;: javax.xml.ws.handler.MessageContext]] = {
+    import scala.collection.mutable.ArrayBuffer
+    val handlerList = ArrayBuffer[Handler[_ &lt;: javax.xml.ws.handler.MessageContext]]()       
+    handlerList += new RequestResponsePrinter()
+    return handlerList
+
+  }
+};
+</code></pre>
+
+<p>```</p>
+
+<h2>Conclusion</h2>
+
+
+<p>We have heavily used handler on client side. On the server side things can change a bit, to be continued &hellip;</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[EE 6 Environmental Enterprise Entries and Glassfish]]></title>
+    <link href="http://ouertani.github.io/blog/2012/06/24/ee-6-environmental-enterprise-entries-and-glassfish/"/>
+    <updated>2012-06-24T02:55:00+02:00</updated>
+    <id>http://ouertani.github.io/blog/2012/06/24/ee-6-environmental-enterprise-entries-and-glassfish</id>
+    <content type="html"><![CDATA[<h2>PURPOSE</h2>
+
+
+<p>This tutorial is a supplement to the article of oracle published <a href="http://www.oracle.com/webfolder/technetwork/tutorials/obe/java/env_entry/env_entry.html.">here</a>. After reading <a href="http://www.oracle.com/webfolder/technetwork/tutorials/obe/java/env_entry/env_entry.html.">this later</a>, I decided to share some tips about this EE environment configuration.</p>
+
+<h2>INTRODUCTION</h2>
+
+
+<p>Two years ago, we decided to move to JEE 6 for our enterprise solutions and take a lot of fun with new EJB 3.1 features and annotations. Glassfish has made our lives easier, it was very easy to declare variables using it&rsquo;s administration console.</p>
+
+<!-- more -->
+
+
+<p>Less complicated than using <b>ejb-jar.xml</b> are two methods using Glassfish server and resources :</p>
+
+<h2>I- OLD FASHION WITH RESOURCE PER PARAM (SIMILAR TO ORACLE TUTORIAL) </h2>
+
+
+<ol>
+<li>Declare an EJB with toBeInjected resource :</li>
+```java
+import javax.annotation.Resource;
+import javax.ejb.Stateless;
+import javax.ejb.LocalBean;
+ 
+/**
+ *
+ * @author slim
+ */
+@Stateless
+@LocalBean
+public class MyEjbBean {
+  @Resource(lookup="resName")
+  protected String toBeInjected; 
+ 
+ 
+  ////
+   
+}
+```
+<li>Open admin console ( localhost:4848 by default ) -> Resources -> Custom Resources -> New -> and fill the informations as below</li>
+</ol>
+
+
+<p><img class="center" src="/images/jndiee1.jpg" width="640" height="424" title="&lsquo;JNDI EE&rsquo; &lsquo;images&rsquo;" ></p>
+
+<p>At first glance, it looks simple and fast forward but problems start after just after a first project.</p>
+
+<h3>Problems ! Why ?</h3>
+
+
+<p>We achieved more than 20 variables and some resource names begin to confuse them. I was very hard for our operations team to catch the name of the correct setting and update its value.
+It was necessary to group parameters resources into a single resource by project.</p>
+
+<h2>NEXT FASHION : GROUPING RESOURCES </h2>
+
+
+<p>In this section I will use scala (similar class can be translated easy to java).</p>
+
+<ol>
+<li>First of all, we need to create our single resource class as simple bean</li>
+
+```java
+package me.slim.ouertani
+class Ressource {
+  var param1 : String = _
+  var parma2 : String = _ 
+}
+```
+
+<li>Next, let's create a resource factory class :</li>
+</ol>
+
+
+<p>```java
+package me.slim.ouertani
+class RessourceFactory extends ObjectFactory {</p>
+
+<p>  override def getObjectInstance(obj: Object, name: javax.naming.Name, nameCtx: javax.naming.Context, environment: Hashtable[<em>, </em>]): Object = {</p>
+
+<pre><code>val ressource = new Ressource();
+val reference = obj.asInstanceOf[Reference];
+val attributes = reference.getAll();
+while (attributes.hasMoreElements()) {
+  val refAddr = attributes.nextElement().asInstanceOf[RefAddr];
+  init(ressource, refAddr.getType(), refAddr.getContent());
+}
+return ressource;
+</code></pre>
+
+<p>  }</p>
+
+<p>  private[this] def init(ressource: Ressource, tipe: String, content: Object) {</p>
+
+<pre><code>tipe match {  
+
+  case "param1" =&gt; ressource.param1 = content.toString()
+  case "param2" =&gt; ressource.param2 = content.toString()
+
+}
+</code></pre>
+
+<p>  }
+}
+```
+The purpose of object factory is to read injectable parameters and populate a resource class</p>
+
+<p><li>Back to Glassfish admininstration console, create a single resource ( see screenshot below) :</li></p>
+
+<ol>
+    <li>Jndi Name => the resource name to be used by project for example
+    <li>Resource Type => check second radio button, and fill the resource full name ( with package)
+    <li>Factory class => Our RessourceFactory class full name ( with package)
+    <li>Add two (or more) properties to be injected in our resource class.</ol>
+
+
+<p><img class="center" src="/images/jndiee2.jpg" width="640" height="424" title="&lsquo;JNDI EE&rsquo; &lsquo;images&rsquo;" ></p>
+
+<p><li>At the end we inject our resource in EJB class :</li></p>
+
+<p>```java
+@Stateless
+@LocalBean
+class MyEjbBean {
+  @Resource(lookup=&ldquo;globalRes&rdquo;)
+  protected var res:Ressource= _</p>
+
+<p>  /// res.param1
+}
+```</p>
+
+<h2>CONCLUSION</h2>
+
+
+<p>Having a single resource per project facilitates business management and thanks to Glassfish administration console managing JNDI became easier.</p>
+]]></content>
+  </entry>
+  
+</feed>
