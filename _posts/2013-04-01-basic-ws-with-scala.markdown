@@ -10,7 +10,7 @@ description: JAX-WS using scala and sbt
 I recently had a chance to work on building SOA platforme using JEE 6 and Scala language. I will share here some snippets my be helpfull to start publishing web services using Scala, Sbt and JAX-WS.
 Consider the example to calculate the quotient and remainder using euclidean algorithm. Not very complexe if the inputs are positives numbers.
 <!-- more -->
-<h2>I- Sbt</h2>
+## I- Sbt
 
 Let’s create an sbt projet and add required dependencies
 <blockquote>
@@ -52,18 +52,21 @@ We will use a single Euclide.scala file for all class this will be easier for vi
 <li>Create a Request Class and don’t forget :</li>
 	<ol>
 	<li>default constructor</li>
-	<li>field access annotation</li></ol>
+	<li>field access annotation</li>
+	</ol>
+</ol>
 ```scala
 @XmlAccessorType(XmlAccessType.FIELD)
 case class Request(a : Int, b : Int ){ def this(){this(0,0)}}
 ```
-<li>Create a Response Class</li>
+<ol>
+<li>Create a Response Class</li></ol>
 ```scala
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "output")
 case class Response (c: Int, d: Int){ def this(){this(0,0)}}
 ```
-<li>Why not to create an exception class to handle exceptions like b is equal to 0</li>
+- Why not to create an exception class to handle exceptions like b is equal to 0
 ```scala
 @XmlAccessorType(XmlAccessType.FIELD)
 case class ResponseException(why : String){  def this(){this("")}}
@@ -73,7 +76,7 @@ case class FaultResponse(@BeanProperty faultInfo : ResponseException) extends Ex
 ```
 Don’t forget to add BeanProperty annotation to faultInfo input !
 
-<li>Let’s add an interceptor to log all ws method call</li>
+- Let’s add an interceptor to log all ws method call
 
 ```scala
 object TracingInterceptor{
@@ -99,7 +102,7 @@ class TracingInterceptor {
   }
 }
 ```
-<li>The WS class and it’s divide method using intercpetor and stateless EJB 3.1</li>
+- The WS class and it’s divide method using intercpetor and stateless EJB 3.1
 ```scala
 @WebService(serviceName = "Euclide", targetNamespace = "http://slim.ouertani.me/")
 @Stateless()
@@ -113,8 +116,8 @@ class Euclide {
     }
 }
 ```
-<li>Don’t forget package , imports at the head of file and it’s all :</li>
-</ol>
+- Don’t forget package , imports at the head of file and it’s all :
+
 ```scala
 package me.ouertani.scala.ws
 
