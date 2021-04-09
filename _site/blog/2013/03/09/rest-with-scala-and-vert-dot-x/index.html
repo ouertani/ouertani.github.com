@@ -289,46 +289,47 @@
 
 <h4 id="scala---using-string-interpolation">Scala : ( Using <a href="http://docs.scala-lang.org/overviews/core/string-interpolation.html">String interpolation</a>)</h4>
 
-<p>```	scala	SampleResticle.scala				
-class SampleResticle extends Resticle
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>class SampleResticle extends Resticle
 {
   override def handles =
-         { GET(“/hello”)      :&gt;  OK( _ =&gt; “world “) } ++
-         { DELETE(“/posts”)   :&gt;  Unauthorized {_ =&gt; “Not allowed user” }} ++
-         { POST(“/:blogname”) :&gt;  OK {req  =&gt; val param = req.params().get(“blogname”) ; s”post $param received !” } }
-}</p>
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>#### Java
-
+         { GET("/hello")      :&gt;  OK( _ =&gt; "world ") } ++
+         { DELETE("/posts")   :&gt;  Unauthorized {_ =&gt; "Not allowed user" }} ++
+         { POST("/:blogname") :&gt;  OK {req  =&gt; val param = req.params().get("blogname") ; s"post $param received !" } }
+}
 </code></pre></div></div>
-<p>public class SampleResticle extends Verticle {</p>
+<h4 id="java-2">Java</h4>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>public void start() {
-    HttpServer server = vertx.createHttpServer();
-    RouteMatcher routeMatcher = new RouteMatcher();
-    routeMatcher.get("/hello", new Handler&lt;HttpServerRequest&gt;() {
-        public void handle(HttpServerRequest req) {
-            req.response.statusCode =200;
-            req.response.end("world");
-        }
-    });
-     routeMatcher.delete("/posts", new Handler&lt;HttpServerRequest&gt;() {
-        public void handle(HttpServerRequest req) {
-            req.response.statusCode =401;
-            req.response.end("Not allowed user");
-        }
-    });
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>public class SampleResticle extends Verticle {
 
-     routeMatcher.post("/:blogname", new Handler&lt;HttpServerRequest&gt;() {
-        public void handle(HttpServerRequest req) {
-            req.response.statusCode =200;
-            String blogName = req.params().get("blogname");
-            req.response.end("post "+blogName+ " received !");
-        }
-    });
+    public void start() {
+        HttpServer server = vertx.createHttpServer();
+        RouteMatcher routeMatcher = new RouteMatcher();
+        routeMatcher.get("/hello", new Handler&lt;HttpServerRequest&gt;() {
+            public void handle(HttpServerRequest req) {
+                req.response.statusCode =200;
+                req.response.end("world");
+            }
+        });
+         routeMatcher.delete("/posts", new Handler&lt;HttpServerRequest&gt;() {
+            public void handle(HttpServerRequest req) {
+                req.response.statusCode =401;
+                req.response.end("Not allowed user");
+            }
+        });
 
-    server.requestHandler(routeMatcher).listen(8080, "localhost");
-} } ``` ## V- Json
+         routeMatcher.post("/:blogname", new Handler&lt;HttpServerRequest&gt;() {
+            public void handle(HttpServerRequest req) {
+                req.response.statusCode =200;
+                String blogName = req.params().get("blogname");
+                req.response.end("post "+blogName+ " received !");
+            }
+        });
+
+        server.requestHandler(routeMatcher).listen(8080, "localhost");
+    }
+}
 </code></pre></div></div>
+<h2 id="v--json">V- Json</h2>
 
 <p>Let’s assume we have a Blog class with two String fields title and content :</p>
 
@@ -364,7 +365,7 @@ The java equivalent has been relocated to the end of the document due to its ver
          { GET("/:id")        :&gt;  OK ( _ =&gt; Blog("rest","scala &amp; vertx"))}
 }
 </code></pre></div></div>
-<h4 id="java-2">Java</h4>
+<h4 id="java-3">Java</h4>
 
 <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>public class SampleResticle extends Verticle {
 

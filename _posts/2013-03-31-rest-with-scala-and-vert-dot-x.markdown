@@ -119,7 +119,7 @@ Vert.x <a href="http://vertx.io/core_manual_java.html#routing-http-requests-with
 
 #### Scala : ( Using <a href="http://docs.scala-lang.org/overviews/core/string-interpolation.html">String interpolation</a>)
 
-```	scala	SampleResticle.scala				
+```			
 class SampleResticle extends Resticle
 {
   override def handles =
