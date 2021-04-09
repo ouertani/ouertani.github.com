@@ -29,16 +29,16 @@ Web Socket are HTML 5 feature providing full-duplex communications. For old brow
 
 In order to run the following example check out : <a href="https://github.com/ouertani/vert.x/blob/master/vertx-examples/src/main/javascript/websockets/ws.html">https://github.com/ouertani/vert.x/blob/master/vertx-examples/src/main/javascript/websockets/ws.html</a> and save it into the compiled lib directory
 
-<h4>Java</h4>
-```	java SampleWebSocket.java
+#### Java
+```
 import org.vertx.java.core.Handler;
 import org.vertx.java.core.buffer.Buffer;
 import org.vertx.java.core.http.HttpServerRequest;
 import org.vertx.java.core.http.ServerWebSocket;
 import org.vertx.java.deploy.Verticle;
- 
+
 public class SampleWebSocket extends Verticle {
- 
+
   public void start() {
     vertx.createHttpServer().websocketHandler(new Handler<ServerWebSocket>() {
       public void handle(final ServerWebSocket ws) {
@@ -61,15 +61,15 @@ public class SampleWebSocket extends Verticle {
 }
 ```
 <h4>Scala</h4>
-```	scala SampleWebSocket.scala
+```
 import org.vertx.java.core.buffer.Buffer;
 import org.vertx.java.core.http.HttpServerRequest;
 import org.vertx.java.core.http.ServerWebSocket;
 import org.vertx.scala.deploy.Verticle
 import org.vertx.scala.core._
- 
-class SampleWebSocket extends Verticle ( 
-  _.getVertx().createHttpServer().websocketHandler{ 
+
+class SampleWebSocket extends Verticle (
+  _.getVertx().createHttpServer().websocketHandler{
      ws:ServerWebSocket => ws.path match {
         case "/myapp" => ws.dataHandler{data : Buffer =>   ws.writeTextFrame(data.toString())}
         case _ => ws.reject();
@@ -85,16 +85,16 @@ Vert.x allows you to easily write full featured, highly performant and scalable 
 The following example starts up an Http server, listening on port 8080, and logging all received requests.
 
 <h4>Java</h4>
-```	java SampleHttpWebServer.java
+```
 import org.vertx.java.core.Handler;
 import org.vertx.java.core.http.HttpServer;
 import org.vertx.java.core.http.HttpServerRequest;
 import org.vertx.java.core.logging.Logger;
 import org.vertx.java.deploy.Verticle;
- 
- 
+
+
 public class SampleHttpWebServer extends Verticle {
- 
+
     public void start() {
         HttpServer server = vertx.createHttpServer();
         final Logger log = getContainer().getLogger();
@@ -107,13 +107,13 @@ public class SampleHttpWebServer extends Verticle {
 }
 ```
 <h4>Scala</h4>
-```	scala SampleWebServer.scala
+```
 import org.vertx.java.core.http. { HttpServerRequest => JHttpServerRequest}
 import org.vertx.scala.deploy.Verticle
 import org.vertx.scala.core._
- 
-class SampleWebServer extends Verticle ( x => 
-  x.getVertx().createHttpServer().withRequestHandler{_ : JHttpServerRequest => 
+
+class SampleWebServer extends Verticle ( x =>
+  x.getVertx().createHttpServer().withRequestHandler{_ : JHttpServerRequest =>
      x.info("A request has arrived on the server!")}
 .listen(8080, "localhost")
 )()
@@ -130,30 +130,30 @@ import org.vertx.java.core.http.HttpClientRequest;
 import org.vertx.java.core.http.HttpClientResponse;
 import org.vertx.java.core.logging.Logger;
 import org.vertx.java.deploy.Verticle;
- 
- 
+
+
 public class SampleHttpClient extends Verticle {
- 
+
     @Override
     public void start() throws Exception {
         HttpClient client = vertx.createHttpClient().setHost("127.0.0.1");
         final Logger log = getContainer().getLogger();
- 
+
         HttpClientRequest request = client.post("/some-path/", new Handler<HttpClientResponse>() {
             public void handle(HttpClientResponse resp) {
                 log.info("Got a response: ");
             }
         });
- 
+
         request.end();
     }
 }
 ```
 <h4>Scala</h4>
-```	scala SampleWebClient.scala
+```
 import org.vertx.scala.deploy.Verticle
 import org.vertx.scala.core._
- 
+
 class SampleWebClient extends Verticle (v =>
    v.getVertx.createHttpClient().setHost("127.0.0.1").setPort(8080)
    .andGetNow("/") {_ => v.info("Got a response: " )}
@@ -164,10 +164,10 @@ class SampleWebClient extends Verticle (v =>
 The event bus is like a vertebral spine, it can be used to connect distributed nodes, and to support interaction between different Verticles, even written in different languages.
 
 <h4>Java</h4>
-```	java SampleEventBus.java
+```
 import org.vertx.java.deploy.Verticle;
 import org.vertx.java.core.eventbus.EventBus;
- 
+
 public class SampleEventBus extends Verticle {
    @Override
     public void start() throws Exception {
@@ -178,14 +178,14 @@ public class SampleEventBus extends Verticle {
 }
 ```
 <h4>Scala</h4>
-```	scala SampleEventBus.scala
+```
 import org.vertx.scala.deploy.Verticle
 import org.vertx.scala.core._
-class SampleEventBus extends Verticle ( x => { 
+class SampleEventBus extends Verticle ( x => {
  val  point = x ! ("path")
- point >> ("ping 1") 
- point >> ("ping 2") 
-} 
+ point >> ("ping 1")
+ point >> ("ping 2")
+}
 )()
 ```
 <h2>Conclusion</h2>
