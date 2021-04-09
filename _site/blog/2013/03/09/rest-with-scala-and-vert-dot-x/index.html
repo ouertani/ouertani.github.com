@@ -195,14 +195,14 @@
 
 <ul>
 <li>RestHandler : Action =&gt; Response</li>
-<li><ul>Action :
+<li>Action :</li><ul>
 <li>GET(pattern : String)</li>
 <li>POST (pattern : String)</li>
 <li>PUT (pattern : String)</li>
 <li>DELETE(pattern : String)</li>
 <li>HEAD (pattern : String)</li>
 <li>ALL(pattern : String)</li>
-</ul></li>
+</ul>
 <li>Response : HttpServerRequest =&gt; Any</li>
 <li>OK, Unauthorized,....</li>
 </ul>
@@ -217,16 +217,16 @@
 <li>GET : /hello → code : 200 , body : world</li>
 <h4>Scala</h4>
 
-<p>```	scala	SampleResticle.scala	
-class SampleResticle extends Resticle 
+<p>```	scala	SampleResticle.scala
+class SampleResticle extends Resticle
 {
-  override def handles = 
+  override def handles =
          { GET(“/hello”)      :&gt;  OK( _ =&gt; “world “) }
 }</p>
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&lt;h4&gt;Java&lt;/h4&gt;	
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&lt;h4&gt;Java&lt;/h4&gt;
 ```	java	SampleResticle.java			
 public class SampleResticle extends Verticle {
- 
+
     public void start() {
         HttpServer server = vertx.createHttpServer();
         RouteMatcher routeMatcher = new RouteMatcher();
@@ -249,17 +249,17 @@ public class SampleResticle extends Verticle {
 <h4>Scala</h4>
 
 <p>```	scala	SampleResticle.scala				
-class SampleResticle extends Resticle 
+class SampleResticle extends Resticle
 {
-  override def handles = 
+  override def handles =
          { GET(“/hello”)      :&gt;  OK( _ =&gt; “world “) } ++
-         { DELETE(“/posts”)   :&gt;  Unauthorized {_ =&gt; “Not allowed user” }} 
+         { DELETE(“/posts”)   :&gt;  Unauthorized {_ =&gt; “Not allowed user” }}
 }</p>
 <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&lt;h4&gt;java&lt;/h4&gt;
 
 ```	java	SampleResticle.java				
 public class SampleResticle extends Verticle {
- 
+
     public void start() {
         HttpServer server = vertx.createHttpServer();
         RouteMatcher routeMatcher = new RouteMatcher();
@@ -290,9 +290,9 @@ public class SampleResticle extends Verticle {
 <h4>Scala : ( Using <a href="http://docs.scala-lang.org/overviews/core/string-interpolation.html">String interpolation</a>)</h4>
 
 <p>```	scala	SampleResticle.scala				
-class SampleResticle extends Resticle 
+class SampleResticle extends Resticle
 {
-  override def handles = 
+  override def handles =
          { GET(“/hello”)      :&gt;  OK( _ =&gt; “world “) } ++
          { DELETE(“/posts”)   :&gt;  Unauthorized {_ =&gt; “Not allowed user” }} ++
          { POST(“/:blogname”) :&gt;  OK {req  =&gt; val param = req.params().get(“blogname”) ; s”post $param received !” } }
@@ -301,7 +301,7 @@ class SampleResticle extends Resticle
 
 ```	java	SampleResticle.java				
 public class SampleResticle extends Verticle {
- 
+
     public void start() {
         HttpServer server = vertx.createHttpServer();
         RouteMatcher routeMatcher = new RouteMatcher();
@@ -317,7 +317,7 @@ public class SampleResticle extends Verticle {
                 req.response.end("Not allowed user");
             }
         });
- 
+
          routeMatcher.post("/:blogname", new Handler&lt;HttpServerRequest&gt;() {
             public void handle(HttpServerRequest req) {
                 req.response.statusCode =200;
@@ -325,7 +325,7 @@ public class SampleResticle extends Verticle {
                 req.response.end("post "+blogName+ " received !");
             }
         });
- 
+
         server.requestHandler(routeMatcher).listen(8080, "localhost");
     }
 }
@@ -340,7 +340,7 @@ The java equivalent has been relocated to the end of the document due to its ver
 <p>Publishing an object using Resticle is simple and transparent due to implicit convertor : T =&gt; Buffer.</p>
 
 <h4>Scala ( Type Class)</h4>
-<p>```	scala	Blog.scala	
+<p>```	scala	Blog.scala
 object Blog {
   implicit def toBuffer(blog : Blog):Buffer = JsonObject.withString(“title” -&gt; blog.title).withString(“content” -&gt; blog.content)
 }</p>
@@ -350,7 +350,7 @@ object Blog {
 public class Convertor {
     public static  JsonObject toJson(Blog blog) {
        return new JsonObject().putString("title", blog.getTitle()).putString("content", blog.getContent());
-    } 
+    }
 }
 </code></pre></div></div>
 <li>GET : /hello → code : 200 , body : world</li>
@@ -360,9 +360,9 @@ public class Convertor {
 <h4>Scala</h4>
 
 <p>```	scala	SampleResticle.scala				
-class SampleResticle extends Resticle 
+class SampleResticle extends Resticle
 {
-  override def handles = 
+  override def handles =
          { GET(“/hello”)      :&gt;  OK( _ =&gt; “world “) } ++
          { DELETE(“/posts”)   :&gt;  Unauthorized {_ =&gt; “Not allowed user” }} ++
          { POST(“/:blogname”) :&gt;  OK {req  =&gt; val param = req.params().get(“blogname”) ; s”post $param received !” } } ++
@@ -372,7 +372,7 @@ class SampleResticle extends Resticle
 
 ```	java	SampleResticle.java				
 public class SampleResticle extends Verticle {
- 
+
     public void start() {
         HttpServer server = vertx.createHttpServer();
         RouteMatcher routeMatcher = new RouteMatcher();
@@ -388,7 +388,7 @@ public class SampleResticle extends Verticle {
                 req.response.end("Not allowed user");
             }
         });
- 
+
          routeMatcher.post("/:blogname", new Handler&lt;HttpServerRequest&gt;() {
             public void handle(HttpServerRequest req) {
                 req.response.statusCode =200;
@@ -396,7 +396,7 @@ public class SampleResticle extends Verticle {
                 req.response.end("post "+blogName+ " received !");
             }
         });
- 
+
         routeMatcher.get("/:id", new Handler&lt;HttpServerRequest&gt;() {
             public void handle(HttpServerRequest req) {
                 req.response.statusCode =200;
@@ -405,7 +405,7 @@ public class SampleResticle extends Verticle {
                 req.response.end(obj.encode());
             }
         });
- 
+
         server.requestHandler(routeMatcher).listen(8080, "localhost");
     }
 }
@@ -417,16 +417,16 @@ public class Blog {</p>
 
 <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>private final  String title;
 private final String content;
- 
+
 public Blog(String title, String content) {
     this.title = title;
     this.content = content;
 }
- 
+
 public String getTitle() {
     return title;
 }
- 
+
 public String getContent() {
     return content;
 }   } ```
