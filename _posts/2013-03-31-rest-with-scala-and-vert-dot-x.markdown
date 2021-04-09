@@ -117,7 +117,7 @@ Vert.x <a href="http://vertx.io/core_manual_java.html#routing-http-requests-with
 <li>POST : /:blogname → code : 200 , body : post {blogname} received !</li>
 
 
-#### Scala : ( Using <a href="http://docs.scala-lang.org/overviews/core/string-interpolation.html">String interpolation</a>)
+#### Scala : ( Using [String interpolation](http://docs.scala-lang.org/overviews/core/string-interpolation.html))
 
 ```			
 class SampleResticle extends Resticle
@@ -128,6 +128,7 @@ class SampleResticle extends Resticle
          { POST("/:blogname") :>  OK {req  => val param = req.params().get("blogname") ; s"post $param received !" } }
 }
 ```
+
 #### Java
 
 ```
