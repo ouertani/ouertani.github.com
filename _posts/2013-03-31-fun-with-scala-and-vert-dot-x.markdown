@@ -30,6 +30,7 @@ Web Socket are HTML 5 feature providing full-duplex communications. For old brow
 In order to run the following example check out : <a href="https://github.com/ouertani/vert.x/blob/master/vertx-examples/src/main/javascript/websockets/ws.html">https://github.com/ouertani/vert.x/blob/master/vertx-examples/src/main/javascript/websockets/ws.html</a> and save it into the compiled lib directory
 
 #### Java
+
 ```
 import org.vertx.java.core.Handler;
 import org.vertx.java.core.buffer.Buffer;
