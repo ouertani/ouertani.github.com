@@ -244,6 +244,7 @@ public class SampleResticle extends Verticle {
     }
 }
 ```
+
 #### Java Blog
 
 ``` 		
