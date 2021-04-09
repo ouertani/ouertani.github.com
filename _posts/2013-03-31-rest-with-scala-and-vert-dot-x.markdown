@@ -40,7 +40,7 @@ Vert.x provides a powerful routing and <a href="http://vertx.io/core_manual_java
 In Hello World snippet, let us publish a static GET service :
 
 <li>GET : /hello → code : 200 , body : world</li>
-<h4>Scala</h4>
+#### Scala
 
 SampleResticle.scala
 ```
@@ -50,7 +50,7 @@ class SampleResticle extends Resticle
          { GET("/hello")      :>  OK( _ => "world ") }
 }
 ```
-<h4>Java</h4>
+#### Java
 ```	java	SampleResticle.java			
 public class SampleResticle extends Verticle {
 
@@ -83,7 +83,7 @@ class SampleResticle extends Resticle
          { DELETE("/posts")   :>  Unauthorized {_ => "Not allowed user" }}
 }
 ```
-<h4>java</h4>
+#### Java
 
 ```	java	SampleResticle.java				
 public class SampleResticle extends Verticle {
@@ -107,7 +107,7 @@ public class SampleResticle extends Verticle {
     }
 }
 ```
-<h2>IV - Value path</h2>
+## IV - Value path
 
 Vert.x <a href="http://vertx.io/core_manual_java.html#routing-http-requests-with-pattern-matching">pattern matching</a> lets you extract values from the path and use them as parameters in the request.
 
@@ -116,7 +116,7 @@ Vert.x <a href="http://vertx.io/core_manual_java.html#routing-http-requests-with
 <li>POST : /:blogname → code : 200 , body : post {blogname} received !</li>
 
 
-<h4>Scala : ( Using <a href="http://docs.scala-lang.org/overviews/core/string-interpolation.html">String interpolation</a>)</h4>
+#### Scala : ( Using <a href="http://docs.scala-lang.org/overviews/core/string-interpolation.html">String interpolation</a>)
 
 ```	scala	SampleResticle.scala				
 class SampleResticle extends Resticle
@@ -127,7 +127,7 @@ class SampleResticle extends Resticle
          { POST("/:blogname") :>  OK {req  => val param = req.params().get("blogname") ; s"post $param received !" } }
 }
 ```
-<h4>Java</h4>
+#### Java
 
 ```	java	SampleResticle.java				
 public class SampleResticle extends Verticle {
@@ -176,7 +176,7 @@ object Blog {
   implicit def toBuffer(blog : Blog):Buffer = JsonObject.withString("title" -> blog.title).withString("content" -> blog.content)
 }
 ```
-<h4>Java ( with explicit convertor )</h4>
+#### Java ( with explicit convertor )
 
 ```	java	Convertor.java				
 public class Convertor {
@@ -201,7 +201,7 @@ class SampleResticle extends Resticle
          { GET("/:id")        :>  OK ( _ => Blog("rest","scala & vertx"))}
 }
 ```
-<h4>Java</h4>
+#### Java
 
 ```	java	SampleResticle.java				
 public class SampleResticle extends Verticle {
@@ -265,6 +265,6 @@ public class Blog {
     }
   }
 ```
-<h2>Conclusion</h2>
+## Conclusion 
 
 Despite the fact that Resticle is in first development step, Rest support is by far simpler and elegant in scala than in java. As described in first tutorial Vert.x java version is burdened with a frightening number of handlers. Will Vert.x 2.0 address this point using <a href="https://github.com/vert-x/vert.x/wiki/Vert.x-2.0-plan">Promises/Deferred APIs </a>?
