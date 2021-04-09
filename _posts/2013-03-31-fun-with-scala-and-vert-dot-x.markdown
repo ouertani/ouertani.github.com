@@ -179,7 +179,7 @@ public class SampleEventBus extends Verticle {
 }
 ```
 <h4>Scala</h4>
-```
+```scala
 import org.vertx.scala.deploy.Verticle
 import org.vertx.scala.core._
 class SampleEventBus extends Verticle ( x => {

@@ -347,14 +347,14 @@ public class SampleEventBus extends Verticle {
 }
 </code></pre></div></div>
 <h4>Scala</h4>
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>import org.vertx.scala.deploy.Verticle
-import org.vertx.scala.core._
-class SampleEventBus extends Verticle ( x =&gt; {
- val  point = x ! ("path")
- point &gt;&gt; ("ping 1")
- point &gt;&gt; ("ping 2")
-}
-)()
+<div class="language-scala highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">import</span> <span class="nn">org.vertx.scala.deploy.Verticle</span>
+<span class="k">import</span> <span class="nn">org.vertx.scala.core._</span>
+<span class="k">class</span> <span class="nc">SampleEventBus</span> <span class="k">extends</span> <span class="nc">Verticle</span> <span class="o">(</span> <span class="n">x</span> <span class="k">=&gt;</span> <span class="o">{</span>
+ <span class="k">val</span>  <span class="nv">point</span> <span class="k">=</span> <span class="n">x</span> <span class="o">!</span> <span class="o">(</span><span class="s">"path"</span><span class="o">)</span>
+ <span class="n">point</span> <span class="o">&gt;&gt;</span> <span class="o">(</span><span class="s">"ping 1"</span><span class="o">)</span>
+ <span class="n">point</span> <span class="o">&gt;&gt;</span> <span class="o">(</span><span class="s">"ping 2"</span><span class="o">)</span>
+<span class="o">}</span>
+<span class="o">)()</span>
 </code></pre></div></div>
 <h2>Conclusion</h2>
 
