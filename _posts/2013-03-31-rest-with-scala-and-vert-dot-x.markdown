@@ -43,7 +43,7 @@ In Hello World snippet, let us publish a static GET service :
 #### Scala
 
 SampleResticle.scala
-```
+```scala
 class SampleResticle extends Resticle
 {
   override def handles =
@@ -52,7 +52,7 @@ class SampleResticle extends Resticle
 ```
 #### Java
 
-```		
+```	java
 public class SampleResticle extends Verticle {
 
     public void start() {
@@ -76,7 +76,7 @@ Using Resticle we can chain handlers quit easily. The following snippets create 
 <li>DELETE : /posts → code : 401 , body : Not allowed user</li>
 #### Scala
 
-```			
+```	scala		
 class SampleResticle extends Resticle
 {
   override def handles =
@@ -86,7 +86,7 @@ class SampleResticle extends Resticle
 ```
 #### Java
 
-```				
+```	java			
 public class SampleResticle extends Verticle {
 
     public void start() {
@@ -119,7 +119,7 @@ Vert.x <a href="http://vertx.io/core_manual_java.html#routing-http-requests-with
 
 #### Scala : ( Using [String interpolation](http://docs.scala-lang.org/overviews/core/string-interpolation.html))
 
-```			
+```	scala		
 class SampleResticle extends Resticle
 {
   override def handles =
@@ -131,7 +131,7 @@ class SampleResticle extends Resticle
 
 #### Java
 
-```
+```java
 public class SampleResticle extends Verticle {
 
     public void start() {
@@ -173,14 +173,14 @@ The java equivalent has been relocated to the end of the document due to its ver
 Publishing an object using Resticle is simple and transparent due to implicit convertor : T => Buffer.
 
 #### Scala ( Type Class)
-```
+```scala
 object Blog {
   implicit def toBuffer(blog : Blog):Buffer = JsonObject.withString("title" -> blog.title).withString("content" -> blog.content)
 }
 ```
 #### Java ( with explicit convertor )
 
-```		
+```java
 public class Convertor {
     public static  JsonObject toJson(Blog blog) {
        return new JsonObject().putString("title", blog.getTitle()).putString("content", blog.getContent());
@@ -192,7 +192,7 @@ public class Convertor {
 <li>POST : /:blogname → code : 200 , body : post {blogname} received !</li>
 <li>GET : /:id → code : 200 , body : {"title":"rest","content":"scala & vertx"}</li>
 #### Scala
-```			
+```scala		
 class SampleResticle extends Resticle
 {
   override def handles =
@@ -204,7 +204,7 @@ class SampleResticle extends Resticle
 ```
 #### Java
 
-``` 		
+```java 		
 public class SampleResticle extends Verticle {
 
     public void start() {
@@ -247,7 +247,7 @@ public class SampleResticle extends Verticle {
 
 #### Java Blog
 
-``` 		
+```java 		
 public class Blog {
 
     private final  String title;
