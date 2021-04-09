@@ -296,29 +296,29 @@ class SampleWebServer extends Verticle ( x =&gt;
 
 <h4 id="java-1">Java</h4>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>import org.vertx.java.core.Handler;
-import org.vertx.java.core.http.HttpClient;
-import org.vertx.java.core.http.HttpClientRequest;
-import org.vertx.java.core.http.HttpClientResponse;
-import org.vertx.java.core.logging.Logger;
-import org.vertx.java.deploy.Verticle;
+<div class="language-scala highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">import</span> <span class="nn">org.vertx.java.core.Handler</span><span class="o">;</span>
+<span class="k">import</span> <span class="nn">org.vertx.java.core.http.HttpClient</span><span class="o">;</span>
+<span class="k">import</span> <span class="nn">org.vertx.java.core.http.HttpClientRequest</span><span class="o">;</span>
+<span class="k">import</span> <span class="nn">org.vertx.java.core.http.HttpClientResponse</span><span class="o">;</span>
+<span class="k">import</span> <span class="nn">org.vertx.java.core.logging.Logger</span><span class="o">;</span>
+<span class="k">import</span> <span class="nn">org.vertx.java.deploy.Verticle</span><span class="o">;</span>
 
-public class SampleHttpClient extends Verticle {
+<span class="n">public</span> <span class="k">class</span> <span class="nc">SampleHttpClient</span> <span class="k">extends</span> <span class="nc">Verticle</span> <span class="o">{</span>
 
-    @Override
-    public void start() throws Exception {
-        HttpClient client = vertx.createHttpClient().setHost("127.0.0.1");
-        final Logger log = getContainer().getLogger();
+    <span class="nd">@Override</span>
+    <span class="n">public</span> <span class="n">void</span> <span class="nf">start</span><span class="o">()</span> <span class="n">throws</span> <span class="nc">Exception</span> <span class="o">{</span>
+        <span class="nc">HttpClient</span> <span class="n">client</span> <span class="k">=</span> <span class="nv">vertx</span><span class="o">.</span><span class="py">createHttpClient</span><span class="o">().</span><span class="py">setHost</span><span class="o">(</span><span class="s">"127.0.0.1"</span><span class="o">);</span>
+        <span class="k">final</span> <span class="nc">Logger</span> <span class="n">log</span> <span class="k">=</span> <span class="nf">getContainer</span><span class="o">().</span><span class="py">getLogger</span><span class="o">();</span>
 
-        HttpClientRequest request = client.post("/some-path/", new Handler&lt;HttpClientResponse&gt;() {
-            public void handle(HttpClientResponse resp) {
-                log.info("Got a response: ");
-            }
-        });
+        <span class="nc">HttpClientRequest</span> <span class="n">request</span> <span class="k">=</span> <span class="nv">client</span><span class="o">.</span><span class="py">post</span><span class="o">(</span><span class="s">"/some-path/"</span><span class="o">,</span> <span class="k">new</span> <span class="nc">Handler</span><span class="o">&lt;</span><span class="nc">HttpClientResponse</span><span class="o">&gt;()</span> <span class="o">{</span>
+            <span class="n">public</span> <span class="n">void</span> <span class="nf">handle</span><span class="o">(</span><span class="nc">HttpClientResponse</span> <span class="n">resp</span><span class="o">)</span> <span class="o">{</span>
+                <span class="nv">log</span><span class="o">.</span><span class="py">info</span><span class="o">(</span><span class="s">"Got a response: "</span><span class="o">);</span>
+            <span class="o">}</span>
+        <span class="o">});</span>
 
-        request.end();
-    }
-}
+        <span class="nv">request</span><span class="o">.</span><span class="py">end</span><span class="o">();</span>
+    <span class="o">}</span>
+<span class="o">}</span>
 </code></pre></div></div>
 <h4>Scala</h4>
 <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>import org.vertx.scala.deploy.Verticle

@@ -125,7 +125,7 @@ Vert.x also provides an HttpClient API, so as to interact with the server part. 
 
 #### Java
 
-```
+```scala
 import org.vertx.java.core.Handler;
 import org.vertx.java.core.http.HttpClient;
 import org.vertx.java.core.http.HttpClientRequest;

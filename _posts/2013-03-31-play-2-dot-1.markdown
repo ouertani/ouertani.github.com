@@ -321,7 +321,7 @@ The syntax of the query demonstrates the power of Slick type-safe query language
 
 
 ## References:
-<li>Slick: [http://slick.typesafe.com](http://slick.typesafe.com) </li>
-<li>Playframework:  [http://www.playframework.org](http://www.playframework.org) , [https://github.com/playframework/Play20](https://github.com/playframework/Play20) </li>
-<li>Scala: [http://www.scala-lang.org/downloads](http://www.scala-lang.org/downloads)</li>
-<li>Squeryl + Playframework + Scala: [http://www.artima.com/articles/play2_scala_squeryl.html](http://www.artima.com/articles/play2_scala_squeryl.html)</li>
+- Slick: [http://slick.typesafe.com](http://slick.typesafe.com) 
+- Playframework:  [http://www.playframework.org](http://www.playframework.org) , [https://github.com/playframework/Play20](https://github.com/playframework/Play20)  
+- Scala: [http://www.scala-lang.org/downloads](http://www.scala-lang.org/downloads)
+- Squeryl + Playframework + Scala: [http://www.artima.com/articles/play2_scala_squeryl.html](http://www.artima.com/articles/play2_scala_squeryl.html)
