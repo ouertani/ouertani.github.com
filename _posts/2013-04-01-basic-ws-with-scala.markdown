@@ -50,20 +50,20 @@ That’a all for project configuration.
 We will use a single Euclide.scala file for all class this will be easier for visibility
 
 - Create a Request Class and don’t forget :
-	- default constructor
-	- field access annotation
+1. default constructor
+2. field access annotation
 
 ```scala
 @XmlAccessorType(XmlAccessType.FIELD)
 case class Request(a : Int, b : Int ){ def this(){this(0,0)}}
 ```
-- Create a Response Class
+3. Create a Response Class
 ```scala
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "output")
 case class Response (c: Int, d: Int){ def this(){this(0,0)}}
 ```
-- Why not to create an exception class to handle exceptions like b is equal to 0
+4. Why not to create an exception class to handle exceptions like b is equal to 0
 ```scala
 @XmlAccessorType(XmlAccessType.FIELD)
 case class ResponseException(why : String){  def this(){this("")}}
@@ -73,7 +73,7 @@ case class FaultResponse(@BeanProperty faultInfo : ResponseException) extends Ex
 ```
 Don’t forget to add BeanProperty annotation to faultInfo input !
 
-	- Let’s add an interceptor to log all ws method call
+5. Let’s add an interceptor to log all ws method call
 
 ```scala
 object TracingInterceptor{
@@ -99,7 +99,7 @@ class TracingInterceptor {
   }
 }
 ```
-	- The WS class and it’s divide method using intercpetor and stateless EJB 3.1
+6. The WS class and it’s divide method using intercpetor and stateless EJB 3.1
 ```scala
 @WebService(serviceName = "Euclide", targetNamespace = "http://slim.ouertani.me/")
 @Stateless()
@@ -113,7 +113,7 @@ class Euclide {
     }
 }
 ```
-	- Don’t forget package , imports at the head of file and it’s all:
+7. Don’t forget package , imports at the head of file and it’s all:
 
 ```scala
 package me.ouertani.scala.ws
