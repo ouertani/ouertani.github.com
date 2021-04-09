@@ -63,7 +63,7 @@ case class Request(a : Int, b : Int ){ def this(){this(0,0)}}
 @XmlType(name = "output")
 case class Response (c: Int, d: Int){ def this(){this(0,0)}}
 ```
-	- Why not to create an exception class to handle exceptions like b is equal to 0
+- Why not to create an exception class to handle exceptions like b is equal to 0
 ```scala
 @XmlAccessorType(XmlAccessType.FIELD)
 case class ResponseException(why : String){  def this(){this("")}}
