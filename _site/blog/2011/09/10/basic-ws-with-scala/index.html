@@ -221,37 +221,31 @@ $ touch src/Euclide.scala
 
 <p>That’a all for project configuration.</p>
 
-<h2>II- Create the WS</h2>
+<h2 id="ii--create-the-ws">II- Create the WS</h2>
 
 <p>We will use a single Euclide.scala file for all class this will be easier for visibility</p>
-<ol>
-<li>Create a Request Class and don’t forget :</li>
-	<ol>
-	<li>default constructor</li>
-	<li>field access annotation</li>
-	</ol>
-</ol>
+
+<ul>
+  <li>Create a Request Class and don’t forget :
+    <ul>
+      <li>default constructor</li>
+      <li>field access annotation</li>
+    </ul>
+  </li>
+</ul>
+
 <div class="language-scala highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nd">@XmlAccessorType</span><span class="o">(</span><span class="nv">XmlAccessType</span><span class="o">.</span><span class="py">FIELD</span><span class="o">)</span>
 <span class="k">case</span> <span class="k">class</span> <span class="nc">Request</span><span class="o">(</span><span class="n">a</span> <span class="k">:</span> <span class="kt">Int</span><span class="o">,</span> <span class="n">b</span> <span class="k">:</span> <span class="kt">Int</span> <span class="o">){</span> <span class="k">def</span> <span class="nf">this</span><span class="o">(){</span><span class="nf">this</span><span class="o">(</span><span class="mi">0</span><span class="o">,</span><span class="mi">0</span><span class="o">)}}</span>
 </code></pre></div></div>
-<ol>
-<li>Create a Response Class</li></ol>
-<div class="language-scala highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nd">@XmlAccessorType</span><span class="o">(</span><span class="nv">XmlAccessType</span><span class="o">.</span><span class="py">FIELD</span><span class="o">)</span>
-<span class="nd">@XmlType</span><span class="o">(</span><span class="n">name</span> <span class="k">=</span> <span class="s">"output"</span><span class="o">)</span>
-<span class="k">case</span> <span class="k">class</span> <span class="nc">Response</span> <span class="o">(</span><span class="n">c</span><span class="k">:</span> <span class="kt">Int</span><span class="o">,</span> <span class="n">d</span><span class="k">:</span> <span class="kt">Int</span><span class="o">){</span> <span class="k">def</span> <span class="nf">this</span><span class="o">(){</span><span class="nf">this</span><span class="o">(</span><span class="mi">0</span><span class="o">,</span><span class="mi">0</span><span class="o">)}}</span>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>- Create a Response Class ```scala @XmlAccessorType(XmlAccessType.FIELD) @XmlType(name = "output") case class Response (c: Int, d: Int){ def this(){this(0,0)}} ```
+- Why not to create an exception class to handle exceptions like b is equal to 0 ```scala @XmlAccessorType(XmlAccessType.FIELD) case class ResponseException(why : String){  def this(){this("")}}
 </code></pre></div></div>
-<ul>
-  <li>Why not to create an exception class to handle exceptions like b is equal to 0
-```scala
-@XmlAccessorType(XmlAccessType.FIELD)
-case class ResponseException(why : String){  def this(){this(“”)}}</li>
-</ul>
 
 <p>@XmlAccessorType(XmlAccessType.FIELD)
 case class FaultResponse(@BeanProperty faultInfo : ResponseException) extends Exception { def this(){this(ResponseException(“”))}}</p>
 <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Don’t forget to add BeanProperty annotation to faultInfo input !
 
-- Let’s add an interceptor to log all ws method call
+	- Let’s add an interceptor to log all ws method call
 
 ```scala
 object TracingInterceptor{
@@ -277,23 +271,13 @@ class TracingInterceptor {
   }
 }
 </code></pre></div></div>
-<ul>
-  <li>The WS class and it’s divide method using intercpetor and stateless EJB 3.1
-    <div class="language-scala highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nd">@WebService</span><span class="o">(</span><span class="n">serviceName</span> <span class="k">=</span> <span class="s">"Euclide"</span><span class="o">,</span> <span class="n">targetNamespace</span> <span class="k">=</span> <span class="s">"http://slim.ouertani.me/"</span><span class="o">)</span>
-<span class="nd">@Stateless</span><span class="o">()</span>
-<span class="nd">@Interceptors</span><span class="o">(</span><span class="nc">Array</span><span class="o">(</span><span class="n">classOf</span><span class="o">[</span><span class="kt">TracingInterceptor</span><span class="o">]))</span>
-<span class="k">class</span> <span class="nc">Euclide</span> <span class="o">{</span>
-<span class="nd">@throws</span><span class="o">(</span><span class="n">classOf</span><span class="o">[</span><span class="kt">FaultResponse</span><span class="o">])</span>
-<span class="k">def</span> <span class="nf">divide</span><span class="o">(</span> <span class="nd">@WebParam</span><span class="o">(</span><span class="n">name</span><span class="o">=</span><span class="s">"input"</span> <span class="o">)</span>  <span class="nd">@XmlElement</span><span class="o">(</span><span class="n">required</span> <span class="k">=</span> <span class="kc">true</span><span class="o">,</span> <span class="n">nillable</span> <span class="k">=</span> <span class="kc">false</span><span class="o">)</span>
-  <span class="n">req</span> <span class="k">:</span><span class="kt">Request</span><span class="o">)</span><span class="k">:</span><span class="kt">Response</span> <span class="o">=</span>  <span class="n">req</span> <span class="k">match</span> <span class="o">{</span>
-    <span class="k">case</span> <span class="nc">Request</span><span class="o">(</span><span class="k">_</span><span class="o">,</span> <span class="mi">0</span> <span class="o">)</span> <span class="k">=&gt;</span> <span class="k">throw</span> <span class="nc">FaultResponse</span><span class="o">(</span><span class="nc">ResponseException</span><span class="o">(</span><span class="s">"Can't divide by ZERO!"</span><span class="o">))</span>
-    <span class="k">case</span> <span class="nc">Request</span><span class="o">(</span><span class="n">a</span><span class="o">,</span> <span class="n">b</span> <span class="o">)</span> <span class="k">=&gt;</span>  <span class="nc">Response</span><span class="o">(</span><span class="n">a</span> <span class="o">/</span> <span class="n">b</span> <span class="o">,</span><span class="n">a</span> <span class="o">%</span> <span class="n">b</span><span class="o">)</span>
-  <span class="o">}</span>
-<span class="o">}</span>
-</code></pre></div>    </div>
-  </li>
-  <li>Don’t forget package , imports at the head of file and it’s all :</li>
-</ul>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>- The WS class and it’s divide method using intercpetor and stateless EJB 3.1 ```scala @WebService(serviceName = "Euclide", targetNamespace = "http://slim.ouertani.me/") @Stateless() @Interceptors(Array(classOf[TracingInterceptor])) class Euclide {   @throws(classOf[FaultResponse])   def divide( @WebParam(name="input" )  @XmlElement(required = true, nillable = false)
+req :Request):Response =  req match {
+  case Request(_, 0 ) =&gt; throw FaultResponse(ResponseException("Can't divide by ZERO!"))
+  case Request(a, b ) =&gt;  Response(a / b ,a % b)
+} } ```
+- Don’t forget package , imports at the head of file and it’s all:
+</code></pre></div></div>
 
 <div class="language-scala highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">package</span> <span class="nn">me.ouertani.scala.ws</span>
 
