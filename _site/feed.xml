@@ -7,8 +7,8 @@
     
     <description>This website is a virtual proof that I&apos;m awesome</description>
     
-    <link></link>
-    <atom:link href="/feed.xml" rel="self" type="application/rss+xml" />
+    <link>http://localhost:4000/</link>
+    <atom:link href="http://localhost:4000/feed.xml" rel="self" type="application/rss+xml" />
     
     
   </channel>
